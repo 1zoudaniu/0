@@ -29,6 +29,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.util.Log;
 import android.widget.Toast;
 
 import cn.smssdk.gui.CommonDialog;
@@ -42,6 +43,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.socks.library.KLog;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
@@ -62,12 +66,63 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        initSMSSDK();
+        SMSSDK.initSDK(this,APPKEY,APPSECRECT);
+        EventHandler eh=new EventHandler(){
+
+            @Override
+            public void afterEvent(int event, int result, Object data) {
+
+                Message msg = new Message();
+                msg.arg1 = event;
+                msg.arg2 = result;
+                msg.obj = data;
+                handler.sendMessage(msg);
+            }
+
+        };
+        SMSSDK.registerEventHandler(eh);
 
         initView();
 
+
+
         setListener();
     }
+    Handler handler=new Handler(){
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            int event = msg.arg1;
+            int result = msg.arg2;
+            Object data = msg.obj;
+            Log.e("event", "event="+event);
+            if (result == SMSSDK.RESULT_COMPLETE) {
+                System.out.println("----"+event);
+                //短信注册成功后，返回MainActivity,然后提示新好友
+                if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
+                    if (result==SMSSDK.RESULT_COMPLETE) {
+                        Toast.makeText(getApplicationContext(), "依然走短信验证", Toast.LENGTH_SHORT).show();
+                    }
+
+                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+                    Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
+//                    textView2.setText("验证码已经发送");
+                }else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//返回支持发送验证码的国家列表
+                    Toast.makeText(getApplicationContext(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
+//                    countryTextView.setText(data.toString());
+                    System.out.println("+++"+getApplicationContext());
+                }else if(event==SMSSDK.RESULT_ERROR){
+                    Toast .makeText(getApplicationContext(),"------" ,Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                ((Throwable) data).printStackTrace();
+                Toast.makeText(getApplicationContext(), "错误"+data, Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
+    };
     private void initView() {
         mEtPhone = (EditText) findViewById(R.id.et_phone);
         mEtPhoneCode = (EditText) findViewById(R.id.et_phone_code);
@@ -107,13 +162,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     ToastUtil.startShort(LoginActivity.this, "手机号不正确！");
                     mEtPhone.requestFocus();
                 }
-
                 break;
             case R.id.btn_submit_test:
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(intent);
                 finish();
-            break;
+                break;
         }
     }
 
@@ -163,270 +217,87 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private boolean validatePhone() {
         String phone = mEtPhone.getText().toString().trim();
         Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-        Matcher m = p.matcher(phone );
+        Matcher m = p.matcher(phone);
         return m.matches();
     }
-    private void initSMSSDK() {
-        //初始化短信验证
-        SMSSDK.initSDK(this, APPKEY, APPSECRECT);
-
-        //注册短信回调
-        SMSSDK.registerEventHandler(new EventHandler() {
-            @Override
-            public void afterEvent(int event, int result, Object data) {
-                switch (event) {
-                    case SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE:
-                        if (result == SMSSDK.RESULT_COMPLETE) {
-                            KLog.e("验证成功");
-
-                            ToastUtil.startShort(LoginActivity.this, "登陆成功！1");
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-                            finish();
-
-                        } else {
-                            KLog.e("验证失败");
-
-                            ToastUtil.startShort(LoginActivity.this, "验证失败！1");
-                        }
-                        break;
-                    case SMSSDK.EVENT_GET_VERIFICATION_CODE:
-                        if (result == SMSSDK.RESULT_COMPLETE) {
-                            KLog.e("获取验证成功");
-
-                            ToastUtil.startShort(LoginActivity.this, "您已经登陆！");
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            startActivity(intent);
-
-                            finish();
-
-                        } else {
-                            KLog.e("获取验证失败");
-
-                            ToastUtil.startShort(LoginActivity.this, "验证失败！2");
-                        }
-                        break;
-                }
-            }
-        });
-    }
 //
-////        SMSSDK.initSDK(this, "17ac5532d8552", "03cbddd8f9b3b70c78bc0a40ba610160");
-////
-//
-//
-//        RegisterPage registerPage = new RegisterPage();
-//        registerPage.setRegisterCallback(new EventHandler() {
+//    private void initSMSSDK() {
+//        SMSSDK.initSDK(this, APPKEY, APPSECRECT, false);
+//        EventHandler eh = new EventHandler() {
 //            public void afterEvent(int event, int result, Object data) {
-//                // 解析注册结果
 //                if (result == SMSSDK.RESULT_COMPLETE) {
-//                    @SuppressWarnings("unchecked")
-//                    HashMap<String, Object> phoneMap = (HashMap<String, Object>) data;
-//                    String country = (String) phoneMap.get("country");
-//                    String phone = (String) phoneMap.get("phone");
-//                    // 提交用户信息
-//                    registerUser(country, phone);
+//                    //回调完成
+//                    if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {
+//                        //提交验证码成功
+////                        if (msgLoginDlg != null && msgLoginDlg.isShowing()) {
+////                            msgLoginDlg.dismiss();
+////                        }
+//                        Log.d("TAG", "提交验证码成功");
+//                    } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
+//                        //获取验证码成功
+//                        Log.d("TAG", "获取验证码成功");
+//                    } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {
+//                        ArrayList<HashMap<String, Object>> hashMaps = (ArrayList<HashMap<String, Object>>) data;
+//                        for (HashMap<String, Object> each : hashMaps) {
+//                            Log.d("TAG", each.toString());
+//                        }
+//                    }
+//                } else {
+//                    Throwable throwable = (Throwable) data;
+//                    Log.d("TAG", throwable.getLocalizedMessage());
+//                    Log.d("TAG", throwable.getMessage());
+//                    try {
+//                        JSONObject object = new JSONObject(throwable.getMessage());
+//                        Log.d("TAG", object.getString("detail"));
+//                        Log.d("TAG", object.getString("status"));
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }
+//        };
+//        //注册短信验证的监听
+//        SMSSDK.registerEventHandler(eh);
+//
+
+
+//
+//        //初始化短信验证
+//        SMSSDK.initSDK(this, APPKEY, APPSECRECT);
+//
+//        //注册短信回调
+//        SMSSDK.registerEventHandler(new EventHandler() {
+//            @Override
+//            public void afterEvent(int event, int result, Object data) {
+//                switch (event) {
+//                    case SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE:
+//                        if (result == SMSSDK.RESULT_COMPLETE) {
+////                            ToastUtil.startShort(LoginActivity.this, "登陆成功！1");
+////                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+////                            startActivity(intent);
+////                            finish();
+//                        } else {
+//                            ToastUtil.startShort(LoginActivity.this, "请检查网络是否连接！");
+//                        }
+//                        break;
+//                    case SMSSDK.EVENT_GET_VERIFICATION_CODE:
+//                        if (result == SMSSDK.RESULT_COMPLETE) {
+//
+//                            ToastUtil.startShort(LoginActivity.this, "您已经登陆！");
+//                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//                            startActivity(intent);
+//
+//                            finish();
+//
+//                        } else {
+//
+//                            ToastUtil.startShort(LoginActivity.this, "请检查网络是否连接！！！");
+//
+//                        }
+//                        break;
 //                }
 //            }
 //        });
-//        registerPage.show(this);
-//
-//
-//        gettingFriends = false;
-//
-//        loadSharePrefrence();
-//
-//        if (Build.VERSION.SDK_INT >= 23) {
-//            int readPhone = checkSelfPermission(Manifest.permission.READ_PHONE_STATE);
-//            int receiveSms = checkSelfPermission(Manifest.permission.RECEIVE_SMS);
-//            int readSms = checkSelfPermission(Manifest.permission.READ_SMS);
-//            int readContacts = checkSelfPermission(Manifest.permission.READ_CONTACTS);
-//            int readSdcard = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-//
-//            int requestCode = 0;
-//            ArrayList<String> permissions = new ArrayList<String>();
-//            if (readPhone != PackageManager.PERMISSION_GRANTED) {
-//                requestCode |= 1 << 0;
-//                permissions.add(Manifest.permission.READ_PHONE_STATE);
-//            }
-//            if (receiveSms != PackageManager.PERMISSION_GRANTED) {
-//                requestCode |= 1 << 1;
-//                permissions.add(Manifest.permission.RECEIVE_SMS);
-//            }
-//            if (readSms != PackageManager.PERMISSION_GRANTED) {
-//                requestCode |= 1 << 2;
-//                permissions.add(Manifest.permission.READ_SMS);
-//            }
-//            if (readContacts != PackageManager.PERMISSION_GRANTED) {
-//                requestCode |= 1 << 3;
-//                permissions.add(Manifest.permission.READ_CONTACTS);
-//            }
-//            if (readSdcard != PackageManager.PERMISSION_GRANTED) {
-//                requestCode |= 1 << 4;
-//                permissions.add(Manifest.permission.READ_EXTERNAL_STORAGE);
-//            }
-//            if (requestCode > 0) {
-//                String[] permission = new String[permissions.size()];
-//                this.requestPermissions(permissions.toArray(permission), requestCode);
-//                return;
-//            }
-//        }
-//
-//        initSDK();
 
-    }
-
-//
-//    // 填写从短信SDK应用后台注册得到的APPKEY
-//    //此APPKEY仅供测试使用，且不定期失效，请到mob.com后台申请正式APPKEY
-//    private static String APPKEY = "17ac5532d8552";
-//
-//    // 填写从短信SDK应用后台注册得到的APPSECRET
-//    private static String APPSECRET = "03cbddd8f9b3b70c78bc0a40ba610160";
-//
-//    // 短信注册，随机产生头像
-//    private static final String[] AVATARS = {
-//            "http://tupian.qqjay.com/u/2011/0729/e755c434c91fed9f6f73152731788cb3.jpg",
-//            "http://99touxiang.com/public/upload/nvsheng/125/27-011820_433.jpg",
-//            "http://img1.touxiang.cn/uploads/allimg/111029/2330264224-36.png",
-//            "http://img1.2345.com/duoteimg/qqTxImg/2012/04/09/13339485237265.jpg",
-//            "http://diy.qqjay.com/u/files/2012/0523/f466c38e1c6c99ee2d6cd7746207a97a.jpg",
-//            "http://img1.touxiang.cn/uploads/20121224/24-054837_708.jpg",
-//            "http://img1.touxiang.cn/uploads/20121212/12-060125_658.jpg",
-//            "http://img1.touxiang.cn/uploads/20130608/08-054059_703.jpg",
-//            "http://diy.qqjay.com/u2/2013/0422/fadc08459b1ef5fc1ea6b5b8d22e44b4.jpg",
-//            "http://img1.2345.com/duoteimg/qqTxImg/2012/04/09/13339510584349.jpg",
-//            "http://img1.touxiang.cn/uploads/20130515/15-080722_514.jpg",
-//            "http://diy.qqjay.com/u2/2013/0401/4355c29b30d295b26da6f242a65bcaad.jpg"
-//    };
-//
-//    private boolean ready;
-//    private boolean gettingFriends;
-//    private Dialog pd;
-//
-//
-//    private void initSDK() {
-//        // 初始化短信SDK
-//        SMSSDK.initSDK(this, APPKEY, APPSECRET, true);
-//        if (APPKEY.equalsIgnoreCase("f3fc6baa9ac4")) {
-//            Toast.makeText(this, "此APPKEY仅供测试使用，且不定期失效，请到mob.com后台申请正式APPKEY", Toast.LENGTH_SHORT).show();
-//        }
-//        final Handler handler = new Handler(this);
-//        EventHandler eventHandler = new EventHandler() {
-//            public void afterEvent(int event, int result, Object data) {
-//                Message msg = new Message();
-//                msg.arg1 = event;
-//                msg.arg2 = result;
-//                msg.obj = data;
-//                handler.sendMessage(msg);
-//            }
-//        };
-//        // 注册回调监听接口
-//        SMSSDK.registerEventHandler(eventHandler);
-//        ready = true;
-//
-//        // 获取新好友个数
-//        showDialog();
-//        SMSSDK.getNewFriendsCount();
-//        gettingFriends = true;
-//    }
-//
-//    private void loadSharePrefrence() {
-//        SharedPreferences p = getSharedPreferences("SMSSDK_SAMPLE", Context.MODE_PRIVATE);
-//        APPKEY = p.getString("APPKEY", APPKEY);
-//        APPSECRET = p.getString("APPSECRET", APPSECRET);
-//    }
-//
-//    private void setSharePrefrence() {
-//        SharedPreferences p = getSharedPreferences("SMSSDK_SAMPLE", Context.MODE_PRIVATE);
-//        Editor edit = p.edit();
-//        edit.putString("APPKEY", APPKEY);
-//        edit.putString("APPSECRET", APPSECRET);
-//        edit.commit();
-//    }
-//
-//    protected void onDestroy() {
-//        if (ready) {
-//            // 销毁回调监听接口
-//            SMSSDK.unregisterAllEventHandler();
-//        }
-//        super.onDestroy();
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        if (ready && !gettingFriends) {
-//            // 获取新好友个数
-//            showDialog();
-//            SMSSDK.getNewFriendsCount();
-//        }
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-//    }
-//
-//
-//    public boolean handleMessage(Message msg) {
-//        if (pd != null && pd.isShowing()) {
-//            pd.dismiss();
-//        }
-//
-//        int event = msg.arg1;
-//        int result = msg.arg2;
-//        Object data = msg.obj;
-//        if (event == SMSSDK.EVENT_SUBMIT_USER_INFO) {
-//            // 短信注册成功后，返回MainActivity,然后提示新好友
-//            if (result == SMSSDK.RESULT_COMPLETE) {
-//
-//                Intent intent = new Intent(this, MainActivity.class);
-//                startActivity(intent);
-//
-//            } else {
-//                ((Throwable) data).printStackTrace();
-//            }
-//        } else if (event == SMSSDK.EVENT_GET_NEW_FRIENDS_COUNT) {
-//            if (result == SMSSDK.RESULT_COMPLETE) {
-//                refreshViewCount(data);
-//                gettingFriends = false;
-//            } else {
-//                ((Throwable) data).printStackTrace();
-//            }
-//        }
-//        return false;
-//    }
-//
-//    // 更新，新好友个数
-//    private void refreshViewCount(Object data) {
-//        int newFriendsCount = 0;
-//        try {
-//            newFriendsCount = Integer.parseInt(String.valueOf(data));
-//        } catch (Throwable t) {
-//            newFriendsCount = 0;
-//        }
-//
-//        if (pd != null && pd.isShowing()) {
-//            pd.dismiss();
-//        }
-//    }
-//
-//    // 弹出加载框
-//    private void showDialog() {
-//        if (pd != null && pd.isShowing()) {
-//            pd.dismiss();
-//        }
-//        pd = CommonDialog.ProgressDialog(this);
-//        pd.show();
-//    }
-//
-//    // 提交用户信息
-//    private void registerUser(String country, String phone) {
-//        Random rnd = new Random();
-//        int id = Math.abs(rnd.nextInt());
-//        String uid = String.valueOf(id);
-//        String nickName = "SmsSDK_User_" + uid;
-//        String avatar = AVATARS[id % 12];
-//        SMSSDK.submitUserInfo(uid, nickName, avatar, country, phone);
-//    }
+}
