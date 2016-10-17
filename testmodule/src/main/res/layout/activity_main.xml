@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:showDividers="middle" >
 
-<fragment
+    <fragment
         android:id="@+id/item_list"
         android:name="safebox.yiye.com.testmodule.eventbusdemo.ItemListFragment"
         android:layout_width="0dip"

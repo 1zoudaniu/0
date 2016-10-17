@@ -14,6 +14,7 @@ import java.util.List;
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
+import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
 import safebox.yiye.com.safebox.utils.L;
 
 public class GuijiActivity extends AppCompatActivity implements View.OnClickListener {
@@ -48,9 +49,15 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
             mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(i)));
         }
         List<Fragment> fragments = new ArrayList<>();
-        for(int i=0;i<titles.size();i++){
-            fragments.add(new GuijiFirstFragment());
-        }
+        GuijiFirstFragment guijiFirstFragment = new GuijiFirstFragment();
+        GuijiSecondFragment guijiSecondFragment = new GuijiSecondFragment();
+        fragments.add(guijiFirstFragment);
+        fragments.add(guijiSecondFragment);
+
+
+//        for(int i=0;i<titles.size();i++){
+//            fragments.add(new GuijiFirstFragment());
+//        }
         GuijiFragmentPageAdapter mGuijiFragmentPageAdapteradapter =
                  new GuijiFragmentPageAdapter(getSupportFragmentManager(), fragments, titles);
         //给ViewPager设置适配器
