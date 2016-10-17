@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mEtPhoneCode;
     private Button mBtnSubmitUser;
     private TextView mTvGetPhoneCode;
+    private Button button_test;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +73,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEtPhoneCode = (EditText) findViewById(R.id.et_phone_code);
         mTvGetPhoneCode = (TextView) findViewById(R.id.tv_get_phone_code);
         mBtnSubmitUser = (Button) findViewById(R.id.btn_submit_user);
+        button_test = (Button) findViewById(R.id.btn_submit_test);
     }
 
     private void setListener() {
         mTvGetPhoneCode.setOnClickListener(this);
         mBtnSubmitUser.setOnClickListener(this);
+        button_test.setOnClickListener(this);
     }
 
     @Override
@@ -106,6 +109,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
 
                 break;
+            case R.id.btn_submit_test:
+                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            break;
         }
     }
 
@@ -174,7 +182,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             ToastUtil.startShort(LoginActivity.this, "登陆成功！1");
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             startActivity(intent);
-
                             finish();
 
                         } else {

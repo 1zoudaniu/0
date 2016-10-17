@@ -319,7 +319,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             intent.putExtra("data_no", fakes.get(position - 1).getTvCarNo());
             intent.putExtra("data_score", fakes.get(position - 1).getTvCarScore());
             startActivity(intent);
-
+            super.onDestroy();
             if (anim != null) {
                 anim.cancel();
 
@@ -369,6 +369,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         }
 
     }
+
     //设置进度条文字的动画
     private void interpolateProgressBar_text(View view1, float interpolation) {
         getOnScreenRect(mRect1, view1);
@@ -510,8 +511,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             dotCircularRingView.setProgress(values[0] + "%");
         }
     }
-
-
 
 
 }
