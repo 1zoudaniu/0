@@ -7,6 +7,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.makeramen.roundedimageview.RoundedImageView;
+
 import java.util.ArrayList;
 
 import safebox.yiye.com.safebox.R;
@@ -49,7 +51,7 @@ public class IndexCarScoreAdapter extends BaseAdapter {
         if (convertView == null) {
             convertView = View.inflate(mContext, mFragment_index_listview_item, null);
             holder = new FragmentIndexListViewHolder();
-            holder.iv_car_icon = (ImageView) convertView.findViewById(R.id.index_listview_item_icon);
+            holder.iv_car_icon = (RoundedImageView) convertView.findViewById(R.id.index_listview_item_icon);
             holder.tvCarNo = (TextView) convertView.findViewById(R.id.index_listview_item_no);
             holder.tvCarScore = (TextView) convertView.findViewById(R.id.index_listview_item_score);
             convertView.setTag(holder);

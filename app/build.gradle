@@ -78,4 +78,6 @@ dependencies {
 
 
     compile 'com.github.lecho:hellocharts-library:1.5.8@aar'
+
+    compile 'com.makeramen:roundedimageview:2.2.1'
 }

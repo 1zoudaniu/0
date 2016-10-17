@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="70dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <LinearLayout
@@ -12,12 +13,22 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <ImageView
+        <!--<ImageView-->
+            <!--android:id="@+id/index_listview_item_icon"-->
+            <!--android:layout_width="50dp"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:src="@drawable/ic_launcher"-->
+            <!--android:layout_gravity="center_vertical|right" />-->
+
+        <com.makeramen.roundedimageview.RoundedImageView
             android:id="@+id/index_listview_item_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/ic_launcher"
-            android:layout_gravity="center_vertical|right" />
+            android:src="@drawable/amap_car"
+            app:riv_border_color="#faf6f6"
+            app:riv_border_width="2dp"
+            android:layout_gravity="center_vertical|right"
+            app:riv_oval="true" />
 
         <TextView
             android:id="@+id/index_listview_item_no"

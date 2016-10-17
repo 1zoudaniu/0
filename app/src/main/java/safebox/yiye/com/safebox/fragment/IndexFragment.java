@@ -109,7 +109,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
         for (int i = 0; i < 16; i++) {
             CarIndexInfoBean carIndexInfoBean = new CarIndexInfoBean();
-            carIndexInfoBean.setIv_car_icon(R.mipmap.ic_launcher);
+            carIndexInfoBean.setIv_car_icon(R.drawable.amap_car);
             carIndexInfoBean.setTvCarNo("沪C" + i);
             carIndexInfoBean.setTvCarScore(i + 100 + new Random().nextInt(100) * 20 + "");
             fakes.add(carIndexInfoBean);
