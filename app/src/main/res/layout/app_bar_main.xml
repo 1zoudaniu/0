@@ -58,9 +58,16 @@
                 android:text="@string/home" />
 
             <RadioButton
-                android:id="@+id/rb_paihang"
+
                 style="@style/tab"
                 android:drawableTop="@drawable/rb_hotplace_selector"
+                android:text="@string/paihang"
+
+                />
+            <RadioButton
+                android:id="@+id/rb_paihang"
+                style="@style/tab"
+                android:drawableTop="@drawable/rb_realtime_selector"
                 android:text="@string/paihang"
 
                 />
@@ -68,7 +75,7 @@
 
         <TextView
             android:id="@+id/rb_guiji"
-            android:layout_width="100dp"
+            android:layout_width="120dp"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:background="@drawable/rb_bg_selector"
