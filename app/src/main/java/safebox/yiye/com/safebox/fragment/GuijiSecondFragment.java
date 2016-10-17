@@ -72,23 +72,57 @@ public class GuijiSecondFragment extends Fragment {
     private boolean hasLabelForSelected = true;
     private boolean pointsHaveDifferentColor;
 
+    //一下是一个周的
+    private LineChartView chart_week;
+    private LineChartData data_week;
+    private int numberOfLines_week = 1;
+    private int maxNumberOfLines_week = 4;
+    private int numberOfPoints_week = 7;
+
+    float[][] randomNumbersTab_week = new float[maxNumberOfLines_week][numberOfPoints_week];
+
+    private boolean hasAxes_week = true;
+    private boolean hasAxesNames_week = true;
+    private boolean hasLines_week = true;
+    private boolean hasPoints_week = true;
+    private ValueShape shape_week = ValueShape.CIRCLE;
+    //出现阴影面积
+    private boolean isFilled_week = true;
+    private boolean hasLabels_week = true;
+    private boolean isCubic_week = false;
+    //点击后出现具体数字
+    private boolean hasLabelForSelected_week = false;
+    private boolean pointsHaveDifferentColor_week;
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_line_column_dependency, container, false);
+//一个周的第一个版本
+//        // *** TOP LINE CHART ***
+//        chartTop = (LineChartView) rootView.findViewById(R.id.chart_top);
+//
+//        // Generate and set data for line chart
+//        generateInitialLineData();
+//
+//        generateLineData(ChartUtils.COLOR_GREEN, 100);
 
-        // *** TOP LINE CHART ***
-        chartTop = (LineChartView) rootView.findViewById(R.id.chart_top);
+        //一下是一个周的
+        chart_week = (LineChartView) rootView.findViewById(R.id.chart_week);
+        pointsHaveDifferentColor_week = !pointsHaveDifferentColor_week;
+        // Generate some random values.
+        generateValues_week();
+        chart_week.setValueSelectionEnabled(hasLabelForSelected_week);
+        generateData_week();
 
-        // Generate and set data for line chart
-        generateInitialLineData();
-
-        generateLineData(ChartUtils.COLOR_GREEN, 100);
+        // Disable viewport recalculations, see toggleCubic() method for more info.
+        chart_week.setViewportCalculationEnabled(false);
+        resetViewport_week();
 
 
         //一下是一个月的
-        chart = (LineChartView) rootView.findViewById(R.id.chart);
+        chart = (LineChartView) rootView.findViewById(R.id.chart_mounth);
         pointsHaveDifferentColor = !pointsHaveDifferentColor;
         // Generate some random values.
         generateValues();
@@ -103,88 +137,163 @@ public class GuijiSecondFragment extends Fragment {
 
         return rootView;
     }
+    //一个周的第一个版本
+//
+//    /**
+//     * Generates initial data for line chart. At the begining all Y values are equals 0. That will change when user
+//     * will select value on column chart.
+//     */
+//    private void generateInitialLineData() {
+//        int numValues = 7;
+//
+//        List<AxisValue> axisValues = new ArrayList<AxisValue>();
+//        List<PointValue> values = new ArrayList<PointValue>();
+//        for (int i = 0; i < numValues; ++i) {
+//            values.add(new PointValue(i, 0));
+//            axisValues.add(new AxisValue(i).setLabel(days[i]));
+//        }
+//
+//        Line line = new Line(values);
+//        line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
+//
+//        List<Line> lines = new ArrayList<Line>();
+//        lines.add(line);
+//
+//        lineData = new LineChartData(lines);
+//        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
+//        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
+//
+//        chartTop.setLineChartData(lineData);
+//
+//        // For build-up animation you have to disable viewport recalculation.
+//        chartTop.setViewportCalculationEnabled(false);
+//
+//        // And set initial max viewport and current viewport- remember to set viewports after data.
+//        Viewport v = new Viewport(0, 100, 6, 0);
+//        chartTop.setMaximumViewport(v);
+//        chartTop.setCurrentViewport(v);
+//
+//        chartTop.setZoomType(ZoomType.HORIZONTAL);
+//
+//        chartTop.setOnValueTouchListener(new LineChartOnValueSelectListener() {
+//            @Override
+//            public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
+//                int i = (int) (value.getX() + 1);
+//
+//                float y = value.getY();
+//                ToastUtil.startShort(getActivity(),"第"+ i +"天的评分为："+ y +"分");
+//            }
+//
+//            @Override
+//            public void onValueDeselected() {
+//
+//            }
+//        });
+//    }
+//
+//    private void generateLineData(int color, float range) {
+//        // Cancel last animation if not finished.
+//        chartTop.cancelDataAnimation();
+//
+//        // Modify data targets
+//        Line line = lineData.getLines().get(0);// For this example there is always only one line.
+//        line.setColor(color);
+//        for (PointValue value : line.getValues()) {
+//            // Change target only for Y value.
+//            value.setTarget(value.getX(), (float) Math.random() * range);
+//        }
+//
+//        // Start new data animation with 300ms duration;
+//        chartTop.startDataAnimation(300);
+//    }
+//
+//    private class ValueTouchListener implements ColumnChartOnValueSelectListener {
+//
+//        @Override
+//        public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
+//            generateLineData(value.getColor(), 100);
+//        }
+//
+//        @Override
+//        public void onValueDeselected() {
+//
+//            generateLineData(ChartUtils.COLOR_GREEN, 0);
+//
+//        }
+//    }
+    //一下是一个周的
 
     /**
-     * Generates initial data for line chart. At the begining all Y values are equals 0. That will change when user
-     * will select value on column chart.
+     * 生成点的数据
      */
-    private void generateInitialLineData() {
-        int numValues = 7;
-
-        List<AxisValue> axisValues = new ArrayList<AxisValue>();
-        List<PointValue> values = new ArrayList<PointValue>();
-        for (int i = 0; i < numValues; ++i) {
-            values.add(new PointValue(i, 0));
-            axisValues.add(new AxisValue(i).setLabel(days[i]));
+    private void generateValues_week() {
+        for (int i = 0; i < maxNumberOfLines_week; ++i) {
+            for (int j = 0; j < numberOfPoints_week; ++j) {
+                randomNumbersTab_week[i][j] = (float) Math.random() * 100f;
+            }
         }
+    }
 
-        Line line = new Line(values);
-        line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
+    /**
+     * 设置视图的点数  起点终点  最大值
+     */
+    private void resetViewport_week() {
+        // Reset viewport height range to (0,100)
+        final Viewport v = new Viewport(chart_week.getMaximumViewport());
+        v.bottom = 0;
+        v.top = 100;
+        v.left = 1;
+        v.right = numberOfPoints_week-1;
+        chart_week.setMaximumViewport(v);
+        chart_week.setCurrentViewport(v);
+    }
+
+    private void generateData_week() {
 
         List<Line> lines = new ArrayList<Line>();
-        lines.add(line);
+        for (int i = 0; i < numberOfLines_week; ++i) {
 
-        lineData = new LineChartData(lines);
-        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
-
-        chartTop.setLineChartData(lineData);
-
-        // For build-up animation you have to disable viewport recalculation.
-        chartTop.setViewportCalculationEnabled(false);
-
-        // And set initial max viewport and current viewport- remember to set viewports after data.
-        Viewport v = new Viewport(0, 100, 6, 0);
-        chartTop.setMaximumViewport(v);
-        chartTop.setCurrentViewport(v);
-
-        chartTop.setZoomType(ZoomType.HORIZONTAL);
-
-        chartTop.setOnValueTouchListener(new LineChartOnValueSelectListener() {
-            @Override
-            public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-                int i = (int) (value.getX() + 1);
-
-                float y = value.getY();
-                ToastUtil.startShort(getActivity(),"第"+ i +"天的评分为："+ y +"分");
+            List<PointValue> values_week = new ArrayList<PointValue>();
+            for (int j = 0; j < numberOfPoints_week; j++) {
+                values_week.add(new PointValue(j, randomNumbersTab_week[i][j]));
             }
 
-            @Override
-            public void onValueDeselected() {
+            Line line = new Line(values_week);
+            line.setColor(ChartUtils.COLORS[i]);
+            line.setShape(shape_week);
+            line.setCubic(isCubic_week);
+            line.setFilled(isFilled_week);
+            line.setHasLabels(hasLabels_week);
+            line.setHasLabelsOnlyForSelected(hasLabelForSelected_week);
+            line.setHasLines(hasLines_week);
+            line.setHasPoints(hasPoints_week);
+            if (pointsHaveDifferentColor_week) {
+//                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
+                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
 
             }
-        });
-    }
-
-    private void generateLineData(int color, float range) {
-        // Cancel last animation if not finished.
-        chartTop.cancelDataAnimation();
-
-        // Modify data targets
-        Line line = lineData.getLines().get(0);// For this example there is always only one line.
-        line.setColor(color);
-        for (PointValue value : line.getValues()) {
-            // Change target only for Y value.
-            value.setTarget(value.getX(), (float) Math.random() * range);
+            lines.add(line);
         }
 
-        // Start new data animation with 300ms duration;
-        chartTop.startDataAnimation(300);
-    }
+        data_week = new LineChartData(lines);
 
-    private class ValueTouchListener implements ColumnChartOnValueSelectListener {
-
-        @Override
-        public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-            generateLineData(value.getColor(), 100);
+        if (hasAxes_week) {
+            Axis axisX = new Axis();
+            Axis axisY = new Axis().setHasLines(true);
+//            if (hasAxesNames) {
+//                axisX.setName("日期");
+//                axisY.setName("评分");
+//            }
+            data_week.setAxisXBottom(axisX);
+            data_week.setAxisYLeft(axisY);
+        } else {
+            data_week.setAxisXBottom(null);
+            data_week.setAxisYLeft(null);
         }
 
-        @Override
-        public void onValueDeselected() {
+        data_week.setBaseValue(Float.NEGATIVE_INFINITY);
+        chart_week.setLineChartData(data_week);
 
-            generateLineData(ChartUtils.COLOR_GREEN, 0);
-
-        }
     }
 
     //一下是一个月的
@@ -200,22 +309,6 @@ public class GuijiSecondFragment extends Fragment {
         }
     }
 
-    private void reset() {
-        numberOfLines = 1;
-        hasAxes = true;
-        hasAxesNames = true;
-        hasLines = true;
-        hasPoints = true;
-        shape = ValueShape.CIRCLE;
-        isFilled = false;
-        hasLabels = false;
-        isCubic = false;
-        hasLabelForSelected = false;
-        pointsHaveDifferentColor = false;
-
-        chart.setValueSelectionEnabled(hasLabelForSelected);
-        resetViewport();
-    }
 
     /**
      * 设置视图的点数  起点终点  最大值
@@ -250,7 +343,7 @@ public class GuijiSecondFragment extends Fragment {
             line.setHasLabelsOnlyForSelected(hasLabelForSelected);
             line.setHasLines(hasLines);
             line.setHasPoints(hasPoints);
-            if (pointsHaveDifferentColor){
+            if (pointsHaveDifferentColor) {
 //                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
                 line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
 
@@ -278,20 +371,5 @@ public class GuijiSecondFragment extends Fragment {
         chart.setLineChartData(data);
 
     }
-    /**
-     * To animate values you have to change targets values and then call {@link Chart#startDataAnimation()}
-     * method(don't confuse with View.animate()). If you operate on data that was set before you don't have to call
-     * {@link LineChartView#setLineChartData(LineChartData)} again.
-     */
-    private void prepareDataAnimation() {
-        for (Line line : data.getLines()) {
-            for (PointValue value : line.getValues()) {
-                // Here I modify target only for Y values but it is OK to modify X targets as well.
-                value.setTarget(value.getX(), (float) Math.random() * 100);
-            }
-        }
-    }
-
-
 }
 
