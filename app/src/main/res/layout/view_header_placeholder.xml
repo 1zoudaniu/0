@@ -81,8 +81,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/circleView"
                 android:layout_centerHorizontal="true"
-                android:text="立即刷新"
+                android:text="  立即刷新  "
                 android:textColor="#fff"
+                android:background="#69B93C"
                 android:textSize="20sp" />
 
         </RelativeLayout>

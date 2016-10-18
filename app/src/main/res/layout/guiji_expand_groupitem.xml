@@ -13,11 +13,11 @@
 
         <ImageView
             android:id="@+id/img_indicator"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/arraw"
+            android:src="@drawable/buddy_header_arrow"
             />
 
         <TextView

@@ -6,24 +6,6 @@
     android:orientation="vertical"
     >
 
-    <!--<com.amap.api.maps.MapView-->
-        <!--android:id="@+id/guiji_expan_item_mapview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-
-        <!--&gt;-->
-
-    <!--</com.amap.api.maps.MapView>-->
-
-    <!--<com.twotoasters.jazzylistview.JazzyListView-->
-        <!--android:id="@+id/expandableListView"-->
-        <!--android:layout_width="fill_parent"-->
-        <!--android:layout_height="0dp"-->
-        <!--android:layout_weight="1"-->
-        <!--android:background="#fff"-->
-        <!--/>-->
-
     <ExpandableListView
         android:id ="@+id/expandableListView"
         android:layout_width="fill_parent"
