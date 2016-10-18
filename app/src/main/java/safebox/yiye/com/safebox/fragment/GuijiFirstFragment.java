@@ -50,9 +50,11 @@ import safebox.yiye.com.safebox.beans.GuijiExpandItemBean;
 import safebox.yiye.com.safebox.holder.JuijiExpandGroupHolder;
 import safebox.yiye.com.safebox.holder.JuijiExpandItemHolder;
 import safebox.yiye.com.safebox.utils.AMapUtil;
+import safebox.yiye.com.safebox.utils.ToastUtil;
 
 public class GuijiFirstFragment extends Fragment implements LocationSource, AMapLocationListener,
         AdapterView.OnItemClickListener {
+    private AMap childmMap;
 
     private List<GuijiExpandItemBean> childArray;
     private List<GuijiExpandGroupBean> groupArray;
@@ -65,37 +67,16 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
     private ExpandableListViewaAdapter guijiListViewAdapter;
     private GeocodeSearch geocoderSearch;
     private Marker regeoMarker;
+    private LatLonPoint latLonPoint;
+    private LatLng latLng;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.list_fragment, container, false);
 
         initData();
-
-//        mapView = (MapView) view.findViewById(R.id.guiji_expan_item_mapview);
-//
-//        mapView.onCreate(savedInstanceState);
-
-//        if (aMap == null) {
-//            aMap = mapView.getMap();
-//            UiSettings uiSettings = aMap.getUiSettings();
-//            aMap.setLocationSource(this);// 设置定位监听
-//            aMap.getUiSettings().setMyLocationButtonEnabled(true);// 设置默认定位按钮是否显示
-//            aMap.setMyLocationEnabled(true);// 设置为true表示显示定位层并可触发定位，false表示隐藏定位层并不可触发定位，默认是false
-//
-//            uiSettings.setMyLocationButtonEnabled(true); // 是否显示默认的定位按钮
-//            uiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
-//            uiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
-//            uiSettings.setZoomControlsEnabled(true);
-//
-//            // 设置定位的类型为 跟随模式
-//            aMap.setMyLocationType(AMap.LOCATION_TYPE_MAP_FOLLOW);
-//
-//            regeoMarker = aMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f)
-//                    .icon(BitmapDescriptorFactory
-//                            .defaultMarker(BitmapDescriptorFactory.HUE_RED)));
-//        }
-//        geocoderSearch = new GeocodeSearch(getActivity());
 
         return view;
     }
@@ -116,6 +97,8 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
         GuijiExpandItemBean GuijiExpandItemBean = new GuijiExpandItemBean();
         GuijiExpandItemBean.setMapViewBean(mapView);
         childArray.add(GuijiExpandItemBean);
+
+
     }
 
     @Override
@@ -130,22 +113,19 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-
+                ToastUtil.startShort(getActivity(), "onGroupExpand  childmMap");
             }
         });
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {
-                
+                ToastUtil.startShort(getActivity(), "onGroupCollapse  childmMap");
+
+
             }
         });
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        mapView.onResume();
-//    }
 
     /**
      * 方法必须重写
@@ -155,6 +135,7 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
     public void onPause() {
         super.onPause();
         mapView.onPause();
+
         deactivate();
     }
 
@@ -233,57 +214,14 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
         expandableListView.smoothScrollToPosition(position);
         expandableListView.setSelection(position);
 
-        Float latitude = groupArray.get(position).getLatitude();
+        Float latitude =  groupArray.get(position).getLatitude();
         Float longitude = groupArray.get(position).getLongitude();
-        final LatLonPoint latLonPoint = new LatLonPoint(latitude, longitude);
-        final LatLng latLng = new LatLng(latitude, longitude);
+        latLonPoint = new LatLonPoint(latitude, longitude);
+        latLng = new LatLng(latitude, longitude);
 
-        RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(latitude, longitude), 200,
-                GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
-        geocoderSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
-        geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-            /**
-             * 逆地理编码回调
-             */
-            @Override
-            public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
-                if (rCode == 1000) {
-                    if (result != null && result.getRegeocodeAddress() != null
-                            && result.getRegeocodeAddress().getFormatAddress() != null) {
-                        aMap.clear();
-                        String addressName = result.getRegeocodeAddress().getFormatAddress()
-                                + "附近";
-                        aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                                AMapUtil.convertToLatLng(latLonPoint), 15));
-                        regeoMarker.setPosition(AMapUtil.convertToLatLng(latLonPoint));
-                        regeoMarker.setAnchor(0.5f,0.5f);
-                        MarkerOptions markOptiopns = new MarkerOptions();
-                        markOptiopns.position(latLng).icon(BitmapDescriptorFactory
-                                .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-                                .setFlat(true);
-                        TextView textView = new TextView(getActivity());
-                        textView.setText(groupArray.get(position).getCarid()+
-                                "    "+groupArray.get(position).getCarstatus()+
-                                "     "+groupArray.get(position).getCarkm()+"\n"+addressName);
-                        textView.setGravity(Gravity.LEFT);
-                        textView.setTextColor(Color.BLACK);
-                        textView.setBackgroundResource(R.drawable.custom_info_bubble);
-                        markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
 
-                        Marker marker = aMap.addMarker(markOptiopns);
-                        marker.setAnchor(0.5f,0.5f);
-
-                        jumpPoint(marker,latLng);
-                    }
-                }
-            }
-
-            @Override
-            public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-
-            }
-        });
     }
+
     /**
      * marker点击时跳动一下
      */
@@ -315,11 +253,11 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
     }
 
 
-
-
     //////////
     class ExpandableListViewaAdapter extends BaseExpandableListAdapter {
 
+        public ExpandableListViewaAdapter() {
+        }
 
         /*-----------------Child */
         @Override
@@ -338,22 +276,59 @@ public class GuijiFirstFragment extends Fragment implements LocationSource, AMap
         public View getChildView(int groupPosition, int childPosition,
                                  boolean isLastChild, View convertView, ViewGroup parent) {
 
-//
-//            JuijiExpandItemHolder viewHolder = null;
-//            if (convertView == null) {
-//                viewHolder = new JuijiExpandItemHolder();
-//                convertView = View.inflate(getContext(), R.layout.guiji_expand_childitem, null);
-//                viewHolder.mapView = (MapView) convertView.findViewById(R.id.text);
-//                convertView.setTag(viewHolder);
-//            } else {
-//                viewHolder = (JuijiExpandItemHolder) convertView.getTag();
+            convertView = View.inflate(getContext(), R.layout.guiji_expand_childitem, null);
+
+//            if (childmMap == null) {
+                childmMap = ((SupportMapFragment) getActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.expan_item_mapview)).getMap();
 //            }
-//            viewHolder.mapView.getMap();
 //
-//            if (aMap == null) {
-//                aMap = ((SupportMapFragment) getActivity().getSupportFragmentManager()
-//                        .findFragmentById(R.id.expan_item_mapview)).getMap();
-//            }
+//            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200,
+//                    GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
+//            geocoderSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
+//            geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
+//                /**
+//                 * 逆地理编码回调
+//                 */
+//                @Override
+//                public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
+//                    if (rCode == 1000) {
+//                        if (result != null && result.getRegeocodeAddress() != null
+//                                && result.getRegeocodeAddress().getFormatAddress() != null) {
+//                            childmMap.clear();
+//                            String addressName = result.getRegeocodeAddress().getFormatAddress()
+//                                    + "附近";
+//                            childmMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+//                                    AMapUtil.convertToLatLng(latLonPoint), 15));
+//                            regeoMarker.setPosition(AMapUtil.convertToLatLng(latLonPoint));
+//                            regeoMarker.setAnchor(0.5f, 0.5f);
+//                            MarkerOptions markOptiopns = new MarkerOptions();
+//                            markOptiopns.position(latLng).icon(BitmapDescriptorFactory
+//                                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
+//                                    .setFlat(true);
+//                            TextView textView = new TextView(getActivity());
+//                            textView.setText(groupArray.get(2).getCarid() +
+//                                    "    " + groupArray.get(2).getCarstatus() +
+//                                    "     " + groupArray.get(2).getCarkm() + "\n" + addressName);
+//                            textView.setGravity(Gravity.LEFT);
+//                            textView.setTextColor(Color.BLACK);
+//                            textView.setBackgroundResource(R.drawable.custom_info_bubble);
+//                            markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
+//
+//                            Marker marker = childmMap.addMarker(markOptiopns);
+//                            marker.setAnchor(0.5f, 0.5f);
+//
+//                            jumpPoint(marker, latLng);
+//                        }
+//                    }
+//                }
+//
+//                @Override
+//                public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+//
+//                }
+//            });
+
             return convertView;
         }
 

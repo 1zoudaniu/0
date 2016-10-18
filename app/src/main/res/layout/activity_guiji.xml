@@ -21,20 +21,21 @@
             <ImageView
                 android:id="@+id/back"
                 android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="30dp"
                 android:src="@drawable/icon_back" />
 
             <android.support.design.widget.TabLayout
                 android:id="@+id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
                 app:tabGravity="center"
-                app:tabIndicatorColor="#ADBE107E"
+                app:tabIndicatorColor="#be1010"
                 app:tabMode="fixed" />
+
         </LinearLayout>
+
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager

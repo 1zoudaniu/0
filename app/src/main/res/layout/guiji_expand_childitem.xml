@@ -5,17 +5,25 @@
     android:orientation="vertical">
 
     <!--<com.amap.api.maps.MapView-->
-        <!--android:id="@+id/expan_item_mapview"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="300dp">-->
+    <!--android:id="@+id/expan_item_mapview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="300dp">-->
 
     <!--</com.amap.api.maps.MapView>-->
 
     <fragment
-        android:id="@+id/expan_item_mapview"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        class="com.amap.api.maps.SupportMapFragment"
-        android:name="safebox.yiye.com.safebox.fragment.GuijiFirstFragment"/>
+    android:id="@+id/expan_item_mapview"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    class="com.amap.api.maps.SupportMapFragment"
+    android:name="safebox.yiye.com.safebox.fragment.GuijiFirstFragment"/>
+
+    <!--<TextView-->
+        <!--android:id="@+id/eee"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp"-->
+        <!--android:text="dadfdsa"-->
+        <!--android:background="#903"-->
+        <!--/>-->
 
 </LinearLayout>

@@ -15,6 +15,7 @@ import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
 import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
+import safebox.yiye.com.safebox.fragment.IndexFragment;
 import safebox.yiye.com.safebox.utils.L;
 
 public class GuijiActivity extends AppCompatActivity implements View.OnClickListener {
@@ -74,7 +75,9 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
             case R.id.back:
                 Intent intent = new Intent(GuijiActivity.this, MainActivity.class);
                 startActivity(intent);
-                finish();
+
+//                getSupportFragmentManager().beginTransaction().show(new IndexFragment()).commit();
+//                finish();
                 break;
         }
     }

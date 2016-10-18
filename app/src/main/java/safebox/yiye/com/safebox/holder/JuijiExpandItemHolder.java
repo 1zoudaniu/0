@@ -1,5 +1,7 @@
 package safebox.yiye.com.safebox.holder;
 
+import android.widget.TextView;
+
 import com.amap.api.maps.MapView;
 
 /**
@@ -8,4 +10,5 @@ import com.amap.api.maps.MapView;
 
 public class JuijiExpandItemHolder {
     public MapView mapView;
+//    public TextView textView;
 }
