@@ -24,7 +24,7 @@
             android:id="@+id/index_listview_item_icon"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@drawable/amap_car"
+            android:src="@drawable/head002"
             app:riv_border_color="#faf6f6"
             app:riv_border_width="2dp"
             android:layout_gravity="center_vertical|right"

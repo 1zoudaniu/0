@@ -43,7 +43,6 @@ public class GuijiSecondFragment extends Fragment {
 
     private LineChartView chartTop;
 
-
     private LineChartData lineData;
 
     public GuijiSecondFragment() {
@@ -304,7 +303,7 @@ public class GuijiSecondFragment extends Fragment {
     private void generateValues() {
         for (int i = 0; i < maxNumberOfLines; ++i) {
             for (int j = 0; j < numberOfPoints; ++j) {
-                randomNumbersTab[i][j] = (float) Math.random() * 100f;
+                randomNumbersTab[i][j] = (float) (70.0f+Math.random() * 30f);
             }
         }
     }
@@ -331,7 +330,9 @@ public class GuijiSecondFragment extends Fragment {
 
             List<PointValue> values = new ArrayList<PointValue>();
             for (int j = 0; j < numberOfPoints; j++) {
-                values.add(new PointValue(j, randomNumbersTab[i][j]));
+                if (j % 2 == 0) {
+                    values.add(new PointValue(j, randomNumbersTab[i][j]));
+                }
             }
 
             Line line = new Line(values);
