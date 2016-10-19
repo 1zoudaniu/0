@@ -9,8 +9,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
@@ -46,7 +48,7 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
         List<String> titles = new ArrayList<>();
         titles.add("现在");
         titles.add("历史");
-        for(int i=0;i<titles.size();i++){
+        for (int i = 0; i < titles.size(); i++) {
             mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(i)));
         }
         List<Fragment> fragments = new ArrayList<>();
@@ -55,12 +57,12 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
         fragments.add(guijiFirstFragment);
         fragments.add(guijiSecondFragment);
 
-
 //        for(int i=0;i<titles.size();i++){
 //            fragments.add(new GuijiFirstFragment());
 //        }
+
         GuijiFragmentPageAdapter mGuijiFragmentPageAdapteradapter =
-                 new GuijiFragmentPageAdapter(getSupportFragmentManager(), fragments, titles);
+                new GuijiFragmentPageAdapter(getSupportFragmentManager(), fragments, titles);
         //给ViewPager设置适配器
         mViewPager.setAdapter(mGuijiFragmentPageAdapteradapter);
         //将TabLayout和ViewPager关联起来。
@@ -73,11 +75,12 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.back:
+                finish();
                 Intent intent = new Intent(GuijiActivity.this, MainActivity.class);
                 startActivity(intent);
 
 //                getSupportFragmentManager().beginTransaction().show(new IndexFragment()).commit();
-//                finish();
+
                 break;
         }
     }

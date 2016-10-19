@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -105,6 +106,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             @Override
             public void onGroupExpand(int groupPosition) {
                 ToastUtil.startShort(getActivity(), "onGroupExpand  childmMap");
+                guijiListViewAdapter.notifyDataSetChanged();
 
 //                childmMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f).title("啦啦").snippet("知道啦"));
 
@@ -163,6 +165,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             public void onGroupCollapse(int groupPosition) {
                 ToastUtil.startShort(getActivity(), "onGroupCollapse  childmMap");
 
+                guijiListViewAdapter.notifyDataSetChanged();
 
             }
         });
@@ -213,41 +216,40 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
 
     }
-
-    /**
-     * marker点击时跳动一下
-     */
-    public void jumpPoint(final Marker marker, final LatLng latLng) {
-        final Handler handler = new Handler();
-        final long start = SystemClock.uptimeMillis();
-        Projection proj = childmMap.getProjection();
-        Point startPoint = proj.toScreenLocation(latLng);
-        startPoint.offset(0, -100);
-        final LatLng startLatLng = proj.fromScreenLocation(startPoint);
-        final long duration = 1500;
-        final Interpolator interpolator = new BounceInterpolator();
-        handler.post(new Runnable() {
-            @Override
-            public void run() {
-                long elapsed = SystemClock.uptimeMillis() - start;
-                float t = interpolator.getInterpolation((float) elapsed
-                        / duration);
-                double lng = t * latLng.longitude + (1 - t)
-                        * startLatLng.longitude;
-                double lat = t * latLng.latitude + (1 - t)
-                        * startLatLng.latitude;
-                marker.setPosition(new LatLng(lat, lng));
-                if (t < 1.0) {
-                    handler.postDelayed(this, 16);
-                }
-            }
-        });
-
-    }
-
-
     //////////
     class ExpandableListViewaAdapter extends BaseExpandableListAdapter implements LocationSource, AMapLocationListener {
+
+        /**
+         * marker点击时跳动一下
+         */
+        public void jumpPoint(final Marker marker, final LatLng latLng) {
+            final Handler handler = new Handler();
+            final long start = SystemClock.uptimeMillis();
+            Projection proj = childmMap.getProjection();
+            Point startPoint = proj.toScreenLocation(latLng);
+            startPoint.offset(0, -100);
+            final LatLng startLatLng = proj.fromScreenLocation(startPoint);
+            final long duration = 1500;
+            final Interpolator interpolator = new BounceInterpolator();
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    long elapsed = SystemClock.uptimeMillis() - start;
+                    float t = interpolator.getInterpolation((float) elapsed
+                            / duration);
+                    double lng = t * latLng.longitude + (1 - t)
+                            * startLatLng.longitude;
+                    double lat = t * latLng.latitude + (1 - t)
+                            * startLatLng.latitude;
+                    marker.setPosition(new LatLng(lat, lng));
+                    if (t < 1.0) {
+                        handler.postDelayed(this, 16);
+                    }
+                }
+            });
+
+        }
+
 
         public ExpandableListViewaAdapter() {
         }
@@ -275,11 +277,21 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                 childmMap = ((SupportMapFragment) getActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.expan_item_mapview)).getMap();
 
-                MarkerOptions markerOptions = new MarkerOptions().anchor(0.5f, 0.5f).position(new LatLng(31.2396997086, 121.4995909338)).icon(BitmapDescriptorFactory
+                MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(31.2396997086, 121.4995909338))
+                        .icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
                         .setFlat(true);
-                Marker marker = childmMap.addMarker(markerOptions);
 
+                TextView textView = new TextView(getActivity());
+                textView.setText("上海市陆家嘴");
+                textView.setGravity(Gravity.CENTER);
+                textView.setTextColor(Color.BLACK);
+                textView.setBackgroundResource(R.drawable.custom_info_bubble);
+                markerOptions.icon(BitmapDescriptorFactory.fromView(textView));
+
+
+                Marker marker = childmMap.addMarker(markerOptions);
+//                jumpPoint(marker, new LatLng(31.2396997086, 121.4995909338));
 
                 UiSettings uiSettings = childmMap.getUiSettings();
 
@@ -293,15 +305,14 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                 childmMap.setMyLocationStyle(myLocationStyle);
                 childmMap.setMyLocationRotateAngle(180);
                 childmMap.setLocationSource(this);// 设置定位监听
-                uiSettings.setMyLocationButtonEnabled(true); // 是否显示默认的定位按钮
-                uiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
+                uiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
+                uiSettings.setTiltGesturesEnabled(false);// 设置地图是否可以倾斜
                 uiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
                 uiSettings.setZoomControlsEnabled(true);
                 CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(
                         //15是缩放比例，0是倾斜度，30显示比例
-                        new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 0, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
+                        new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 60, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
                 childmMap.moveCamera(cameraUpdate);//定位的方法
-
 
             }
             return convertView;
