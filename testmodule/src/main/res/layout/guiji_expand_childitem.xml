@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    android:orientation="vertical">
+
+    <!--<com.amap.api.maps.MapView-->
+    <!--android:id="@+id/expan_item_mapview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="300dp">-->
+
+    <!--</com.amap.api.maps.MapView>-->
+
+    <fragment
+    android:id="@+id/expan_item_mapview"
+    android:layout_width="match_parent"
+    android:layout_height="300dp"
+    class="com.amap.api.maps.SupportMapFragment"
+    android:name="safebox.yiye.com.testmodule.Map3DExpandlistview.GuijiFirstFragment"/>
+
+    <!--<TextView-->
+        <!--android:id="@+id/eee"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="300dp"-->
+        <!--android:text="dadfdsa"-->
+        <!--android:background="#903"-->
+        <!--/>-->
+
+</LinearLayout>

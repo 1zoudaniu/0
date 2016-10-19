@@ -1,7 +1,6 @@
-package safebox.yiye.com.safebox.fragment;
+package safebox.yiye.com.testmodule.Map3DExpandlistview;
 
 
-import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,18 +22,14 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
-import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.MapView;
 import com.amap.api.maps.Projection;
 import com.amap.api.maps.SupportMapFragment;
-import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
-import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeSearch;
 
@@ -42,21 +37,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import safebox.yiye.com.safebox.R;
-import safebox.yiye.com.safebox.beans.GuijiExpandGroupBean;
-import safebox.yiye.com.safebox.beans.GuijiExpandItemBean;
-import safebox.yiye.com.safebox.holder.JuijiExpandGroupHolder;
-import safebox.yiye.com.safebox.utils.ToastUtil;
+import safebox.yiye.com.testmodule.R;
 
-public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemClickListener
-     {
+
+public class GuijiFirstFragment extends Fragment implements LocationSource, AMapLocationListener,
+        AdapterView.OnItemClickListener {
     private AMap childmMap;
 
     private List<GuijiExpandItemBean> childArray;
     private List<GuijiExpandGroupBean> groupArray;
     private ExpandableListView expandableListView;
-
-    private LocationSource.OnLocationChangedListener mListener;
+    private MapView mapView;
+    private AMap aMap;
+    private OnLocationChangedListener mListener;
     private AMapLocationClient mlocationClient = new AMapLocationClient(getActivity());
     private AMapLocationClientOption mLocationOption;
     private ExpandableListViewaAdapter guijiListViewAdapter;
@@ -78,6 +71,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
     private void initData() {
         groupArray = new ArrayList<GuijiExpandGroupBean>();
+        childArray = new ArrayList<GuijiExpandItemBean>();
 
         for (int i = 0; i < 20; i++) {
             GuijiExpandGroupBean guijiExpandGroupBean = new GuijiExpandGroupBean();
@@ -88,6 +82,11 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             guijiExpandGroupBean.setLongitude(121.61471f);
             groupArray.add(guijiExpandGroupBean);
         }
+        GuijiExpandItemBean GuijiExpandItemBean = new GuijiExpandItemBean();
+        GuijiExpandItemBean.setMapViewBean(mapView);
+        childArray.add(GuijiExpandItemBean);
+
+
     }
 
     @Override
@@ -104,7 +103,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
         expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
             @Override
             public void onGroupExpand(int groupPosition) {
-                ToastUtil.startShort(getActivity(), "onGroupExpand  childmMap");
 
 //                childmMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f).title("啦啦").snippet("知道啦"));
 
@@ -161,7 +159,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
             @Override
             public void onGroupCollapse(int groupPosition) {
-                ToastUtil.startShort(getActivity(), "onGroupCollapse  childmMap");
 
 
             }
@@ -176,6 +173,9 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onPause() {
         super.onPause();
+//        mapView.onPause();
+
+        deactivate();
     }
 
     /**
@@ -202,6 +202,53 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     @Override
+    public void onLocationChanged(AMapLocation amapLocation) {
+        if (mListener != null && amapLocation != null) {
+            if (amapLocation != null
+                    && amapLocation.getErrorCode() == 0) {
+
+                mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
+
+            } else {
+                String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
+                Log.e("AmapErr", errText);
+            }
+        }
+    }
+
+    //激活定位
+    @Override
+    public void activate(OnLocationChangedListener listener) {
+        mListener = listener;
+        if (mlocationClient == null) {
+            mlocationClient = new AMapLocationClient(getActivity());
+            mLocationOption = new AMapLocationClientOption();
+            //设置定位监听
+            mlocationClient.setLocationListener(this);
+            //设置为高精度定位模式
+            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+            //设置定位参数
+            mlocationClient.setLocationOption(mLocationOption);
+            // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
+            // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
+            // 在定位结束后，在合适的生命周期调用onDestroy()方法
+            // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
+            mlocationClient.startLocation();
+        }
+    }
+
+    //停止定位
+    @Override
+    public void deactivate() {
+        mListener = null;
+        if (mlocationClient != null) {
+            mlocationClient.stopLocation();
+            mlocationClient.onDestroy();
+        }
+        mlocationClient = null;
+    }
+
+    @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
         expandableListView.smoothScrollToPosition(position);
         expandableListView.setSelection(position);
@@ -220,7 +267,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     public void jumpPoint(final Marker marker, final LatLng latLng) {
         final Handler handler = new Handler();
         final long start = SystemClock.uptimeMillis();
-        Projection proj = childmMap.getProjection();
+        Projection proj = aMap.getProjection();
         Point startPoint = proj.toScreenLocation(latLng);
         startPoint.offset(0, -100);
         final LatLng startLatLng = proj.fromScreenLocation(startPoint);
@@ -247,7 +294,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
 
     //////////
-    class ExpandableListViewaAdapter extends BaseExpandableListAdapter implements LocationSource, AMapLocationListener {
+    class ExpandableListViewaAdapter extends BaseExpandableListAdapter {
 
         public ExpandableListViewaAdapter() {
         }
@@ -274,58 +321,38 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             if (childmMap == null) {
                 childmMap = ((SupportMapFragment) getActivity().getSupportFragmentManager()
                         .findFragmentById(R.id.expan_item_mapview)).getMap();
-
-                MarkerOptions markerOptions = new MarkerOptions().anchor(0.5f, 0.5f).position(new LatLng(31.2396997086, 121.4995909338)).icon(BitmapDescriptorFactory
+//                childmMap.addMarker(new MarkerOptions().position(new LatLng(31.2396997086, 121.4995909338)));
+                childmMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f).position(new LatLng(31.2396997086, 121.4995909338)).icon(BitmapDescriptorFactory
                         .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-                        .setFlat(true);
-                Marker marker = childmMap.addMarker(markerOptions);
-
-
-                UiSettings uiSettings = childmMap.getUiSettings();
-
-                // 自定义系统定位小蓝点
-                MyLocationStyle myLocationStyle = new MyLocationStyle();
-                myLocationStyle.myLocationIcon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.location_marker));// 设置小蓝点的图标
-                myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
-                myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
-                myLocationStyle.strokeWidth(12f);// 设置圆形的边框粗细
-                childmMap.setMyLocationStyle(myLocationStyle);
-                childmMap.setMyLocationRotateAngle(180);
-                childmMap.setLocationSource(this);// 设置定位监听
-                uiSettings.setMyLocationButtonEnabled(true); // 是否显示默认的定位按钮
-                uiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
-                uiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
-                uiSettings.setZoomControlsEnabled(true);
-                CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(
-                        //15是缩放比例，0是倾斜度，30显示比例
-                        new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 0, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
-                childmMap.moveCamera(cameraUpdate);//定位的方法
-
-
+                        .setFlat(true));
             }
+
             return convertView;
         }
 
 
         @Override
         public int getChildrenCount(int groupPosition) {
+            // TODO Auto-generated method stub
             return 1;
         }
 
         /* ----------------------------Group */
         @Override
         public Object getGroup(int groupPosition) {
+            // TODO Auto-generated method stub
             return getGroup(groupPosition);
         }
 
         @Override
         public int getGroupCount() {
+            // TODO Auto-generated method stub
             return groupArray.size();
         }
 
         @Override
         public long getGroupId(int groupPosition) {
+            // TODO Auto-generated method stub
             return groupPosition;
         }
 
@@ -357,57 +384,14 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
         @Override
         public boolean hasStableIds() {
+            // TODO Auto-generated method stub
             return false;
         }
 
         @Override
         public boolean isChildSelectable(int groupPosition, int childPosition) {
+            // TODO Auto-generated method stub
             return true;
-        }
-
-        @Override
-        public void activate(OnLocationChangedListener listener) {
-            mListener = listener;
-            if (mlocationClient == null) {
-                mlocationClient = new AMapLocationClient(getActivity());
-                mLocationOption = new AMapLocationClientOption();
-                //设置定位监听
-                mlocationClient.setLocationListener(this);
-                //设置为高精度定位模式
-                mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-                //设置定位参数
-                mlocationClient.setLocationOption(mLocationOption);
-                // 此方法为每隔固定时间会发起一次定位请求，为了减少电量消耗或网络流量消耗，
-                // 注意设置合适的定位时间的间隔（最小间隔支持为2000ms），并且在合适时间调用stopLocation()方法来取消定位请求
-                // 在定位结束后，在合适的生命周期调用onDestroy()方法
-                // 在单次定位情况下，定位无论成功与否，都无需调用stopLocation()方法移除请求，定位sdk内部会移除
-                mlocationClient.startLocation();
-            }
-        }
-
-        @Override
-        public void deactivate() {
-            mListener = null;
-            if (mlocationClient != null) {
-                mlocationClient.stopLocation();
-                mlocationClient.onDestroy();
-            }
-            mlocationClient = null;
-        }
-
-        @Override
-        public void onLocationChanged(AMapLocation amapLocation) {
-            if (mListener != null && amapLocation != null) {
-                if (amapLocation != null
-                        && amapLocation.getErrorCode() == 0) {
-
-                    mListener.onLocationChanged(amapLocation);// 显示系统小蓝点
-
-                } else {
-                    String errText = "定位失败," + amapLocation.getErrorCode() + ": " + amapLocation.getErrorInfo();
-                    Log.e("AmapErr", errText);
-                }
-            }
         }
     }
 }

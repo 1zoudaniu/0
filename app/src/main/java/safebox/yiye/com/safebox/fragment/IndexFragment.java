@@ -107,11 +107,24 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private void initListViewData() {
         fakes = new ArrayList<CarIndexInfoBean>();
 
-        for (int i = 0; i < 16; i++) {
+        for (int i = 0; i < 20; i++) {
             CarIndexInfoBean carIndexInfoBean = new CarIndexInfoBean();
             carIndexInfoBean.setIv_car_icon(R.drawable.head002);
-            carIndexInfoBean.setTvCarNo("沪C" + i);
-            carIndexInfoBean.setTvCarScore(i + 100 + new Random().nextInt(100) * 20 + "");
+            if (i % 5 == 4) {
+                carIndexInfoBean.setTvCarNo("沪A" + new Random().nextInt(9999) * 20);
+            } else if (i % 5 == 0) {
+                carIndexInfoBean.setTvCarNo("沪B" + new Random().nextInt(9999) * 20);
+            } else if (i % 5 == 3) {
+                carIndexInfoBean.setTvCarNo("沪C" + new Random().nextInt(9999) * 20);
+            } else if (i % 5 == 2) {
+                carIndexInfoBean.setTvCarNo("沪D" + new Random().nextInt(9999) * 20);
+            } else if (i % 5 == 1) {
+                carIndexInfoBean.setTvCarNo("沪E" + new Random().nextInt(9999) * 20);
+            }else{
+                carIndexInfoBean.setTvCarNo("沪F" + new Random().nextInt(9999) * 20);
+            }
+
+            carIndexInfoBean.setTvCarScore(100 + new Random().nextInt(99999) + "");
             fakes.add(carIndexInfoBean);
 
         }

@@ -136,10 +136,10 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
             mUiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
             mUiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
             mUiSettings.setZoomControlsEnabled(true);
-            mUpdata = CameraUpdateFactory.newCameraPosition(
-                    //15是缩放比例，0是倾斜度，30显示比例
-                    new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 0, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
-            aMap.moveCamera(mUpdata);//定位的方法
+//            mUpdata = CameraUpdateFactory.newCameraPosition(
+//                    //15是缩放比例，0是倾斜度，30显示比例
+//                    new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 0, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
+//            aMap.moveCamera(mUpdata);//定位的方法
 
             initMapListener();
         }
@@ -330,14 +330,14 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onMapLoaded() {
-        // 设置所有maker显示在当前可视区域地图中
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (int i = 0; i < 8; i++) {
-            LatLng allLagng = new LatLng(setLatitude[i], setLongitude[i]);
-            builder.include(allLagng);
-        }
-        LatLngBounds build = builder.build();
-        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build, 150));
+//        // 设置所有maker显示在当前可视区域地图中
+//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//        for (int i = 0; i < 8; i++) {
+//            LatLng allLagng = new LatLng(setLatitude[i], setLongitude[i]);
+//            builder.include(allLagng);
+//        }
+//        LatLngBounds build = builder.build();
+//        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build, 150));
     }
 
     @Override
