@@ -330,14 +330,14 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onMapLoaded() {
-//        // 设置所有maker显示在当前可视区域地图中
-//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//        for (int i = 0; i < 8; i++) {
-//            LatLng allLagng = new LatLng(setLatitude[i], setLongitude[i]);
-//            builder.include(allLagng);
-//        }
-//        LatLngBounds build = builder.build();
-//        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build, 150));
+        // 设置所有maker显示在当前可视区域地图中
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        for (int i = 0; i < 8; i++) {
+            LatLng allLagng = new LatLng(setLatitude[i], setLongitude[i]);
+            builder.include(allLagng);
+        }
+        LatLngBounds build = builder.build();
+        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build, 150));
     }
 
     @Override
