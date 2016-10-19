@@ -37,7 +37,10 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,8 +64,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     private AMapLocationClient mlocationClient = new AMapLocationClient(getActivity());
     private AMapLocationClientOption mLocationOption;
     private ExpandableListViewaAdapter guijiListViewAdapter;
-    private GeocodeSearch geocoderSearch;
-    private Marker regeoMarker;
     private LatLonPoint latLonPoint;
     private LatLng latLng;
 
@@ -95,7 +96,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         expandableListView = (ExpandableListView) getView().findViewById(R.id.expandableListView);
-//        expandableListView.setTransitionEffect(new GrowEffect());
 
         guijiListViewAdapter = new ExpandableListViewaAdapter();
         expandableListView.setAdapter(guijiListViewAdapter);
@@ -107,57 +107,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             public void onGroupExpand(int groupPosition) {
                 ToastUtil.startShort(getActivity(), "onGroupExpand  childmMap");
                 guijiListViewAdapter.notifyDataSetChanged();
-
-//                childmMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f).title("啦啦").snippet("知道啦"));
-
-//                childmMap.addMarker(new MarkerOptions().anchor(0.5f, 0.5f).position(new LatLng(31.2396997086, 121.4995909338)).icon(BitmapDescriptorFactory
-//                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-//                        .setFlat(true));
-//                RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200,
-//                        GeocodeSearch.AMAP);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
-//                geocoderSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
-//                geocoderSearch.setOnGeocodeSearchListener(new GeocodeSearch.OnGeocodeSearchListener() {
-//                    /**
-//                     * 逆地理编码回调
-//                     */
-//                    @Override
-//                    public void onRegeocodeSearched(RegeocodeResult result, int rCode) {
-//                        if (rCode == 1000) {
-//                            if (result != null && result.getRegeocodeAddress() != null
-//                                    && result.getRegeocodeAddress().getFormatAddress() != null) {
-//                                childmMap.clear();
-//                                String addressName = result.getRegeocodeAddress().getFormatAddress()
-//                                        + "附近";
-//                                childmMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                                        AMapUtil.convertToLatLng(latLonPoint), 15));
-//                                regeoMarker.setPosition(AMapUtil.convertToLatLng(latLonPoint));
-//                                regeoMarker.setAnchor(0.5f, 0.5f);
-//                                MarkerOptions markOptiopns = new MarkerOptions();
-//                                markOptiopns.position(latLng).icon(BitmapDescriptorFactory
-//                                        .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-//                                        .setFlat(true);
-//                                TextView textView = new TextView(getActivity());
-//                                textView.setText(groupArray.get(2).getCarid() +
-//                                        "    " + groupArray.get(2).getCarstatus() +
-//                                        "     " + groupArray.get(2).getCarkm() + "\n" + addressName);
-//                                textView.setGravity(Gravity.LEFT);
-//                                textView.setTextColor(Color.BLACK);
-//                                textView.setBackgroundResource(R.drawable.custom_info_bubble);
-//                                markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
-//
-//                                Marker marker = childmMap.addMarker(markOptiopns);
-//                                marker.setAnchor(0.5f, 0.5f);
-//
-//                                jumpPoint(marker, latLng);
-//                            }
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-//
-//                    }
-//                });
             }
         });
         expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
@@ -217,7 +166,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
     }
     //////////
-    class ExpandableListViewaAdapter extends BaseExpandableListAdapter implements LocationSource, AMapLocationListener {
+    class ExpandableListViewaAdapter extends BaseExpandableListAdapter implements LocationSource, AMapLocationListener, GeocodeSearch.OnGeocodeSearchListener {
 
         /**
          * marker点击时跳动一下
@@ -289,6 +238,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                 textView.setBackgroundResource(R.drawable.custom_info_bubble);
                 markerOptions.icon(BitmapDescriptorFactory.fromView(textView));
 
+                initGeocodeSearch();
 
                 Marker marker = childmMap.addMarker(markerOptions);
 //                jumpPoint(marker, new LatLng(31.2396997086, 121.4995909338));
@@ -318,7 +268,13 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             return convertView;
         }
 
-
+        private void initGeocodeSearch() {
+            GeocodeSearch geocodeSearch = new GeocodeSearch(getContext());
+            geocodeSearch.setOnGeocodeSearchListener(this);
+            RegeocodeQuery query = new RegeocodeQuery(latLonPoint, 200,
+                    GeocodeSearch.GPS);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
+            geocodeSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
+        }
         @Override
         public int getChildrenCount(int groupPosition) {
             return 1;
@@ -419,6 +375,16 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                     Log.e("AmapErr", errText);
                 }
             }
+        }
+
+        @Override
+        public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+
+        }
+
+        @Override
+        public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+
         }
     }
 }
