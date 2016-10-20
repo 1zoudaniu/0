@@ -88,7 +88,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                              Bundle savedInstanceState) {
 
 
-        proressbar = 5 + new Random().nextInt(96);
+
 
         initListViewData();
 
@@ -111,20 +111,20 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             CarIndexInfoBean carIndexInfoBean = new CarIndexInfoBean();
             carIndexInfoBean.setIv_car_icon(R.drawable.head002);
             if (i % 5 == 4) {
-                carIndexInfoBean.setTvCarNo("沪A" + new Random().nextInt(9999) * 20);
+                carIndexInfoBean.setTvCarNo("沪A" + new Random().nextInt(99999) * 20);
             } else if (i % 5 == 0) {
-                carIndexInfoBean.setTvCarNo("沪B" + new Random().nextInt(9999) * 20);
+                carIndexInfoBean.setTvCarNo("沪B" + new Random().nextInt(99999) * 20);
             } else if (i % 5 == 3) {
-                carIndexInfoBean.setTvCarNo("沪C" + new Random().nextInt(9999) * 20);
+                carIndexInfoBean.setTvCarNo("沪C" + new Random().nextInt(99999) * 20);
             } else if (i % 5 == 2) {
-                carIndexInfoBean.setTvCarNo("沪D" + new Random().nextInt(9999) * 20);
+                carIndexInfoBean.setTvCarNo("沪D" + new Random().nextInt(99999) * 20);
             } else if (i % 5 == 1) {
-                carIndexInfoBean.setTvCarNo("沪E" + new Random().nextInt(9999) * 20);
+                carIndexInfoBean.setTvCarNo("沪E" + new Random().nextInt(99999) * 20);
             }else{
-                carIndexInfoBean.setTvCarNo("沪F" + new Random().nextInt(9999) * 20);
+                carIndexInfoBean.setTvCarNo("沪F" + new Random().nextInt(99999) * 20);
             }
 
-            carIndexInfoBean.setTvCarScore(100 + new Random().nextInt(99999) + "");
+            carIndexInfoBean.setTvCarScore(100 + new Random().nextInt(999999) + "");
             fakes.add(carIndexInfoBean);
 
         }
@@ -172,7 +172,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                         rotateAnimation.cancel();
                     }
 
-                    proressbar = 5 + new Random().nextInt(96);
+                    proressbar = 40 + new Random().nextInt(60);
                     initRota();
 
                 }
@@ -191,7 +191,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
 
-                int n = proressbar - 10;
+                int n = proressbar - 30;
                 if (n <= 1) {
                     n = 1;
                 }
@@ -246,7 +246,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             }
         });
         anim.start();
-
     }
 
     @Override
@@ -257,8 +256,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onPause() {
         super.onPause();
-
-        isFirstRoate = false;
 
     }
 
@@ -332,7 +329,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             intent.putExtra("data_no", fakes.get(position - 1).getTvCarNo());
             intent.putExtra("data_score", fakes.get(position - 1).getTvCarScore());
             startActivity(intent);
-            super.onDestroy();
+
             if (anim != null) {
                 anim.cancel();
 
@@ -405,8 +402,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
 
         float translationY_pinyi = translationY - mHeader.getTranslationY();
-        LogUtils.showLog("tagggggg", "translationX" + translationX);
-        LogUtils.showLog("tagggggg", "translationY_pinyi" + translationY_pinyi);
 
         view1.setTranslationY(translationY_pinyi);
         view1.setTranslationX(translationX);

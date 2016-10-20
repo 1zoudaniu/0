@@ -1,1 +1,1 @@
-include ':app', ':busyindicator', ':testmodule'
+include ':app', ':busyindicator'
