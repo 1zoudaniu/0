@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -24,17 +25,22 @@ import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import safebox.yiye.com.safebox.R;
+import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.fragment.BaseFragment;
 
+import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
+import safebox.yiye.com.safebox.fragment.GuijiFragment;
+import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
 import safebox.yiye.com.safebox.fragment.IndexFragment;
 import safebox.yiye.com.safebox.fragment.PaihangFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, BaseFragment.BackHandledInterface, View.OnClickListener {
+        implements NavigationView.OnNavigationItemSelectedListener, BaseFragment.BackHandledInterface{
 
     private FragmentManager supportFragmentManager;
 
@@ -44,6 +50,8 @@ public class MainActivity extends AppCompatActivity
     private BaseFragment mBackHandedFragment;
     public long getFirsttime = new Date().getTime();
     private TextView textView;
+    private GuijiFragment guijiFirstFragment;
+    private GuijiFragmentPageAdapter guijiFragmentPageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,15 +176,40 @@ public class MainActivity extends AppCompatActivity
     private void initFragment() {
         indexFragment = new IndexFragment();
 
+        guijiFirstFragment = new GuijiFragment();
+//        TabLayout mTabLayout = (TabLayout) findViewById(R.id.tabs);
+//        List<String> titles = new ArrayList<>();
+//        titles.add("现在");
+//        titles.add("历史");
+//        for (int i = 0; i < titles.size(); i++) {
+//            mTabLayout.addTab(mTabLayout.newTab().setText(titles.get(i)));
+//        }
+//        List<Fragment> fragments = new ArrayList<>();
+//        GuijiFirstFragment guijiFirstFragment1 = new GuijiFirstFragment();
+//        GuijiSecondFragment guijiSecondFragment1 = new GuijiSecondFragment();
+//        fragments.add(guijiFirstFragment1);
+//        fragments.add(guijiSecondFragment1);
+//        guijiFragmentPageAdapter = new GuijiFragmentPageAdapter(getSupportFragmentManager(), fragments, titles);
+//        //给ViewPager设置适配器
+//        mViewPager.setAdapter(guijiFragmentPageAdapter);
+//        //将TabLayout和ViewPager关联起来。
+//        mTabLayout.setupWithViewPager(mViewPager);
+//        //给TabLayout设置适配器
+//        mTabLayout.setTabsFromPagerAdapter(mGuijiFragmentPageAdapteradapter);
+
+
+
         paihangFragment = new PaihangFragment();
+
+
     }
 
     //初始化view
     private void initView() {
         radioGroup = (RadioGroup) findViewById(R.id.rg_tab);
-        textView = (TextView) findViewById(R.id.rb_guiji);
+//        textView = (TextView) findViewById(R.id.rb_guiji);
         radioGroup.setOnCheckedChangeListener(listener);
-        textView.setOnClickListener(this);
+//        textView.setOnClickListener(this);
 
     }
 
@@ -190,6 +223,11 @@ public class MainActivity extends AppCompatActivity
                 case R.id.rb_paihang:
                     changeFragment(paihangFragment);//切换到排行页
                     break;
+                case R.id.rb_guiji:
+                    changeFragment(guijiFirstFragment);//切换到排行页
+                    break;
+
+
 
             }
         }
@@ -255,7 +293,7 @@ public class MainActivity extends AppCompatActivity
         String visibleFragment = getVisibleFragment().getClass().getName();
 
         if (visibleFragment.equals(IndexFragment.class.getName())
-
+||visibleFragment.equals(GuijiFragment.class.getName())
                 || visibleFragment.equals(PaihangFragment.class.getName())) {
             radioGroup.setVisibility(View.VISIBLE);
         } else {
@@ -270,7 +308,12 @@ public class MainActivity extends AppCompatActivity
             radioGroup.check(R.id.rb_home);
             radioGroup.setVisibility(View.VISIBLE);
 
-        } else if (visibleFragment.equals(PaihangFragment.class.getName())) {
+        }
+        else if (visibleFragment.equals(GuijiFragment.class.getName())) {
+            radioGroup.check(R.id.rb_guiji);
+            radioGroup.setVisibility(View.VISIBLE);
+        }
+        else if (visibleFragment.equals(PaihangFragment.class.getName())) {
             radioGroup.check(R.id.rb_paihang);
             radioGroup.setVisibility(View.VISIBLE);
         } else {
@@ -313,13 +356,13 @@ public class MainActivity extends AppCompatActivity
         win.setAttributes(winParams);
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.rb_guiji:
-                Intent intent = new Intent(MainActivity.this, GuijiActivity.class);
-                startActivity(intent);
-                break;
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()) {
+//            case R.id.rb_guiji:
+//                Intent intent = new Intent(MainActivity.this, GuijiActivity.class);
+//                startActivity(intent);
+//                break;
+//        }
+//    }
 }

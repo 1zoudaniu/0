@@ -9,10 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+
         <com.twotoasters.jazzylistview.JazzyListView
             android:id="@+id/expandableListView"
             android:layout_width="fill_parent"
-            android:layout_height="match_parent"></com.twotoasters.jazzylistview.JazzyListView>
+            android:layout_height="match_parent">
+        </com.twotoasters.jazzylistview.JazzyListView>
 
         <com.amap.api.maps.MapView
             android:id="@+id/list_fragment_map"

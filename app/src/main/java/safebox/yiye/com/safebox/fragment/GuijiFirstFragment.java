@@ -19,9 +19,6 @@ import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -29,15 +26,12 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
-import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
 import com.amap.api.maps.LocationSource;
 import com.amap.api.maps.MapView;
 import com.amap.api.maps.Projection;
-import com.amap.api.maps.SupportMapFragment;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
-import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
@@ -62,7 +56,8 @@ import safebox.yiye.com.safebox.utils.AMapUtil;
 import safebox.yiye.com.safebox.utils.LogUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 
-public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemClickListener, LocationSource, AMapLocationListener, GeocodeSearch.OnGeocodeSearchListener {
+public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemClickListener,
+        LocationSource, AMapLocationListener, GeocodeSearch.OnGeocodeSearchListener {
     private AMap childmMap;
 
     private List<GuijiExpandItemBean> childArray;
@@ -70,7 +65,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     private JazzyListView expandableListView;
 
     private LocationSource.OnLocationChangedListener mListener;
-    private AMapLocationClient mlocationClient = new AMapLocationClient(getActivity());
+    private AMapLocationClient mlocationClient = new AMapLocationClient(getContext());
     private AMapLocationClientOption mLocationOption;
     private LatLonPoint latLonPoint;
     private LatLng latLng;
@@ -95,8 +90,25 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             guijiExpandGroupBean.setCarid("沪C" + new Random().nextInt(10000));
             guijiExpandGroupBean.setCarstatus("行驶中");
             guijiExpandGroupBean.setCarkm(new Random().nextInt(200) + "km");
-            guijiExpandGroupBean.setLatitude(31.216524f);
-            guijiExpandGroupBean.setLongitude(121.61471f);
+
+             if (i % 5 == 0) {
+                guijiExpandGroupBean.setLatitude(31.216634f);
+                guijiExpandGroupBean.setLongitude(121.61481f);
+            } else if (i % 5 == 1) {
+                guijiExpandGroupBean.setLatitude(31.316744f);
+                guijiExpandGroupBean.setLongitude(121.61491f);
+            } else if (i % 5 == 2) {
+                guijiExpandGroupBean.setLatitude(31.416854f);
+                guijiExpandGroupBean.setLongitude(121.61501f);
+            } else if (i % 5 == 3) {
+                guijiExpandGroupBean.setLatitude(31.516964f);
+                guijiExpandGroupBean.setLongitude(121.61511f);
+            } else if (i % 5 == 4) {
+                guijiExpandGroupBean.setLatitude(31.617074f);
+                guijiExpandGroupBean.setLongitude(121.61521f);
+            }
+
+
             groupArray.add(guijiExpandGroupBean);
         }
     }
@@ -131,43 +143,42 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 //                    new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 30, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
 //            aMap_frame.moveCamera(cameraUpdate);//定位的方法
 
-            LatLonPoint latLonPoint = new LatLonPoint(31.2396997086, 121.4995909338);
-            aMap_frame.animateCamera(CameraUpdateFactory.newLatLngZoom(
-                    AMapUtil.convertToLatLng(latLonPoint), 11));
+//            LatLonPoint latLonPoint = new LatLonPoint(31.2396997086, 121.4995909338);
+//            aMap_frame.animateCamera(CameraUpdateFactory.newLatLngZoom(
+//                    AMapUtil.convertToLatLng(latLonPoint), 11));
+//
+//
+//            MarkerOptions markOptiopns = new MarkerOptions();
+//            markOptiopns.position(latLng)
+//                    .icon(BitmapDescriptorFactory
+//                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
+//                    .setFlat(true);
+//            TextView textView = new TextView(getContext());
+//            textView.setText("dddd");
+//            textView.setGravity(Gravity.CENTER);
+//            textView.setTextColor(Color.BLACK);
+//            textView.setBackgroundResource(R.drawable.custom_info_bubble);
+//            markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
+//
+//            marker = aMap_frame.addMarker(markOptiopns);
 
 
+            UiSettings uiSettings = aMap_frame.getUiSettings();
 
-            MarkerOptions markOptiopns = new MarkerOptions();
-            markOptiopns.position(latLng)
-                    .icon(BitmapDescriptorFactory
-                    .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-                    .setFlat(true);
-            TextView textView = new TextView(getContext());
-            textView.setText("dddd");
-            textView.setGravity(Gravity.CENTER);
-            textView.setTextColor(Color.BLACK);
-            textView.setBackgroundResource(R.drawable.custom_info_bubble);
-            markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
-
-            marker = aMap_frame.addMarker(markOptiopns);
-
-
-                UiSettings uiSettings = aMap_frame.getUiSettings();
-
-                // 自定义系统定位小蓝点
-                MyLocationStyle myLocationStyle = new MyLocationStyle();
-                myLocationStyle.myLocationIcon(BitmapDescriptorFactory
-                        .fromResource(R.drawable.location_marker));// 设置小蓝点的图标
-                myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
-                myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
-                myLocationStyle.strokeWidth(12f);// 设置圆形的边框粗细
-                aMap_frame.setMyLocationStyle(myLocationStyle);
-                aMap_frame.setMyLocationRotateAngle(60);
-                aMap_frame.setLocationSource(this);// 设置定位监听
-                uiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
-                uiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
-                uiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
-                uiSettings.setZoomControlsEnabled(true);
+            // 自定义系统定位小蓝点
+            MyLocationStyle myLocationStyle = new MyLocationStyle();
+            myLocationStyle.myLocationIcon(BitmapDescriptorFactory
+                    .fromResource(R.drawable.location_marker));// 设置小蓝点的图标
+            myLocationStyle.strokeColor(Color.argb(0, 0, 0, 0));// 设置圆形的边框颜色
+            myLocationStyle.radiusFillColor(Color.argb(0, 0, 0, 0));// 设置圆形的填充颜色
+            myLocationStyle.strokeWidth(12f);// 设置圆形的边框粗细
+            aMap_frame.setMyLocationStyle(myLocationStyle);
+            aMap_frame.setMyLocationRotateAngle(60);
+            aMap_frame.setLocationSource(this);// 设置定位监听
+            uiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
+            uiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
+            uiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
+            uiSettings.setZoomControlsEnabled(true);
 
         }
     }
@@ -184,12 +195,15 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
         latLonPoint = new LatLonPoint(latitude, longitude);
         latLng = new LatLng(latitude, longitude);
 
+        ToastUtil.startShort(getActivity(), "唯独" + groupArray.get(position).getLatitude());
+
         mapView_frame.setVisibility(View.VISIBLE);
 
 
         initGeocodeSearch();
 
     }
+
     private void initGeocodeSearch() {
         GeocodeSearch geocodeSearch = new GeocodeSearch(getContext());
         geocodeSearch.setOnGeocodeSearchListener(this);
@@ -197,6 +211,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                 GeocodeSearch.GPS);// 第一个参数表示一个Latlng，第二参数表示范围多少米，第三个参数表示是火系坐标系还是GPS原生坐标系
         geocodeSearch.getFromLocationAsyn(query);// 设置同步逆地理编码请求
     }
+
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -217,17 +232,36 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
         expandableListView.setOnItemClickListener(this);
 
 
-
-//        expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+        expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
 //                ToastUtil.startShort(getActivity(), "正在改变onScrollonScrollStateChanged");
-//                mapView_frame.setVisibility(View.VISIBLE);
-//            }
+
+
+//                switch (scrollState) {
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
+//                        // 手指触屏拉动准备滚动，只触发一次        顺序: 1
+//                        mapView_frame.setVisibility(View.GONE);
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
+//                        // 持续滚动开始，只触发一次                顺序: 2
+//                        mapView_frame.setVisibility(View.GONE);
+//                        break;
+//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
+//                        // 整个滚动事件结束，只触发一次            顺序: 4
+//                        mapView_frame.setVisibility(View.VISIBLE);
+//                        break;
 //
-//            @Override
-//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-//
+//                }
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+
+//                ToastUtil.startShort(getActivity(), "正在改变onScroll");
+
+
 //                int scrollY = expandableListView.getScrollY();
 //                LogUtils.showLog("GGGG","VVV"+scrollY);
 ////                if (scrollY > 5) {
@@ -244,8 +278,8 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 ////                } else {
 ////                    mapView_frame.setVisibility(View.VISIBLE);
 ////                }
-//            }
-//        });
+            }
+        });
 
 
 //        guijiListViewAdapter = new ExpandableListViewaAdapter();
@@ -304,7 +338,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             mlocationClient.onDestroy();
         }
     }
-
 
 
     /**
@@ -401,7 +434,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
                 aMap_frame.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         AMapUtil.convertToLatLng(latLonPoint), 11));
-                marker.setPosition(AMapUtil.convertToLatLng(latLonPoint));
+
 
                 MarkerOptions markOptiopns = new MarkerOptions();
                 markOptiopns.position(latLng).icon(BitmapDescriptorFactory
@@ -414,9 +447,11 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                 textView.setBackgroundResource(R.drawable.custom_info_bubble);
                 markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
 
-                aMap_frame.addMarker(markOptiopns);
+                Marker marker1 = aMap_frame.addMarker(markOptiopns);
 
-                jumpPoint(marker, latLng);
+                marker1.setPosition(AMapUtil.convertToLatLng(latLonPoint));
+
+                jumpPoint(marker1, latLng);
             } else {
 
             }

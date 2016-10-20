@@ -7,6 +7,9 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import java.util.List;
 
+import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
+import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
+
 
 public class GuijiFragmentPageAdapter extends FragmentStatePagerAdapter {
     private List<Fragment> mFragments;
@@ -18,11 +21,28 @@ public class GuijiFragmentPageAdapter extends FragmentStatePagerAdapter {
         mTitles = titles;
     }
 
+
+
+//    @Override
+//    public Fragment getItem(int position) {
+//        return mFragments.get(position);
+//    }
+
     @Override
     public Fragment getItem(int position) {
-        return mFragments.get(position);
+        if(position == 0){
+                if(mFragments.get(position) == null){
+                    return new GuijiFirstFragment();
+                }
+            return mFragments.get(position);
+        }else if(position ==1){
+                if(mFragments.get(position) == null){
+                    return new GuijiSecondFragment();
+                }
+            return mFragments.get(position);
+        }
+        return null;
     }
-
     @Override
     public int getCount() {
         return mFragments.size();
