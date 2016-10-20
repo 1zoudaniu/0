@@ -74,6 +74,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     private MapView mapView_frame;
     private Marker marker;
 
+    private StringBuilder sb;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -155,21 +156,22 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, final int position, long id) {
-//        expandableListView.setSelection(2);
-//        expandableListView.smoothScrollToPosition(2);
-//        expandableListView.setSelection(position);
 
-        view.setSelected(true);
+        GuijiExpandGroupBean guijiExpandGroupBean = groupArray.get(position);
 
-        Float latitude = groupArray.get(position - 1).getLatitude();
-        Float longitude = groupArray.get(position - 1).getLongitude();
+        sb = new StringBuilder(guijiExpandGroupBean.getCarid() + "     " +
+                guijiExpandGroupBean.getCarstatus() + "     " +
+                guijiExpandGroupBean.getCarkm());
+
+
+        Float latitude = guijiExpandGroupBean.getLatitude();
+        Float longitude = guijiExpandGroupBean.getLongitude();
         latLonPoint = new LatLonPoint(latitude, longitude);
         latLng = new LatLng(latitude, longitude);
 
-        ToastUtil.startShort(getActivity(), position + "唯独" + groupArray.get(position - 1).getLatitude());
-
         mapView_frame.setVisibility(View.VISIBLE);
-
+        jazzyListViewAdapter.setSelectedPosition(position);
+        jazzyListViewAdapter.notifyDataSetInvalidated();
 
         initGeocodeSearch();
 
@@ -192,13 +194,11 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
         expandableListView = (JazzyListView) getView().findViewById(R.id.expandableListView);
 //        mapView_frame = (MapView) getView().findViewById(R.id.list_fragment_map);
-
-
-        View header = getLayoutInflater(new Bundle()).inflate(R.layout.fragment_guiji_first_head, expandableListView, false);
-        mapView_frame = (MapView) header.findViewById(R.id.list_fragment_map);
-        expandableListView.addHeaderView(header);
+//        View header = getLayoutInflater(new Bundle()).inflate(R.layout.fragment_guiji_first_head, expandableListView, false);
+//        mapView_frame = (MapView) header.findViewById(R.id.list_fragment_map);
+//        expandableListView.addHeaderView(header);
+        mapView_frame = (MapView) getView().findViewById(R.id.list_fragment_map);
         mapView_frame.onCreate(savedInstanceState);// 此方法必须重写
-        mapView_frame.setVisibility(View.GONE);
 
         initMap();
 
@@ -207,36 +207,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
         expandableListView.setAdapter(jazzyListViewAdapter);
         expandableListView.setOnItemClickListener(this);
 
-
-        expandableListView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                ToastUtil.startShort(getActivity(), "正在改变onScrollonScrollStateChanged");
-
-
-//                switch (scrollState) {
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL:
-//                        // 手指触屏拉动准备滚动，只触发一次        顺序: 1
-//                        mapView_frame.setVisibility(View.GONE);
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_FLING:
-//                        // 持续滚动开始，只触发一次                顺序: 2
-//                        mapView_frame.setVisibility(View.GONE);
-//                        break;
-//                    case AbsListView.OnScrollListener.SCROLL_STATE_IDLE:
-//                        // 整个滚动事件结束，只触发一次            顺序: 4
-//                        mapView_frame.setVisibility(View.VISIBLE);
-//                        break;
-//
-//                }
-
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
     }
 
 
@@ -375,7 +345,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
                         .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
                         .setFlat(true);
                 TextView textView = new TextView(getContext());
-                textView.setText(formatAddress);
+                textView.setText(sb.toString() + "\n" + formatAddress);
                 textView.setGravity(Gravity.CENTER);
                 textView.setTextColor(Color.BLACK);
                 textView.setBackgroundResource(R.drawable.custom_info_bubble);
@@ -400,6 +370,8 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     }
 
     private class JazzyListViewAdapter extends BaseAdapter {
+        private int selectedPosition = -1;// 选中的位置
+
         @Override
         public int getCount() {
             return groupArray.size();
@@ -432,11 +404,29 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             } else {
                 groupHolder = (JuijiExpandGroupHolder) convertView.getTag();
             }
+
+            if (selectedPosition == position) {
+                groupHolder.carid.setTextColor(Color.WHITE);
+                groupHolder.carstatus.setTextColor(Color.WHITE);
+                groupHolder.carkm.setTextColor(Color.WHITE);
+                convertView.setBackgroundColor(Color.LTGRAY);
+            } else {
+                groupHolder.carid.setTextColor(Color.BLACK);
+                groupHolder.carstatus.setTextColor(Color.BLACK);
+                groupHolder.carkm.setTextColor(Color.BLACK);
+                convertView.setBackgroundColor(Color.TRANSPARENT);
+
+            }
+
             groupHolder.carid.setText(guijiExpandGroupBean.getCarid());
             groupHolder.carstatus.setText(guijiExpandGroupBean.getCarstatus());
             groupHolder.carkm.setText(guijiExpandGroupBean.getCarkm());
 
             return convertView;
+        }
+
+        public void setSelectedPosition(int position) {
+            selectedPosition = position;
         }
     }
 //    //////////

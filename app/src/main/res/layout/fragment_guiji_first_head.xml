@@ -7,7 +7,6 @@
         android:id="@+id/list_fragment_map"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:layout_gravity="center"
-        android:background="#903">
+        android:layout_gravity="center">
     </com.amap.api.maps.MapView>
 </LinearLayout>
