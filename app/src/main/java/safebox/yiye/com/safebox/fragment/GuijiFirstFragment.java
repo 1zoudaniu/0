@@ -19,6 +19,7 @@ import android.view.animation.Interpolator;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -87,27 +88,36 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
         for (int i = 0; i < 20; i++) {
             GuijiExpandGroupBean guijiExpandGroupBean = new GuijiExpandGroupBean();
-            guijiExpandGroupBean.setCarid("沪C" + new Random().nextInt(10000));
-            guijiExpandGroupBean.setCarstatus("行驶中");
+
+            int i1 = new Random().nextInt(10000);
             guijiExpandGroupBean.setCarkm(new Random().nextInt(200) + "km");
 
-             if (i % 5 == 0) {
+            if (i % 5 == 0) {
                 guijiExpandGroupBean.setLatitude(31.216634f);
                 guijiExpandGroupBean.setLongitude(121.61481f);
+                guijiExpandGroupBean.setCarstatus("行驶中");
+                guijiExpandGroupBean.setCarid("沪F" + i1);
             } else if (i % 5 == 1) {
                 guijiExpandGroupBean.setLatitude(31.316744f);
                 guijiExpandGroupBean.setLongitude(121.61491f);
+                guijiExpandGroupBean.setCarstatus("待速中");
+                guijiExpandGroupBean.setCarid("京B" + i1);
             } else if (i % 5 == 2) {
                 guijiExpandGroupBean.setLatitude(31.416854f);
                 guijiExpandGroupBean.setLongitude(121.61501f);
+                guijiExpandGroupBean.setCarstatus("熄火");
+                guijiExpandGroupBean.setCarid("渝D" + i1);
             } else if (i % 5 == 3) {
                 guijiExpandGroupBean.setLatitude(31.516964f);
                 guijiExpandGroupBean.setLongitude(121.61511f);
+                guijiExpandGroupBean.setCarstatus("飞奔中");
+                guijiExpandGroupBean.setCarid("苏C" + i1);
             } else if (i % 5 == 4) {
                 guijiExpandGroupBean.setLatitude(31.617074f);
                 guijiExpandGroupBean.setLongitude(121.61521f);
+                guijiExpandGroupBean.setCarstatus("行驶中");
+                guijiExpandGroupBean.setCarid("贵A" + i1);
             }
-
 
             groupArray.add(guijiExpandGroupBean);
         }
@@ -122,46 +132,6 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 
         if (aMap_frame == null) {
             aMap_frame = mapView_frame.getMap();
-//            MarkerOptions markerOptions = new MarkerOptions().position(new LatLng(31.2396997086, 121.4995909338))
-//                    .icon(BitmapDescriptorFactory
-//                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-//                    .setFlat(true);
-//
-//            TextView textView = new TextView(getActivity());
-//            textView.setText("上海市东方明珠");
-//            textView.setGravity(Gravity.CENTER);
-//            textView.setTextColor(Color.BLACK);
-//            textView.setBackgroundResource(R.drawable.custom_info_bubble);
-//            markerOptions.icon(BitmapDescriptorFactory.fromView(textView));
-//
-//            UiSettings uiSettings = aMap_frame.getUiSettings();
-//
-            // 自定义系统定位小蓝点
-//
-//            CameraUpdate cameraUpdate = CameraUpdateFactory.newCameraPosition(
-//                    //15是缩放比例，0是倾斜度，30显示比例
-//                    new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 30, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
-//            aMap_frame.moveCamera(cameraUpdate);//定位的方法
-
-//            LatLonPoint latLonPoint = new LatLonPoint(31.2396997086, 121.4995909338);
-//            aMap_frame.animateCamera(CameraUpdateFactory.newLatLngZoom(
-//                    AMapUtil.convertToLatLng(latLonPoint), 11));
-//
-//
-//            MarkerOptions markOptiopns = new MarkerOptions();
-//            markOptiopns.position(latLng)
-//                    .icon(BitmapDescriptorFactory
-//                            .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
-//                    .setFlat(true);
-//            TextView textView = new TextView(getContext());
-//            textView.setText("dddd");
-//            textView.setGravity(Gravity.CENTER);
-//            textView.setTextColor(Color.BLACK);
-//            textView.setBackgroundResource(R.drawable.custom_info_bubble);
-//            markOptiopns.icon(BitmapDescriptorFactory.fromView(textView));
-//
-//            marker = aMap_frame.addMarker(markOptiopns);
-
 
             UiSettings uiSettings = aMap_frame.getUiSettings();
 
@@ -188,14 +158,15 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
 //        expandableListView.setSelection(2);
 //        expandableListView.smoothScrollToPosition(2);
 //        expandableListView.setSelection(position);
+
         view.setSelected(true);
 
-        Float latitude = groupArray.get(position).getLatitude();
-        Float longitude = groupArray.get(position).getLongitude();
+        Float latitude = groupArray.get(position - 1).getLatitude();
+        Float longitude = groupArray.get(position - 1).getLongitude();
         latLonPoint = new LatLonPoint(latitude, longitude);
         latLng = new LatLng(latitude, longitude);
 
-        ToastUtil.startShort(getActivity(), "唯独" + groupArray.get(position).getLatitude());
+        ToastUtil.startShort(getActivity(), position + "唯独" + groupArray.get(position - 1).getLatitude());
 
         mapView_frame.setVisibility(View.VISIBLE);
 
@@ -220,7 +191,12 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
         initData();
 
         expandableListView = (JazzyListView) getView().findViewById(R.id.expandableListView);
-        mapView_frame = (MapView) getView().findViewById(R.id.list_fragment_map);
+//        mapView_frame = (MapView) getView().findViewById(R.id.list_fragment_map);
+
+
+        View header = getLayoutInflater(new Bundle()).inflate(R.layout.fragment_guiji_first_head, expandableListView, false);
+        mapView_frame = (MapView) header.findViewById(R.id.list_fragment_map);
+        expandableListView.addHeaderView(header);
         mapView_frame.onCreate(savedInstanceState);// 此方法必须重写
         mapView_frame.setVisibility(View.GONE);
 
@@ -259,50 +235,8 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
             @Override
             public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
 
-//                ToastUtil.startShort(getActivity(), "正在改变onScroll");
-
-
-//                int scrollY = expandableListView.getScrollY();
-//                LogUtils.showLog("GGGG","VVV"+scrollY);
-////                if (scrollY > 5) {
-//                    mapView_frame.setVisibility(View.GONE);
-////                } else {
-////                    mapView_frame.setVisibility(View.VISIBLE);
-////                }
-//
-//
-////                if (scaleY < 10) {
-////                    ToastUtil.startShort(getActivity(), "正在改变onScroll");
-////
-////                    mapView_frame.setVisibility(View.GONE);
-////                } else {
-////                    mapView_frame.setVisibility(View.VISIBLE);
-////                }
             }
         });
-
-
-//        guijiListViewAdapter = new ExpandableListViewaAdapter();
-//        expandableListView.setAdapter(guijiListViewAdapter);
-//
-//        expandableListView.setOnItemClickListener(this);
-//
-//        expandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//            @Override
-//            public void onGroupExpand(int groupPosition) {
-//                ToastUtil.startShort(getActivity(), "onGroupExpand  childmMap");
-//                guijiListViewAdapter.notifyDataSetChanged();
-//            }
-//        });
-//        expandableListView.setOnGroupCollapseListener(new ExpandableListView.OnGroupCollapseListener() {
-//            @Override
-//            public void onGroupCollapse(int groupPosition) {
-//                ToastUtil.startShort(getActivity(), "onGroupCollapse  childmMap");
-//
-//                guijiListViewAdapter.notifyDataSetChanged();
-//
-//            }
-//        });
     }
 
 
