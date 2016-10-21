@@ -6,6 +6,43 @@
     android:orientation="vertical"
     android:translationY="0dp">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorPrimary"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/route_drive_select" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:text="阿牛哥车队"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="20dp"
+            />
+
+        <TextView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="20dp"
+            android:text="20辆车"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:textStyle="bold"
+
+            />
+    </LinearLayout>
 
     <com.twotoasters.jazzylistview.JazzyListView
         android:id="@+id/listview"
@@ -13,6 +50,7 @@
         android:layout_height="wrap_content"
         android:elevation="0dp"
         android:translationY="0dp">
+
     </com.twotoasters.jazzylistview.JazzyListView>
 
 

@@ -1,6 +1,10 @@
 package safebox.yiye.com.safebox.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,79 +27,80 @@ import java.util.List;
 import java.util.Map;
 
 import safebox.yiye.com.safebox.R;
+import safebox.yiye.com.safebox.activity.MainActivity;
+import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.adapter.PaiHangMainAdapter;
 import safebox.yiye.com.safebox.adapter.PaiHangMoreAdapter;
+import safebox.yiye.com.safebox.adapter.PaihangFragmentPageAdapter;
 import safebox.yiye.com.safebox.beans.PaihangCar;
 import safebox.yiye.com.safebox.constant.Model;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 
-public class PaihangFragment extends  BaseFragment{
+public class PaihangFragment extends Fragment {
 
-    private ListView mainlist;
-    private ListView morelist;
-    private List<Map<String, Object>> mainList;
-    PaiHangMainAdapter mainAdapter;
-    PaiHangMoreAdapter moreAdapter;
+    private MainActivity mainActivity;
+    private ViewPager viewPager;
 
+    private TabLayout tabLayout;
+    private View view;
+    private PaihangFirstFragment paihangFirstFragment;
+    private PaihangSecondFragment paihangSecondFragment;
+    private PaihangFragmentPageAdapter paihangFragmentPageAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View mView = inflater.inflate(R.layout.activity_paihang, null);
-
-        initModle();
-
-        mainlist = (ListView) mView.findViewById(R.id.classify_mainlist);
-        morelist = (ListView) mView.findViewById(R.id.classify_morelist);
-        mainAdapter = new PaiHangMainAdapter(getActivity(), mainList);
-        mainAdapter.setSelectItem(0);
-        mainlist.setAdapter(mainAdapter);
-
-        mainlist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                initAdapter(Model.MORELISTTXT[position]);
-                mainAdapter.setSelectItem(position);
-                mainAdapter.notifyDataSetChanged();
-            }
-        });
-        mainlist.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        // 一定要设置这个属性，否则ListView不会刷新
-        initAdapter(Model.MORELISTTXT[0]);
-
-        morelist.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                moreAdapter.setSelectItem(position);
-                moreAdapter.notifyDataSetChanged();
-            }
-        });
-        return mView;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
     }
 
-    private void initAdapter(String[] array) {
-        moreAdapter = new PaiHangMoreAdapter(getContext(), array);
-        morelist.setAdapter(moreAdapter);
-        moreAdapter.notifyDataSetChanged();
-    }
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-    private void initModle() {
-
-        mainList = new ArrayList<Map<String, Object>>();
-        for (int i = 0; i < Model.LISTVIEWTXT.length; i++) {
-            Map<String, Object> map = new HashMap<String, Object>();
-            map.put("txt", Model.LISTVIEWTXT[i]);
-            mainList.add(map);
+        if (view != null) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) {
+                parent.removeView(view);
+            }
+            return view;
         }
+
+        view = inflater.inflate(R.layout.fragment_paihang, container, false);
+
+        paihangFirstFragment = new PaihangFirstFragment();
+        paihangSecondFragment = new PaihangSecondFragment();
+
+        mainActivity = (MainActivity) getActivity();
+        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
+        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+
+
+        initViewPager();
+        return view;
     }
 
+    private void initViewPager() {
+
+        List<String> titles = new ArrayList<>();
+        titles.add("当月");
+        titles.add("上月");
+        for (int i = 0; i < titles.size(); i++) {
+            tabLayout.addTab(tabLayout.newTab().setText(titles.get(i)));
+        }
+        List<Fragment> fragments = new ArrayList<>();
+        fragments.add(paihangFirstFragment);
+        fragments.add(paihangSecondFragment);
+
+        paihangFragmentPageAdapter = new PaihangFragmentPageAdapter(mainActivity.getSupportFragmentManager(), fragments, titles);
+        viewPager.setAdapter(paihangFragmentPageAdapter);
+        viewPager.setCurrentItem(0);
+        //将TabLayout和ViewPager关联起来。
+        tabLayout.setupWithViewPager(viewPager);
+        //给TabLayout设置适配器
+        tabLayout.setTabsFromPagerAdapter(paihangFragmentPageAdapter);
+    }
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onPause() {
+        super.onPause();
     }
 
     @Override
@@ -104,8 +109,12 @@ public class PaihangFragment extends  BaseFragment{
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onDestroy() {
+        super.onDestroy();
+    }
 
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
     }
 }
