@@ -1,5 +1,6 @@
 package safebox.yiye.com.safebox.activity;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.animation.BounceInterpolator;
 import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -64,14 +66,14 @@ public class IndexChoseActivity extends AppCompatActivity implements
         AMapLocationListener, LocationSource,
         AMap.OnMapLoadedListener, AMap.OnCameraChangeListener, AMap.OnInfoWindowClickListener,
         AMap.OnMarkerClickListener, AMap.InfoWindowAdapter,
-        AMap.OnPOIClickListener, GeocodeSearch.OnGeocodeSearchListener {
+        AMap.OnPOIClickListener, GeocodeSearch.OnGeocodeSearchListener, View.OnClickListener {
 
     private AppBarLayout mAppBarLayout;
     private SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM yyyy", /*Locale.getDefault()*/Locale.CHINESE);
     private CompactCalendarView mCompactCalendarView;
     private boolean isExpanded = false;
     private ImageView arrow;
-    private RelativeLayout datePickerButton;
+    private LinearLayout datePickerButton;
     private Toolbar toolbar;
 
     //////
@@ -91,11 +93,16 @@ public class IndexChoseActivity extends AppCompatActivity implements
     private Float[] setLongitude;
     private List<Marker> markerlst;
     private List<Marker> markerlst1;
+    private ImageView imageviewBace;
+    private String data_no_;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index_chose);
+
+        Intent intent = getIntent();
+        data_no_ = intent.getStringExtra("data_no_");
 
         initView();
 
@@ -186,7 +193,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
             @Override
             public void onDayClick(Date dateClicked) {
                 setSubtitle(dateFormat.format(dateClicked));
-                ToastUtil.startShort(IndexChoseActivity.this, "onDayClick");
+
                 ToastUtil.startShort(IndexChoseActivity.this, dateFormat.format(dateClicked));
 
                 ViewCompat.animate(arrow).rotation(0).start();
@@ -200,22 +207,9 @@ public class IndexChoseActivity extends AppCompatActivity implements
                 setSubtitle(dateFormat.format(firstDayOfNewMonth));
             }
         });
-        datePickerButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (isExpanded) {
-                    ViewCompat.animate(arrow).rotation(0).start();
-                    mAppBarLayout.setExpanded(false, true);
-                    isExpanded = false;
-                    ToastUtil.startShort(IndexChoseActivity.this, "dianjieledatePickerButton isExpanded");
-                } else {
-                    ViewCompat.animate(arrow).rotation(180).start();
-                    mAppBarLayout.setExpanded(true, true);
-                    isExpanded = true;
-                    ToastUtil.startShort(IndexChoseActivity.this, "dianjieledatePickerButton");
-                }
-            }
-        });
+        datePickerButton.setOnClickListener(this);
+
+        imageviewBace.setOnClickListener(this);
     }
 
     private void initData() {
@@ -240,7 +234,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
 
     private void initPath() {
         setSupportActionBar(toolbar);
-        setTitle("沪A6903");
+        setTitle(data_no_);
         // Force English
         mCompactCalendarView.setLocale(TimeZone.getDefault(), Locale.ENGLISH);
 
@@ -249,9 +243,11 @@ public class IndexChoseActivity extends AppCompatActivity implements
 
     private void initView() {
         arrow = (ImageView) findViewById(R.id.date_picker_arrow);
-        datePickerButton = (RelativeLayout) findViewById(R.id.date_picker_button);
+        datePickerButton = (LinearLayout) findViewById(R.id.date_picker_button);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("");
         mAppBarLayout = (AppBarLayout) findViewById(R.id.app_bar_layout);
+        imageviewBace = (ImageView) findViewById(R.id.chose_back);
         // Set up the CompactCalendarView
         mCompactCalendarView = (CompactCalendarView) findViewById(R.id.compactcalendar_view);
 
@@ -541,5 +537,27 @@ public class IndexChoseActivity extends AppCompatActivity implements
      */
     @Override
     public void onGeocodeSearched(GeocodeResult result, int rCode) {
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case  R.id.chose_back:
+                finish();
+                break;
+            case  R.id.date_picker_button:
+                if (isExpanded) {
+                    ViewCompat.animate(arrow).rotation(0).start();
+                    mAppBarLayout.setExpanded(false, true);
+                    isExpanded = false;
+
+                } else {
+                    ViewCompat.animate(arrow).rotation(180).start();
+                    mAppBarLayout.setExpanded(true, true);
+                    isExpanded = true;
+
+                }
+                break;
+        }
     }
 }

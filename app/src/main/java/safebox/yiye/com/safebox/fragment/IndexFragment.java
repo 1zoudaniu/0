@@ -78,7 +78,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private TextView header_refresh_car;
     private TextView header_refresh_score;
 
-    public static int proressbar = 50 + new Random().nextInt(96);
+    public static int proressbar = 50 + new Random().nextInt(50);
     private View mPlaceHolderView;
     private ObjectAnimator anim;
 

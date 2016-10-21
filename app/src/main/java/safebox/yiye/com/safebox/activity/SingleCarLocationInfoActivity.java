@@ -90,6 +90,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
     private Float[] setLongitude;
     private List<Marker> markerlst;
     private List<Marker> markerlst1;
+    private String data_no;
 
 
     @Override
@@ -212,7 +213,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         jazzyListView.setOnItemClickListener(this);
 
         Intent intent = getIntent();
-        String data_no = intent.getStringExtra("data_no");
+        data_no = intent.getStringExtra("data_no");
         String data_score = intent.getStringExtra("data_score");
         single_car_losction_carinfo.setText(data_no);
         single_car_losction_carinfo_dis.setText("总里程:" + data_score + "km");
@@ -360,7 +361,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
     @Override
     public View getInfoContents(Marker marker) {
-        ToastUtil.startShort(this, "getInfoContents:" + marker.getId());
+
         return null;
     }
     private void initGeocodeSearch() {
@@ -378,11 +379,9 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
                 finish();
                 break;
             case R.id.single_car_losction_carinfo_dot:
-                ToastUtil.startShort(this, "轨迹页面");
-
                 Intent intent = new Intent(SingleCarLocationInfoActivity.this, IndexChoseActivity.class);
+                intent.putExtra("data_no_", data_no);
                 startActivity(intent);
-
                 break;
         }
     }

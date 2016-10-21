@@ -18,8 +18,7 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:context=".activity.IndexChoseActivity"
-        >
+        tools:context=".activity.IndexChoseActivity">
 
         <android.support.design.widget.AppBarLayout
             android:id="@+id/app_bar_layout"
@@ -69,38 +68,44 @@
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/AppTheme.PopupOverlay">
 
-                    <RelativeLayout
+                    <ImageView
+                        android:id="@+id/chose_back"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/icon_back" />
+
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                      android:layout_marginLeft="25dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="333"
+                        android:textSize="15sp"
+                        android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
+                        android:textColor="@android:color/white" />
+
+                    <LinearLayout
                         android:id="@+id/date_picker_button"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="?attr/actionBarSize"
+                        android:layout_marginLeft="50dp"
                         android:background="?android:selectableItemBackground"
                         android:clickable="true"
-
-                        android:orientation="vertical">
-
-                        <View
-                            android:id="@+id/centerInParent"
-                            android:layout_width="match_parent"
-                            android:layout_height="0dp"
-                            android:layout_centerVertical="true" />
-
-                        <TextView
-                            android:id="@+id/title"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_above="@id/centerInParent"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
-                            android:textColor="@android:color/white" />
+                        android:gravity="center"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:id="@+id/date_picker_text_view"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/centerInParent"
+                            android:layout_centerInParent="true"
                             android:ellipsize="end"
                             android:maxLines="1"
+                            android:text="44"
+                            android:textSize="15sp"
                             android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Subtitle"
                             android:textColor="@android:color/white" />
 
@@ -108,12 +113,12 @@
                             android:id="@+id/date_picker_arrow"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignBottom="@id/date_picker_text_view"
-                            android:layout_toRightOf="@id/date_picker_text_view"
+                            android:layout_alignBottom="@+id/date_picker_text_view"
+                            android:layout_toRightOf="@+id/date_picker_text_view"
                             app:srcCompat="@drawable/ic_arrow_drop_down"
                             tools:ignore="ContentDescription,RtlHardcoded" />
 
-                    </RelativeLayout>
+                    </LinearLayout>
 
                 </android.support.v7.widget.Toolbar>
 
