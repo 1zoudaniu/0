@@ -195,15 +195,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                 int currentBarScore = new Random().nextInt(n);
                 dotCircularRingView.setProgress(0 + "%");
                 header_refresh_score.setText(currentBarScore + "");
-                if (currentBarScore >= 90) {
-                    header_refresh_level.setText("优秀");
-                } else if (currentBarScore >= 80 && currentBarScore < 90) {
-                    header_refresh_level.setText("良好");
-                } else if (currentBarScore >= 60 && currentBarScore < 80) {
-                    header_refresh_level.setText("中等");
-                } else {
-                    header_refresh_level.setText("较差");
-                }
+                header_refresh_level.setText("火速计算中...");
             }
         });
 
@@ -214,7 +206,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
                 dotCircularRingView.setProgress("0%");
             }
-
             @Override
             public void onAnimationEnd(Animator animation) {
                 mHeaderRefresh.setClickable(true);
@@ -230,7 +221,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                 } else {
                     header_refresh_level.setText("较差");
                 }
-
             }
 
             @Override
