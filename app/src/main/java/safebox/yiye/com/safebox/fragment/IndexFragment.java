@@ -87,9 +87,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-
-
-
         initListViewData();
 
         initViewData(inflater);

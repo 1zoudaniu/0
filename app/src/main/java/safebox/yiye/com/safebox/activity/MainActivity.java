@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity
         applyKitKatTranslucency();
 
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.main_toolbar_index);
 
         setSupportActionBar(toolbar);
 

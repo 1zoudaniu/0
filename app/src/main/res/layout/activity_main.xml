@@ -15,13 +15,43 @@
         android:translationY="0dp">
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/main_toolbar_index"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/colorPrimary"
             android:elevation="0dp"
             android:translationY="0dp"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            app:popupTheme="@style/AppTheme.PopupOverlay" >
+
+            <!--<TextView-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:textColor="#fff"-->
+                <!--android:text="汽车安全车队"-->
+                <!--/>-->
+        </android.support.v7.widget.Toolbar>
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar_second"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="0dp"
+            android:translationY="0dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:visibility="gone"
+            />
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/main_toolbar_third"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            android:elevation="0dp"
+            android:translationY="0dp"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            android:visibility="gone"
+            />
 
     </android.support.design.widget.AppBarLayout>
 

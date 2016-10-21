@@ -217,7 +217,7 @@ public class GuijiFirstFragment extends Fragment implements AdapterView.OnItemCl
     @Override
     public void onPause() {
         super.onPause();
-        mapView_frame.onPause();
+        super.onDestroy();
     }
 
     /**

@@ -387,6 +387,10 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
                 break;
             case R.id.single_car_losction_carinfo_dot:
                 ToastUtil.startShort(this, "轨迹页面");
+
+                Intent intent = new Intent(SingleCarLocationInfoActivity.this, IndexChoseActivity.class);
+                startActivity(intent);
+
                 break;
         }
     }
