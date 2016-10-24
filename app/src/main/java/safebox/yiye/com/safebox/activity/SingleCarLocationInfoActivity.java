@@ -128,7 +128,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
             mUiSettings.setMyLocationButtonEnabled(true); // 是否显示默认的定位按钮
             mUiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
             mUiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
-            mUiSettings.setZoomControlsEnabled(true);
+            mUiSettings.setZoomControlsEnabled(false);
 //            mUpdata = CameraUpdateFactory.newCameraPosition(
 //                    //15是缩放比例，0是倾斜度，30显示比例
 //                    new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 0, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。

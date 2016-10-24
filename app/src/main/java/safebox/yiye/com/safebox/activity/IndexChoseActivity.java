@@ -146,7 +146,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
             mUiSettings.setMyLocationButtonEnabled(true); // 是否显示默认的定位按钮
             mUiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
             mUiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
-            mUiSettings.setZoomControlsEnabled(true);
+            mUiSettings.setZoomControlsEnabled(false);
             initMapListener();
         }
 

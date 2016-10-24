@@ -9,6 +9,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,13 +21,22 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.twotoasters.jazzylistview.JazzyListView;
 import com.twotoasters.jazzylistview.effects.ReverseFlyEffect;
 
 import java.util.ArrayList;
 import java.util.Random;
 
+import safebox.yiye.com.safebox.Globle.VolleyErrorHelper;
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.activity.SingleCarLocationInfoActivity;
 import safebox.yiye.com.safebox.adapter.IndexCarScoreAdapter;
@@ -81,6 +91,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     public static int proressbar = 50 + new Random().nextInt(50);
     private View mPlaceHolderView;
     private ObjectAnimator anim;
+    private RequestQueue requestQueue;
 
 
     @Override
@@ -104,7 +115,8 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private void initListViewData() {
         fakes = new ArrayList<CarIndexInfoBean>();
 
-        for (int i = 0; i < 20; i++) {
+
+            for (int i = 0; i < 20; i++) {
             CarIndexInfoBean carIndexInfoBean = new CarIndexInfoBean();
             carIndexInfoBean.setIv_car_icon(R.drawable.head002);
             if (i % 5 == 4) {
