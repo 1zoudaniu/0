@@ -2,25 +2,30 @@
 
     <!--&lt;!&ndash; Base application theme. &ndash;&gt;-->
     <!--<style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
-        <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
-        <!--<item name="colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="colorAccent">@color/colorAccent</item>-->
+    <!--&lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+    <!--<item name="colorPrimary">@color/colorPrimary</item>-->
+    <!--<item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+    <!--<item name="colorAccent">@color/colorAccent</item>-->
 
-        <!--&lt;!&ndash; 设置activity切换动画 &ndash;&gt;-->
-        <!--<item name="android:windowAnimationStyle">@style/activityAnimation</item>-->
+    <!--&lt;!&ndash; 设置activity切换动画 &ndash;&gt;-->
+    <!--<item name="android:windowAnimationStyle">@style/activityAnimation</item>-->
     <!--</style>-->
 
     <style name="AppTheme" parent="AppTheme.Base">
+        <item name="android:windowBackground">@color/white</item>
     </style>
+
     <style name="AppTheme.Base" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
-
+        <item name="android:windowBackground">@color/white</item>
         <item name="android:clipToPadding">false</item>
         <!-- 设置activity切换动画 -->
         <item name="android:windowAnimationStyle">@style/activityAnimation</item>
+
+        <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowContentOverlay">@null</item>
     </style>
 
 
@@ -28,17 +33,20 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="android:clipToPadding">false</item>
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <item name="android:clipToPadding">false</item>
-
+        <item name="android:windowBackground">@color/white</item>
     </style>
 
-    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light">
+        <item name="android:windowBackground">@color/white</item>
+    </style>
 
-    <style name = "tab">
+    <style name="tab">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_weight">1</item>
@@ -61,13 +69,6 @@
     </style>
 
 
-
-
-
-
-
-
-
     <style name="Toolbar" parent="Theme.AppCompat">
         <!-- android:actionMenuTextColor is the color of the text of action (menu) items in the Toolbar, at least in the
         Theme.AppCompat theme. For some reason, they already get the textColorPrimary when running on API 21, but not on older versions of
@@ -85,6 +86,7 @@
         <item name="titleTextAppearance">@style/ToolbarTitleTextAppearance</item>
         <item name="subtitleTextAppearance">@style/ToolbarSubtitleTextAppearance</item>
     </style>
+
     <style name="ToolbarTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textColor">@android:color/white</item>
     </style>
