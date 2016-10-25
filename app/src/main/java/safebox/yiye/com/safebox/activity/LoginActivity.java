@@ -31,6 +31,7 @@ import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -173,10 +174,39 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         button_test = (Button) findViewById(R.id.btn_submit_test);
     }
 
+    private int editStart;//光标开始位置
+    private int editEnd;//光标结束位置
+    private final int charMaxNum = 11;
+
     private void setListener() {
         mTvGetPhoneCode.setOnClickListener(this);
         mBtnSubmitUser.setOnClickListener(this);
         button_test.setOnClickListener(this);
+        mEtPhone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                /** 得到光标开始和结束位置 ,超过最大数后记录刚超出的数字索引进行控制 */
+                if (mEtPhone.getText().toString().trim().length() >= 11) {
+                    if (!validatePhone()) {
+                        ToastUtil.startShort(LoginActivity.this, "手机号不对！");
+                    } else {
+                        if (mEtPhone.getText().toString().trim().length() == charMaxNum) {
+                            mEtPhoneCode.requestFocus();
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @Override
