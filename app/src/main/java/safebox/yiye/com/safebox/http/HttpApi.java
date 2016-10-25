@@ -3,7 +3,6 @@ package safebox.yiye.com.safebox.http;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Path;
 
 /**
  * Created by CC on 2016/7/2.

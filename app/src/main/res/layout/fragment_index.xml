@@ -6,43 +6,59 @@
     android:orientation="vertical"
     android:translationY="0dp">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:background="@color/colorPrimary"
+        android:layout_gravity="center"
         android:gravity="center"
+        android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
-        <!--<ImageView-->
-            <!--android:layout_marginLeft="20dp"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:src="@drawable/route_drive_select" />-->
-
-        <TextView
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:text="阿牛哥车队"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:textStyle="bold"
             android:layout_marginLeft="20dp"
-            />
+            android:layout_centerVertical="true"
 
-        <TextView
+            android:src="@drawable/menu" />
 
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="50dp"
+            android:background="@color/colorPrimary"
+            android:layout_centerInParent="true"
+            android:orientation="horizontal">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="阿牛哥车队"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"
+                android:text="20辆车"
+                android:textColor="#fff"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                />
+        </LinearLayout>
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="20dp"
-            android:text="20辆车"
-            android:textColor="#fff"
-            android:textSize="20sp"
-            android:textStyle="bold"
-
-            />
-    </LinearLayout>
+            android:layout_alignParentRight="true"
+            android:paddingRight="10dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/message" />
+    </RelativeLayout>
 
     <com.twotoasters.jazzylistview.JazzyListView
         android:id="@+id/listview"
