@@ -60,6 +60,7 @@ import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.beans.CarIndexTwoBean;
 import safebox.yiye.com.safebox.constant.Model;
 import safebox.yiye.com.safebox.utils.AMapUtil;
+import safebox.yiye.com.safebox.utils.ActivityCollector;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 
 public class IndexChoseActivity extends AppCompatActivity implements
@@ -100,7 +101,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_index_chose);
-
+        ActivityCollector.addActivity(this);
         Intent intent = getIntent();
         data_no_ = intent.getStringExtra("data_no_");
 
@@ -281,6 +282,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ActivityCollector.removeActivity(this);
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         if (null != mlocationClient) {
             mlocationClient.onDestroy();

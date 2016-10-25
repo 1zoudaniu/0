@@ -38,6 +38,7 @@ import safebox.yiye.com.safebox.fragment.GuijiFragment;
 import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
 import safebox.yiye.com.safebox.fragment.IndexFragment;
 import safebox.yiye.com.safebox.fragment.PaihangFragment;
+import safebox.yiye.com.safebox.utils.ActivityCollector;
 
 public class MainActivity extends AppCompatActivity
         implements BaseFragment.BackHandledInterface {
@@ -59,7 +60,7 @@ public class MainActivity extends AppCompatActivity
 
 
         setContentView(R.layout.activity_main);
-
+        ActivityCollector.addActivity(this);
 
         applyKitKatTranslucency();
 

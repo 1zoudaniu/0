@@ -18,6 +18,7 @@ import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.twotoasters.jazzylistview.JazzyListView;
@@ -33,6 +34,7 @@ import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import safebox.yiye.com.safebox.R;
+import safebox.yiye.com.safebox.activity.PersonInfoActivity;
 import safebox.yiye.com.safebox.activity.SingleCarLocationInfoActivity;
 import safebox.yiye.com.safebox.adapter.IndexCarScoreAdapter;
 import safebox.yiye.com.safebox.firstanmi.AlphaForegroundColorSpan;
@@ -45,7 +47,7 @@ import safebox.yiye.com.safebox.view.DotCircularRingView;
 /**
  * Created by aina on 2016/9/20.
  */
-public class IndexFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class IndexFragment extends BaseFragment implements AdapterView.OnItemClickListener, View.OnClickListener {
 
 
     public static boolean isFirstRoate = true;
@@ -88,6 +90,8 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     public static int proressbar = 50 + new Random().nextInt(50);
     private View mPlaceHolderView;
     private ObjectAnimator anim;
+    private ImageView imageView_message;
+    private ImageView imageView_menu;
 
 
     @Override
@@ -154,6 +158,12 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
         mPlaceHolderView = getHeadView();
         mListView = (JazzyListView) mView.findViewById(R.id.listview);
+        imageView_menu = (ImageView) mView.findViewById(R.id.fragment_index_menu);
+        imageView_message = (ImageView) mView.findViewById(R.id.fragment_index_message);
+        imageView_menu.setOnClickListener(this);
+        imageView_message.setOnClickListener(this);
+
+
 
         mHeader = (RelativeLayout) mPlaceHolderView.findViewById(R.id.header);
         mHeaderPicture = (TextView) mPlaceHolderView.findViewById(R.id.header_picture);
@@ -162,6 +172,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         header_refresh_car = (TextView) mPlaceHolderView.findViewById(R.id.header_refresh_car);
         header_refresh_score = (TextView) mPlaceHolderView.findViewById(R.id.header_refresh_score);
         header_refresh_level = (TextView) mPlaceHolderView.findViewById(R.id.header_refresh_level);
+
 
         mHeader.setClickable(false);
         mHeaderRefresh.setClickable(false);
@@ -482,6 +493,19 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             headerHeight = getHeadView().getHeight();
         }
         return -top + firstVisiblePosition * c.getHeight() + headerHeight;
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.fragment_index_menu:
+                Intent intent = new Intent(getActivity(), PersonInfoActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.fragment_index_message:
+                ToastUtil.startShort(getActivity(), "消息界面");
+                break;
+        }
     }
 
     private class myAsync extends AsyncTask<Void, Integer, Void> {

@@ -29,10 +29,13 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Handler.Callback;
 import android.os.Message;
+import android.text.Editable;
+import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
 import cn.smssdk.gui.CommonDialog;
+import safebox.yiye.com.safebox.utils.SPUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 
 
@@ -61,34 +64,47 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private TextView mTvGetPhoneCode;
     private Button button_test;
 
+    private static final int CODE_ING = 1;   //已发送，倒计时
+    private static final int CODE_REPEAT = 2;  //重新发送
+    private static final int SMSDDK_HANDLER = 3;  //短信回调
+    private int TIME = 60;//倒计时60s
+    private String login_safebox;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        login_safebox = SPUtils.getString(LoginActivity.this, "login_safebox");
+        if (!TextUtils.isEmpty(login_safebox)) {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
 
-        SMSSDK.initSDK(this,APPKEY,APPSECRECT);
-        EventHandler eh=new EventHandler(){
+            initView();
 
-            @Override
-            public void afterEvent(int event, int result, Object data) {
+            SMSSDK.initSDK(this, APPKEY, APPSECRECT);
+            EventHandler eh = new EventHandler() {
 
-                Message msg = new Message();
-                msg.arg1 = event;
-                msg.arg2 = result;
-                msg.obj = data;
-                handler.sendMessage(msg);
-            }
+                @Override
+                public void afterEvent(int event, int result, Object data) {
 
-        };
-        SMSSDK.registerEventHandler(eh);
+                    Message msg = new Message();
+                    msg.arg1 = event;
+                    msg.arg2 = result;
+                    msg.obj = data;
+                    handler.sendMessage(msg);
+                }
 
-        initView();
+            };
+            SMSSDK.registerEventHandler(eh);
 
+            setListener();
 
-
-        setListener();
+        }
     }
-    Handler handler=new Handler(){
+
+    Handler handler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
@@ -96,33 +112,59 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             int event = msg.arg1;
             int result = msg.arg2;
             Object data = msg.obj;
-            Log.e("event", "event="+event);
+            Log.e("event", "event=" + event);
             if (result == SMSSDK.RESULT_COMPLETE) {
-                System.out.println("----"+event);
+                System.out.println("----" + event);
                 //短信注册成功后，返回MainActivity,然后提示新好友
                 if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
-                    if (result==SMSSDK.RESULT_COMPLETE) {
-                        Toast.makeText(getApplicationContext(), "依然走短信验证", Toast.LENGTH_SHORT).show();
+                    if (result == SMSSDK.RESULT_COMPLETE) {
+                        String trim = mEtPhone.getText().toString().trim();
+                        SPUtils.saveString(LoginActivity.this, "login_safebox", trim);
+                        Toast.makeText(getApplicationContext(), "短信验证成功", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        startActivity(intent);
+                        finish();
                     }
 
-                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
+                } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
 //                    textView2.setText("验证码已经发送");
-                }else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//返回支持发送验证码的国家列表
+                } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {//返回支持发送验证码的国家列表
                     Toast.makeText(getApplicationContext(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
 //                    countryTextView.setText(data.toString());
-                    System.out.println("+++"+getApplicationContext());
-                }else if(event==SMSSDK.RESULT_ERROR){
-                    Toast .makeText(getApplicationContext(),"------" ,Toast.LENGTH_SHORT).show();
+                    System.out.println("+++" + getApplicationContext());
+                } else if (event == SMSSDK.RESULT_ERROR) {
+                    try {
+                        Throwable throwable = (Throwable) data;
+                        throwable.printStackTrace();
+                        JSONObject object = new JSONObject(throwable.getMessage());
+                        String des = object.optString("detail");//错误描述
+                        int status = object.optInt("status");//错误代码
+                        if (status > 0 && !TextUtils.isEmpty(des)) {
+                            Toast.makeText(getApplicationContext(), des, Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    } catch (Exception e) {
+                    }
                 }
             } else {
-                ((Throwable) data).printStackTrace();
-                Toast.makeText(getApplicationContext(), "错误"+data, Toast.LENGTH_SHORT).show();
+                try {
+                    Throwable throwable = (Throwable) data;
+                    throwable.printStackTrace();
+                    JSONObject object = new JSONObject(throwable.getMessage());
+                    String des = object.optString("detail");//错误描述
+                    int status = object.optInt("status");//错误代码
+                    if (status > 0 && !TextUtils.isEmpty(des)) {
+                        Toast.makeText(getApplicationContext(), des, Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-
         }
-
     };
+
     private void initView() {
         mEtPhone = (EditText) findViewById(R.id.et_phone);
         mEtPhoneCode = (EditText) findViewById(R.id.et_phone_code);
@@ -205,8 +247,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //防止使用短信验证 产生内存溢出问题
-        SMSSDK.unregisterAllEventHandler();
+        if (TextUtils.isEmpty(login_safebox)) {
+            //防止使用短信验证 产生内存溢出问题
+            SMSSDK.unregisterAllEventHandler();
+        }
+
     }
 
     /**

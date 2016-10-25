@@ -18,6 +18,7 @@ import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
 import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
 import safebox.yiye.com.safebox.fragment.IndexFragment;
+import safebox.yiye.com.safebox.utils.ActivityCollector;
 import safebox.yiye.com.safebox.utils.L;
 
 public class GuijiActivity extends AppCompatActivity implements View.OnClickListener {
@@ -29,6 +30,7 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guiji);
+        ActivityCollector.addActivity(this);
         initView();
         initListener();
         initViewPager();

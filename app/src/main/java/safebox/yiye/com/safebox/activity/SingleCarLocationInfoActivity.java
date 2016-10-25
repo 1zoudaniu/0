@@ -55,6 +55,7 @@ import safebox.yiye.com.safebox.adapter.IndexTwoListViewAdapter;
 import safebox.yiye.com.safebox.beans.CarIndexTwoBean;
 import safebox.yiye.com.safebox.constant.Model;
 import safebox.yiye.com.safebox.utils.AMapUtil;
+import safebox.yiye.com.safebox.utils.ActivityCollector;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 
 
@@ -97,7 +98,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_car_location_info);
-
+        ActivityCollector.addActivity(this);
 
         initData();
 
@@ -233,6 +234,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
     @Override
     public void onDestroy() {
         super.onDestroy();
+        ActivityCollector.removeActivity(this);
         //在activity执行onDestroy时执行mMapView.onDestroy()，实现地图生命周期管理
         if (null != mlocationClient) {
             mlocationClient.onDestroy();
