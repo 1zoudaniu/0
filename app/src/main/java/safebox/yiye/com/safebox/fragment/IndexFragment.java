@@ -115,7 +115,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private void initListViewData() {
         fakes = new ArrayList<CarScoreAndListModel.ResDataBean>();
 
-        httpApi.getCarList()
+        httpApi.getCarList("321")
                 .enqueue(new Callback<CarScoreAndListModel>() {
 
                     @Override

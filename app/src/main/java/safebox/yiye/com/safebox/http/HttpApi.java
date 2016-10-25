@@ -3,6 +3,7 @@ package safebox.yiye.com.safebox.http;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 /**
  * Created by CC on 2016/7/2.
@@ -14,8 +15,8 @@ public interface HttpApi {
      *
      * @return
      */
-    @GET("getRealTimeCarInfoByOri?tel=321")
-    Call<CarScoreAndListModel> getCarList();
+    @GET("getRealTimeCarInfoByOri")
+    Call<CarScoreAndListModel> getCarList(@Query("tel") String tel);
 
 
 //    @GET("getRealTimeCarInfoByOri")
