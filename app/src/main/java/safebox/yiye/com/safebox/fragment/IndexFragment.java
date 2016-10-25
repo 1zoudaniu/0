@@ -9,7 +9,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,28 +20,26 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.twotoasters.jazzylistview.JazzyListView;
 import com.twotoasters.jazzylistview.effects.ReverseFlyEffect;
 
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
-import safebox.yiye.com.safebox.Globle.VolleyErrorHelper;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.activity.SingleCarLocationInfoActivity;
 import safebox.yiye.com.safebox.adapter.IndexCarScoreAdapter;
-import safebox.yiye.com.safebox.beans.CarIndexInfoBean;
 import safebox.yiye.com.safebox.firstanmi.AlphaForegroundColorSpan;
-import safebox.yiye.com.safebox.utils.LogUtils;
+import safebox.yiye.com.safebox.http.CarScoreAndListModel;
+import safebox.yiye.com.safebox.http.HttpApi;
+import safebox.yiye.com.safebox.utils.BaseUrl;
+import safebox.yiye.com.safebox.utils.ToastUtil;
 import safebox.yiye.com.safebox.view.DotCircularRingView;
 
 /**
@@ -81,7 +78,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private View mView;
     private TextView mHeaderRefresh;
     private RotateAnimation rotateAnimation;
-    private ArrayList<CarIndexInfoBean> fakes;
+    private ArrayList<CarScoreAndListModel.ResDataBean> fakes;
     private IndexCarScoreAdapter carAdapter;
     private DotCircularRingView dotCircularRingView;
     private TextView header_refresh_level;
@@ -91,7 +88,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     public static int proressbar = 50 + new Random().nextInt(50);
     private View mPlaceHolderView;
     private ObjectAnimator anim;
-    private RequestQueue requestQueue;
 
 
     @Override
@@ -113,30 +109,28 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     private void initListViewData() {
-        fakes = new ArrayList<CarIndexInfoBean>();
+        fakes = new ArrayList<CarScoreAndListModel.ResDataBean>();
 
+        httpApi.getCarList()
+                .enqueue(new Callback<CarScoreAndListModel>() {
 
-            for (int i = 0; i < 20; i++) {
-            CarIndexInfoBean carIndexInfoBean = new CarIndexInfoBean();
-            carIndexInfoBean.setIv_car_icon(R.drawable.head002);
-            if (i % 5 == 4) {
-                carIndexInfoBean.setTvCarNo("沪A" + new Random().nextInt(99999) * 20);
-            } else if (i % 5 == 0) {
-                carIndexInfoBean.setTvCarNo("沪B" + new Random().nextInt(99999) * 20);
-            } else if (i % 5 == 3) {
-                carIndexInfoBean.setTvCarNo("沪C" + new Random().nextInt(99999) * 20);
-            } else if (i % 5 == 2) {
-                carIndexInfoBean.setTvCarNo("沪D" + new Random().nextInt(99999) * 20);
-            } else if (i % 5 == 1) {
-                carIndexInfoBean.setTvCarNo("沪E" + new Random().nextInt(99999) * 20);
-            }else{
-                carIndexInfoBean.setTvCarNo("沪F" + new Random().nextInt(99999) * 20);
-            }
+                    @Override
+                    public void onResponse(Call<CarScoreAndListModel> call, retrofit2.Response<CarScoreAndListModel> response) {
+                        //判断是否成功
+                        if (response.isSuccessful()) {
+                            CarScoreAndListModel responseLimitProductModel = response.body();
+                            //判断是否后台返回错误
+                            List<CarScoreAndListModel.ResDataBean> res_data = responseLimitProductModel.getRes_data();
+                            fakes.addAll(res_data);
+                        }
+                    }
 
-            carIndexInfoBean.setTvCarScore(100 + new Random().nextInt(999999) + "");
-            fakes.add(carIndexInfoBean);
+                    @Override
+                    public void onFailure(Call<CarScoreAndListModel> call, Throwable t) {
+                        ToastUtil.startShort(getActivity(),t.toString());
+                    }
+                });
 
-        }
     }
 
     private void initRefreshTitle() {
@@ -180,7 +174,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                     if (rotateAnimation != null) {
                         rotateAnimation.cancel();
                     }
-
                     proressbar = 40 + new Random().nextInt(60);
                     initRota();
 
@@ -218,6 +211,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
                 dotCircularRingView.setProgress("0%");
             }
+
             @Override
             public void onAnimationEnd(Animator animation) {
                 mHeaderRefresh.setClickable(true);
@@ -325,8 +319,8 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
         } else {
             Intent intent = new Intent(getActivity(), SingleCarLocationInfoActivity.class);
-            intent.putExtra("data_no", fakes.get(position - 1).getTvCarNo());
-            intent.putExtra("data_score", fakes.get(position - 1).getTvCarScore());
+            intent.putExtra("data_no", fakes.get(position - 1).getCar_code());
+            intent.putExtra("data_score", fakes.get(position - 1).getScore());
             startActivity(intent);
 
             if (anim != null) {
@@ -518,7 +512,5 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             dotCircularRingView.setProgress(values[0] + "%");
         }
     }
-
-
 }
 

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.beans.CarIndexInfoBean;
 import safebox.yiye.com.safebox.holder.FragmentIndexListViewHolder;
+import safebox.yiye.com.safebox.http.CarScoreAndListModel;
 
 /**
  * Created by aina on 2016/9/22.
@@ -22,9 +23,9 @@ import safebox.yiye.com.safebox.holder.FragmentIndexListViewHolder;
 public class IndexCarScoreAdapter extends BaseAdapter {
     private Context mContext;
     private int mFragment_index_listview_item;
-    private ArrayList<CarIndexInfoBean> mFakes;
+    private ArrayList<CarScoreAndListModel.ResDataBean> mFakes;
 
-    public IndexCarScoreAdapter(Context context, int fragment_index_listview_item, ArrayList<CarIndexInfoBean> fakes) {
+    public IndexCarScoreAdapter(Context context, int fragment_index_listview_item, ArrayList<CarScoreAndListModel.ResDataBean> fakes) {
         this.mContext = context;
         this.mFragment_index_listview_item = fragment_index_listview_item;
         this.mFakes = fakes;
@@ -58,9 +59,9 @@ public class IndexCarScoreAdapter extends BaseAdapter {
         } else {
             holder = (FragmentIndexListViewHolder) convertView.getTag();
         }
-        holder.iv_car_icon.setImageResource(mFakes.get(position).getIv_car_icon());
-        holder.tvCarNo.setText(mFakes.get(position).getTvCarNo());
-        holder.tvCarScore.setText(mFakes.get(position).getTvCarScore());
+        holder.iv_car_icon.setImageResource(R.drawable.head002);
+        holder.tvCarNo.setText(mFakes.get(position).getCar_code());
+        holder.tvCarScore.setText(mFakes.get(position).getScore());
 
         return convertView;
     }

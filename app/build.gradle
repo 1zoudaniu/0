@@ -76,5 +76,6 @@ dependencies {
     compile 'com.makeramen:roundedimageview:2.2.1'
     compile 'com.github.sundeepk:compact-calendar-view:1.9.2-beta'
     testCompile 'org.mockito:mockito-core:1.9.0'
-    compile 'eu.the4thfloor.volley:com.android.volley:2015.05.28'
+    compile 'com.squareup.retrofit2:retrofit:2.1.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.1.0'
 }

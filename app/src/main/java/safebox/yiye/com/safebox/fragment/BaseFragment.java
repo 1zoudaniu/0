@@ -6,6 +6,11 @@ import android.support.v4.app.Fragment;
 
 import java.util.List;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+import safebox.yiye.com.safebox.http.HttpApi;
+import safebox.yiye.com.safebox.utils.BaseUrl;
+
 /**
  * @author Chance
  *         <p/>
@@ -13,6 +18,8 @@ import java.util.List;
  */
 public abstract class BaseFragment extends Fragment {
 
+
+    public HttpApi httpApi;
 
     /**
      * 所有继承BackHandledFragment的子类都将在这个方法中实现物理Back键按下后的逻辑
@@ -39,12 +46,11 @@ public abstract class BaseFragment extends Fragment {
             this.mBackHandledInterface = (BackHandledInterface) getActivity();
         }
 
-//        httpApi = new Retrofit
-//                .Builder()
-//                .baseUrl(Constant.BASE_URL)
-//                .addConverterFactory(GsonConverterFactory.create())
-//                .build()
-//                .create(HttpApi.class);
+        httpApi = new Retrofit.Builder()
+                .baseUrl(BaseUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(HttpApi.class);
     }
 
     /**

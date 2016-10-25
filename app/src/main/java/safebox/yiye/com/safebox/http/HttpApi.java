@@ -1,6 +1,10 @@
 package safebox.yiye.com.safebox.http;
 
 
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Path;
+
 /**
  * Created by CC on 2016/7/2.
  * Hello wolrd
@@ -11,8 +15,8 @@ public interface HttpApi {
      *
      * @return
      */
-//    @GET("getRealTimeCarInfoByOri/{owner}/{repo}/contributors")
-//    Call<CarScoreAndListModel> getCarList(@Path("owner") String owner);
+    @GET("getRealTimeCarInfoByOri?tel=321")
+    Call<CarScoreAndListModel> getCarList();
 
 
 //    @GET("getRealTimeCarInfoByOri")
