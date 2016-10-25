@@ -3,60 +3,30 @@ package safebox.yiye.com.safebox.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
-import java.util.HashMap;
-
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import cn.smssdk.gui.RegisterPage;
 import safebox.yiye.com.safebox.R;
-
-
-import java.util.ArrayList;
-import java.util.Random;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import android.Manifest;
-import android.app.Activity;
-import android.app.Dialog;
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
-import android.os.Handler.Callback;
 import android.os.Message;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Toast;
-
-import cn.smssdk.gui.CommonDialog;
 import safebox.yiye.com.safebox.utils.SPUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
-
-
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import com.socks.library.KLog;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import cn.smssdk.EventHandler;
-import cn.smssdk.SMSSDK;
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
-
-
     private static final String APPKEY = "17ac5532d8552";
     private static final String APPSECRECT = "03cbddd8f9b3b70c78bc0a40ba610160";
     private EditText mEtPhone;
@@ -81,15 +51,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             startActivity(intent);
             finish();
         } else {
-
             initView();
-
             SMSSDK.initSDK(this, APPKEY, APPSECRECT);
             EventHandler eh = new EventHandler() {
 
                 @Override
                 public void afterEvent(int event, int result, Object data) {
-
                     Message msg = new Message();
                     msg.arg1 = event;
                     msg.arg2 = result;
@@ -99,9 +66,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             };
             SMSSDK.registerEventHandler(eh);
-
             setListener();
-
         }
     }
 
@@ -126,7 +91,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         startActivity(intent);
                         finish();
                     }
-
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
 //                    textView2.setText("验证码已经发送");
@@ -185,12 +149,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mEtPhone.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
 
             @Override
@@ -255,7 +217,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SMSSDK.submitVerificationCode("86", phone, code);//提交验证码  在eventHandler里面查看验证结果
 
     }
-
     /**
      * 使用计时器来限定验证码
      * 在发送验证码的过程 不可以再次申请获取验证码 在指定时间之后没有获取到验证码才能重新进行发送
