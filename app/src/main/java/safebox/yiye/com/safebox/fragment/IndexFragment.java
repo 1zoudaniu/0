@@ -260,15 +260,11 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     @Override
     public void onPause() {
         super.onPause();
-
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (anim != null) {
-            anim.cancel();
-        }
     }
 
     private void setupListView() {
@@ -333,11 +329,11 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             intent.putExtra("data_no", fakes.get(position - 1).getCar_code());
             intent.putExtra("data_score", fakes.get(position - 1).getScore());
             startActivity(intent);
-
-            if (anim != null) {
-                anim.cancel();
-
-            }
+//
+//            if (anim != null) {
+//                anim.cancel();
+//
+//            }
 
         }
     }
