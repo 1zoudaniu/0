@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,9 +16,7 @@ import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
 import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
-import safebox.yiye.com.safebox.fragment.IndexFragment;
 import safebox.yiye.com.safebox.utils.ActivityCollector;
-import safebox.yiye.com.safebox.utils.L;
 
 public class GuijiActivity extends AppCompatActivity implements View.OnClickListener {
     private ViewPager mViewPager;

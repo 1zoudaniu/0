@@ -1,11 +1,15 @@
 package safebox.yiye.com.safebox.activity;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
+import safebox.yiye.com.safebox.BroadcastReceiver.BroadCastActivity_SMS;
 import safebox.yiye.com.safebox.R;
 
 import java.util.regex.Matcher;
@@ -13,6 +17,7 @@ import java.util.regex.Pattern;
 
 import android.os.Handler;
 import android.os.Message;
+import android.telephony.SmsMessage;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -47,6 +52,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private static final int SMSDDK_HANDLER = 3;  //短信回调
     private int TIME = 60;//倒计时60s
     private String login_safebox;
+    private String substring;
+    private IntentFilter intentFilter;
+    private BroadCastActivity_SSS broadCastActivity_sss;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +67,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             finish();
         } else {
             initView();
+
+            intentFilter = new IntentFilter();
+            intentFilter.addAction("android.provider.Telephony.SMS_RECEIVED");
+            broadCastActivity_sss = new BroadCastActivity_SSS();
+            registerReceiver(broadCastActivity_sss, intentFilter);
+
             SMSSDK.initSDK(this, APPKEY, APPSECRECT);
             EventHandler eh = new EventHandler() {
 
@@ -80,7 +94,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     Handler handler = new Handler() {
 
         @Override
-        public void handleMessage(Message msg) {
+        public void handleMessage(final Message msg) {
             super.handleMessage(msg);
             int event = msg.arg1;
             int result = msg.arg2;
@@ -100,6 +114,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                 } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                     Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
+
+
 //                    textView2.setText("验证码已经发送");
                 } else if (event == SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES) {//返回支持发送验证码的国家列表
                     Toast.makeText(getApplicationContext(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
@@ -183,7 +199,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (v.getId()) {
             //点击获取验证码控件
             case R.id.tv_get_phone_code:
-                mTvGetPhoneCode.requestFocus();
+                mEtPhoneCode.requestFocus();
                 if (validatePhone()) {
                     //启动获取验证码 86是中国
                     String phone = mEtPhone.getText().toString().trim();
@@ -196,7 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             //点击提交信息按钮
             case R.id.btn_submit_user:
-                mTvGetPhoneCode.requestFocus();
+                mEtPhoneCode.requestFocus();
                 if (validatePhone()) {
                     submitInfo();
                 } else {
@@ -250,7 +266,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //防止使用短信验证 产生内存溢出问题
             SMSSDK.unregisterAllEventHandler();
         }
+        if (broadCastActivity_sss != null) {
 
+            unregisterReceiver(broadCastActivity_sss);
+        }
     }
 
     /**
@@ -260,10 +279,73 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private boolean validatePhone() {
         String phone = mEtPhone.getText().toString().trim();
-        Pattern pattern = Pattern.compile("^1[0-9]{10}$");
+        Pattern pattern = Pattern.compile("^1[35678][0-9]{9}$");
         Matcher m = pattern.matcher(phone);
+
+
+//        String regex = "([a-zA-Z0-9]{6,12})";
 
         return m.matches();
     }
+    class BroadCastActivity_SSS extends BroadcastReceiver {
+//
+//        public SmsMessage[] getMessageFromIntent(Intent intent) {
+//            SmsMessage retmeMessage[] = null;
+//            Bundle bundle = intent.getExtras();
+//            Object pdus[] = (Object[]) bundle.get("pdus");
+//            retmeMessage = new SmsMessage[pdus.length];
+//            for (int i = 0; i < pdus.length; i++) {
+//                byte[] bytedata = (byte[]) pdus[i];
+//                retmeMessage[i] = SmsMessage.createFromPdu(bytedata);
+//            }
+//            return retmeMessage;
+//        }
+//
+//        public static final String ACTION = "android.provider.Telephony.SMS_RECEIVED";
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+//                            // TODO Auto-generated method stub
+//                            if (ACTION.equals(intent.getAction())) {
+//                                Intent i = new Intent(context, BroadCastActivity_SMS.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//                                SmsMessage[] msgs = getMessageFromIntent(intent);
+//
+//                                StringBuilder sBuilder = new StringBuilder();
+//                                if (msgs != null && msgs.length > 0) {
+//                                    for (SmsMessage msg : msgs) {
+//                                        if (msg.getDisplayOriginatingAddress().startsWith("106571207117008")) {
+//                                            String displayMessageBody = msg.getDisplayMessageBody();
+//                                            substring = displayMessageBody.substring(displayMessageBody.length() - 4);
+//                                            i.putExtra("sms_body", substring);
+//                                            if (!TextUtils.isEmpty(substring)) {
+//                                                mEtPhoneCode.requestFocus();
+//                                                mEtPhoneCode.setText(substring);
+//                                                ToastUtil.startShort(LoginActivity.this,"验证码已输入，请点击登录！");
+//                                            }
+//                                        }
+//                                    }
+//                                }
+//                                Toast.makeText(context, sBuilder.toString(), Toast.LENGTH_LONG).show();
+//                                context.startActivity(i);
+
+            Bundle bundle = intent.getExtras();
+            Object[] objects = (Object[]) bundle.get("puds");
+            SmsMessage[] smsMessage = new SmsMessage[objects.length];
+            for (int i = 0; i < smsMessage.length; i++) {
+                smsMessage[i] = SmsMessage.createFromPdu((byte[]) objects[i]);
+            }
+            String address = smsMessage[0].getOriginatingAddress();
+            if (address.equals("106571207117008")) {
+                String fullMessage = "";
+                for (SmsMessage message : smsMessage) {
+                    fullMessage += message.getMessageBody();
+                }
+                String substring = fullMessage.substring(fullMessage.length() - 4);
+                mEtPhoneCode.setText(substring);
+                Toast.makeText(LoginActivity.this,"获取到了验证码："+substring,Toast.LENGTH_LONG).show();
+            }
+
+        }
+    }
 }
