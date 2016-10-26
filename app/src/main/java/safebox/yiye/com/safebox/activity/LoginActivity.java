@@ -3,11 +3,14 @@ package safebox.yiye.com.safebox.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
 import safebox.yiye.com.safebox.R;
+
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import android.os.Handler;
 import android.os.Message;
 import android.text.Editable;
@@ -15,14 +18,18 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.Toast;
+
 import safebox.yiye.com.safebox.utils.SPUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
+
 import android.os.CountDownTimer;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.socks.library.KLog;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -217,6 +224,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         SMSSDK.submitVerificationCode("86", phone, code);//提交验证码  在eventHandler里面查看验证结果
 
     }
+
     /**
      * 使用计时器来限定验证码
      * 在发送验证码的过程 不可以再次申请获取验证码 在指定时间之后没有获取到验证码才能重新进行发送
@@ -252,8 +260,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
      */
     private boolean validatePhone() {
         String phone = mEtPhone.getText().toString().trim();
-        Pattern p = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
-        Matcher m = p.matcher(phone);
+        Pattern pattern = Pattern.compile("^1[0-9]{10}$");
+        Matcher m = pattern.matcher(phone);
+
         return m.matches();
     }
 
