@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import cn.smssdk.EventHandler;
 import cn.smssdk.SMSSDK;
-import safebox.yiye.com.safebox.BroadcastReceiver.BroadCastActivity_SMS;
 import safebox.yiye.com.safebox.R;
 
 import java.util.regex.Matcher;

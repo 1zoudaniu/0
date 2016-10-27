@@ -39,6 +39,9 @@ import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
 import safebox.yiye.com.safebox.fragment.IndexFragment;
 import safebox.yiye.com.safebox.fragment.PaihangFragment;
 import safebox.yiye.com.safebox.utils.ActivityCollector;
+import safebox.yiye.com.safebox.utils.JsonUtils;
+import safebox.yiye.com.safebox.utils.LogUtils;
+import safebox.yiye.com.safebox.utils.ToastUtil;
 
 public class MainActivity extends AppCompatActivity
         implements BaseFragment.BackHandledInterface {
@@ -57,7 +60,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
 
         setContentView(R.layout.activity_main);
         ActivityCollector.addActivity(this);
