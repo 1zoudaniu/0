@@ -27,7 +27,7 @@
                 android:singleLine="true"
                 android:text="车队"
                 android:textColor="#000"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/paihang_second_item_score"
@@ -39,7 +39,7 @@
                 android:singleLine="true"
                 android:text="分数"
                 android:textColor="#000"
-                android:textSize="18sp" />
+                android:textSize="15sp" />
     </LinearLayout>
 
 </LinearLayout>

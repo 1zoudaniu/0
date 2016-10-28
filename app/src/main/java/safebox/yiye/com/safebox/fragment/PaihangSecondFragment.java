@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.ExpandableListView;
 import android.widget.ListView;
 
 
@@ -24,6 +25,8 @@ import safebox.yiye.com.safebox.utils.LogUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 import safebox.yiye.com.safebox.view.PinnedSectionListView;
 
+import static com.loc.e.i;
+
 /**
  * Created by aina on 2016/10/21.
  */
@@ -41,6 +44,8 @@ public class PaihangSecondFragment extends  BaseFragment {
     private ArrayList<String> alString;
     private ArrayList<String> dataLeftBeen;
     private ArrayList<PaiHangJsonModel.DataBean.CategoriesBean> dataRightBeen;
+    private ExpandableListView expandableListView;
+    private PaiHangJsonModel paiHangJsonModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -67,16 +72,15 @@ public class PaihangSecondFragment extends  BaseFragment {
         lvLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                pslvRight.setSelection(Integer.parseInt(alLeft.get(position).info));
+//                pslvRight.setSelection(Integer.parseInt(alLeft.get(position).info));
 //                posi = position;
                 leftAdapter.setSelectedPosition(position);
                 leftAdapter.notifyDataSetInvalidated();
                 ToastUtil.startShort(getActivity(), "动起来");
-//                initData();
-//                initRightData();
 
-//                rightAdapter.notifyDataSetChanged();
-
+                List<PaiHangJsonModel.DataBean.CategoriesBean> categories = paiHangJsonModel.getData().get(position).getCategories();
+                initRightData(categories);
+                rightAdapter.notifyDataSetChanged();
             }
         });
         /**得到左边ListView第一列的位置（显示左边ListView被选中但被隐藏的Item时用）**/
@@ -117,12 +121,20 @@ public class PaihangSecondFragment extends  BaseFragment {
 
 
         rightAdapter=new RightAdapter(getContext(),dataRightBeen);
-        pslvRight.setAdapter(rightAdapter);
+        expandableListView.setAdapter(rightAdapter);
+        //遍历所有group,将所有项设置成默认展开
+        int count = expandableListView.getCount();
+        for (int i=0; i<count; i++)
+        {
+            expandableListView.expandGroup(i);
+        };
     }
 
     private void initView(View mView) {
         lvLeft=(ListView) mView.findViewById(R.id.lv_left);
-        pslvRight=(PinnedSectionListView)mView.findViewById(R.id.pslv_right);
+//        pslvRight=(PinnedSectionListView)mView.findViewById(R.id.pslv_right);
+        expandableListView = (ExpandableListView) mView.findViewById(R.id.expendlist);
+
     }
 
     //生成左边的数据
@@ -131,7 +143,7 @@ public class PaihangSecondFragment extends  BaseFragment {
         dataRightBeen = new ArrayList<>();
         String json = JsonUtils.getJson(getContext(), "safebox.json");
         Gson gson = new Gson();
-        PaiHangJsonModel paiHangJsonModel = gson.fromJson(json, PaiHangJsonModel.class);
+        paiHangJsonModel = gson.fromJson(json, PaiHangJsonModel.class);
         List<PaiHangJsonModel.DataBean> data = paiHangJsonModel.getData();
 
         dataLeftBeen.clear();
@@ -140,24 +152,14 @@ public class PaihangSecondFragment extends  BaseFragment {
             dataLeftBeen.add(cname);
         }
 
-        initRightData(data.get(0).getCategories());
+        List<PaiHangJsonModel.DataBean.CategoriesBean> categories = data.get(0).getCategories();
+        initRightData(categories);
 
     }
 
-    private void initRightData(List<PaiHangJsonModel.DataBean.CategoriesBean> categories) {
+    private void initRightData(List<PaiHangJsonModel.DataBean.CategoriesBean> dataBean) {
         dataRightBeen.clear();
-        dataRightBeen.addAll(categories);
+        dataRightBeen.addAll(dataBean);
+
     }
-
-
-    /**显示左边ListView被选中但被隐藏的Item**/
-    private void changePosition(){
-        if(posi-first>=14){
-            lvLeft.setSelection(first+1);
-        }
-        if(posi<first){
-            lvLeft.setSelection(posi);
-        }
-    }
-
 }

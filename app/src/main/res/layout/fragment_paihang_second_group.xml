@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="30dp">
+
+            <TextView
+                android:id="@+id/paihang_second_group_carname"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+               android:gravity="center_vertical"
+                android:paddingLeft="10dp"
+                android:singleLine="true"
+                android:text="车队"
+                android:textColor="#a5a4a4"
+                android:background="#FAF0E6"
+                android:textSize="15sp" />
+
+</LinearLayout>

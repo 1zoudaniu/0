@@ -20,7 +20,7 @@
             app:tabIndicatorColor="#fff"
             app:tabMode="fixed"
             app:tabSelectedTextColor="#fff"
-            app:tabTextColor="#fb0202"
+            app:tabTextColor="#cbcccf"
 
             />
 
