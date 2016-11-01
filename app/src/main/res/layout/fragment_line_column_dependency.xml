@@ -27,8 +27,9 @@
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="15dp"
+        android:layout_height="25dp"
         android:layout_marginTop="8dp"
+        android:layout_gravity="center"
         android:gravity="center_horizontal"
         android:text="近一周的评分趋势图"
         android:textColor="#903" />

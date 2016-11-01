@@ -140,7 +140,6 @@ public class PaihangFirstFragment extends  BaseFragment {
 //                posi = position;
                 leftAdapter.setSelectedPosition(position);
                 leftAdapter.notifyDataSetInvalidated();
-                ToastUtil.startShort(getActivity(), "动起来");
 
                 List<PaiHangJsonModel.DataBean.CategoriesBean> categories = paiHangJsonModel.getData().get(position).getCategories();
                 initRightData(categories);
