@@ -431,18 +431,18 @@ public class IndexChoseActivity extends AppCompatActivity implements
 
         marker.showInfoWindow();
 
-//        if (aMap != null) {
-//            for (int i = 0; i < markerlst.size(); i++) {
-//                if (marker.equals(markerlst.get(i))) {
-//                    addressName = new StringBuilder(fakes.get(i).getTime() + "  " + fakes.get(i).getEvent() + "  扣分" + fakes.get(i).getScore() + "\n");
-//                    LatLng latLng = new LatLng(setLatitude[i], setLongitude[i]);
-//                    latLonPoint = new LatLonPoint(setLatitude[i], setLongitude[i]);
-//                    latLngww = new LatLng(setLatitude[i], setLongitude[i]);
-//
-//                    initGeocodeSearch();
-//                }
-//            }
-//        }
+        if (aMap != null) {
+            for (int i = 0; i < markerlst.size(); i++) {
+                if (marker.equals(markerlst.get(i))) {
+                    addressName = new StringBuilder(fakes.get(i).getTime() + "  " + fakes.get(i).getEvent() + "  扣分" + fakes.get(i).getScore() + "\n");
+                    LatLng latLng = new LatLng(setLatitude[i], setLongitude[i]);
+                    latLonPoint = new LatLonPoint(setLatitude[i], setLongitude[i]);
+                    latLngww = new LatLng(setLatitude[i], setLongitude[i]);
+
+                    initGeocodeSearch();
+                }
+            }
+        }
         return false;
     }
 
@@ -556,7 +556,6 @@ public class IndexChoseActivity extends AppCompatActivity implements
                     ViewCompat.animate(arrow).rotation(180).start();
                     mAppBarLayout.setExpanded(true, true);
                     isExpanded = true;
-
                 }
                 break;
         }
