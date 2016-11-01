@@ -106,7 +106,7 @@
 
                 <FrameLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="55dp"
                     android:layout_gravity="bottom"
 
                     >
@@ -114,7 +114,7 @@
                     <RadioGroup
                         android:id="@+id/rg_tab"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
+                        android:layout_height="55dp"
                         android:layout_gravity="bottom"
 
                         android:orientation="horizontal">
