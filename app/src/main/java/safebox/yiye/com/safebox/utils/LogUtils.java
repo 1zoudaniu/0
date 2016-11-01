@@ -26,7 +26,9 @@ public class LogUtils {
         String callerClazzName = stackTraceElement.getClassName();
         callerClazzName = callerClazzName.substring(callerClazzName.lastIndexOf(".") + 1);
         String tag = "%s.%s(L:%d)";
-        tag = String.format(tag, new Object[]{callerClazzName, stackTraceElement.getMethodName(), Integer.valueOf(stackTraceElement.getLineNumber())});
+
+        Object[] args = {callerClazzName, stackTraceElement.getMethodName(), Integer.valueOf(stackTraceElement.getLineNumber())};
+        tag = String.format(tag, args);
         //给tag设置前缀
         tag = TextUtils.isEmpty(tagPrefix) ? tag : tagPrefix + ":" + tag;
         return tag;

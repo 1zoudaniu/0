@@ -8,12 +8,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="3"></ListView>
-    <!--<safebox.yiye.com.safebox.view.PinnedSectionListView-->
-    <!--android:id="@+id/pslv_right"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:layout_weight="1"/>-->
-
     <ExpandableListView
         android:id="@+id/expendlist"
         android:layout_width="match_parent"
