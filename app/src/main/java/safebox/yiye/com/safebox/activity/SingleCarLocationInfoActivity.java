@@ -106,16 +106,11 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
         //在activity执行onCreate时执行mMapView.onCreate(savedInstanceState)，实现地图生命周期管理
         mMapView.onCreate(savedInstanceState);
-
         if (aMap == null) {
-
             aMap = mMapView.getMap();
-
             regeoMarker = aMap.addMarker(new MarkerOptions().icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA)).draggable(false));
-
             mUiSettings = aMap.getUiSettings();
-
             // 自定义系统定位小蓝点
             MyLocationStyle myLocationStyle = new MyLocationStyle();
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory
@@ -126,19 +121,13 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
             aMap.setMyLocationStyle(myLocationStyle);
             aMap.setMyLocationRotateAngle(180);
             aMap.setLocationSource(this);// 设置定位监听
-            mUiSettings.setMyLocationButtonEnabled(true); // 是否显示默认的定位按钮
-            mUiSettings.setTiltGesturesEnabled(true);// 设置地图是否可以倾斜
+            mUiSettings.setMyLocationButtonEnabled(false); // 是否显示默认的定位按钮
+            mUiSettings.setTiltGesturesEnabled(false);// 设置地图是否可以倾斜
             mUiSettings.setScaleControlsEnabled(true);// 设置地图默认的比例尺是否显示
             mUiSettings.setZoomControlsEnabled(false);
-//            mUpdata = CameraUpdateFactory.newCameraPosition(
-//                    //15是缩放比例，0是倾斜度，30显示比例
-//                    new CameraPosition(new LatLng(31.2396997086, 121.4995909338), 13, 0, BitmapDescriptorFactory.HUE_ROSE));//这是地理位置，就是经纬度。
-//            aMap.moveCamera(mUpdata);//定位的方法
 
             initMapListener();
         }
-
-
         initFirstAllMark();
     }
 
@@ -158,6 +147,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
             markOptiopns.position(allLagng).icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
+                    .anchor(0.5f,0.5f)
                     .setFlat(true);
             if (i == 0) {
                 markOptiopns.icon(BitmapDescriptorFactory.fromResource(R.drawable.dir_start));
@@ -170,12 +160,10 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         }
 
         polylineOptions.width(5).setDottedLine(true).geodesic(true)
-                .color(Color.argb(255, 48, 63, 159));
+                .color(Color.argb(255, 190, 16, 16));
         Polyline polyline = aMap.addPolyline(polylineOptions);
 
         markerlst = aMap.addMarkers(markerOptionlst, true);
-
-
     }
 
 

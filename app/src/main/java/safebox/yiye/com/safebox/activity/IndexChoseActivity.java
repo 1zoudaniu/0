@@ -168,6 +168,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
 
             markOptiopns.position(allLagng).icon(BitmapDescriptorFactory
                     .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
+                    .anchor(0.5f,0.5f)
                     .setFlat(true);
             if (i == 0) {
                 markOptiopns.icon(BitmapDescriptorFactory.fromResource(R.drawable.dir_start));
@@ -180,7 +181,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
         }
 
         polylineOptions.width(5).setDottedLine(true).geodesic(true)
-                .color(Color.argb(255, 48, 63, 159));
+                .color(Color.argb(255, 190, 16, 16));
         Polyline polyline = aMap.addPolyline(polylineOptions);
 
         markerlst = aMap.addMarkers(markerOptionlst, true);

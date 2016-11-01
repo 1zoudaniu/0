@@ -131,7 +131,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
                     @Override
                     public void onFailure(Call<CarScoreAndListModel> call, Throwable t) {
-                        ToastUtil.startShort(getActivity(),t.toString());
+                        ToastUtil.startShort(getActivity(),"请检查网络");
                     }
                 });
 
@@ -262,10 +262,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         super.onPause();
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-    }
+
 
     private void setupListView() {
 
@@ -329,12 +326,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             intent.putExtra("data_no", fakes.get(position - 1).getCar_code());
             intent.putExtra("data_score", fakes.get(position - 1).getScore());
             startActivity(intent);
-//
-//            if (anim != null) {
-//                anim.cancel();
-//
-//            }
-
         }
     }
 
