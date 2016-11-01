@@ -98,6 +98,7 @@ public class SplashActivity extends Activity {
         }
 
     };
+    private String login_safebox;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -237,9 +238,16 @@ public class SplashActivity extends Activity {
         //FIXME: 看一下效果
         Log.i(TAG, "进入主界面");
 
-        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-        //关闭当前的界面
-        finish();
+        login_safebox = SPUtils.getString(SplashActivity.this, "login_safebox");
+        if (!TextUtils.isEmpty(login_safebox)) {
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+        } else {
+            startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+            //关闭当前的界面
+            finish();
+        }
     }
 
     ;
