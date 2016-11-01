@@ -25,7 +25,6 @@ import safebox.yiye.com.safebox.utils.LogUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 import safebox.yiye.com.safebox.view.PinnedSectionListView;
 
-import static com.loc.e.i;
 
 /**
  * Created by aina on 2016/10/21.
