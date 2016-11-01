@@ -39,4 +39,8 @@ public class Model {
     public static Float[] INDEX_TWO_Longitude = new Float[]{121.61904f, 121.61471f,
             121.581078f, 121.544427f, 121.507345f, 121.407345f, 121.60471f, 121.701078f};
 
+    //自动更新
+    public static final String AUTOISOPEN= "AUTOISOPEN";
+    //把url地址抽出来
+    public static final String SERVERVERSONURL = "http://192.168.1.144:8080/versionServer.json";
 }

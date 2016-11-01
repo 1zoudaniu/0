@@ -18,7 +18,6 @@ import android.view.animation.Interpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
@@ -70,7 +69,7 @@ public class IndexChoseActivity extends AppCompatActivity implements
         AMap.OnPOIClickListener, GeocodeSearch.OnGeocodeSearchListener, View.OnClickListener {
 
     private AppBarLayout mAppBarLayout;
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("d MMMM yyyy", /*Locale.getDefault()*/Locale.CHINESE);
+    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日", /*Locale.getDefault()*/Locale.ENGLISH);
     private CompactCalendarView mCompactCalendarView;
     private boolean isExpanded = false;
     private ImageView arrow;
@@ -432,18 +431,18 @@ public class IndexChoseActivity extends AppCompatActivity implements
 
         marker.showInfoWindow();
 
-        if (aMap != null) {
-            for (int i = 0; i < markerlst.size(); i++) {
-                if (marker.equals(markerlst.get(i))) {
-                    addressName = new StringBuilder(fakes.get(i).getTime() + "  " + fakes.get(i).getEvent() + "  扣分" + fakes.get(i).getScore() + "\n");
-                    LatLng latLng = new LatLng(setLatitude[i], setLongitude[i]);
-                    latLonPoint = new LatLonPoint(setLatitude[i], setLongitude[i]);
-                    latLngww = new LatLng(setLatitude[i], setLongitude[i]);
-
-                    initGeocodeSearch();
-                }
-            }
-        }
+//        if (aMap != null) {
+//            for (int i = 0; i < markerlst.size(); i++) {
+//                if (marker.equals(markerlst.get(i))) {
+//                    addressName = new StringBuilder(fakes.get(i).getTime() + "  " + fakes.get(i).getEvent() + "  扣分" + fakes.get(i).getScore() + "\n");
+//                    LatLng latLng = new LatLng(setLatitude[i], setLongitude[i]);
+//                    latLonPoint = new LatLonPoint(setLatitude[i], setLongitude[i]);
+//                    latLngww = new LatLng(setLatitude[i], setLongitude[i]);
+//
+//                    initGeocodeSearch();
+//                }
+//            }
+//        }
         return false;
     }
 

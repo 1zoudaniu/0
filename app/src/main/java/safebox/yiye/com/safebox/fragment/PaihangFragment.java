@@ -5,36 +5,16 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 
-import com.alibaba.fastjson.JSON;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
-import com.google.gson.stream.JsonReader;
-import com.google.gson.stream.JsonToken;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.activity.MainActivity;
-import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
-import safebox.yiye.com.safebox.adapter.PaiHangMainAdapter;
-import safebox.yiye.com.safebox.adapter.PaiHangMoreAdapter;
 import safebox.yiye.com.safebox.adapter.PaihangFragmentPageAdapter;
-import safebox.yiye.com.safebox.beans.PaihangCar;
-import safebox.yiye.com.safebox.constant.Model;
-import safebox.yiye.com.safebox.utils.ToastUtil;
 
 public class PaihangFragment extends Fragment {
 

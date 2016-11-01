@@ -43,4 +43,10 @@ public class SPUtils {
         init(context);
         return  preferences.getString(key, "");
     }
+
+    public static boolean getBoolean_true(Context context,String key)
+    {
+        init(context);
+        return  preferences.getBoolean(key, true);
+    }
 }

@@ -507,7 +507,9 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         indexTwoListViewAdapter.setSelectItemPosition(position);
         indexTwoListViewAdapter.notifyDataSetInvalidated();
         indexTwoListViewAdapter.notifyDataSetChanged();
-
+        if (addressName != null) {
+            addressName=null;
+        }
         addressName = new StringBuilder(fakes.get(position).getTime() + "  " + fakes.get(position).getEvent() + "  扣分" + fakes.get(position).getScore() + "\n");
 
 //        aMap.clear();
