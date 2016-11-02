@@ -448,7 +448,8 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
                 }
 
 //                aMap.clear();
-                addressName.append(result.getRegeocodeAddress().getFormatAddress());
+                String formatAddress = result.getRegeocodeAddress().getFormatAddress();
+
 
                 aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                         AMapUtil.convertToLatLng(latLonPoint), 11));
@@ -459,7 +460,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
                         .defaultMarker(BitmapDescriptorFactory.HUE_AZURE))    // 将Marker设置为贴地显示，可以双指下拉看效果
                         .setFlat(true);
                 TextView textView = new TextView(getApplicationContext());
-                textView.setText(addressName);
+                textView.setText(addressName.toString()+formatAddress);
                 textView.setGravity(Gravity.CENTER);
                 textView.setTextColor(Color.BLACK);
                 textView.setBackgroundResource(R.drawable.custom_info_bubble);
