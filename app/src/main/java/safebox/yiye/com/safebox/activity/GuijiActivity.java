@@ -27,9 +27,13 @@ public class GuijiActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guiji);
+
         ActivityCollector.addActivity(this);
+
         initView();
+
         initListener();
+
         initViewPager();
     }
 
