@@ -84,7 +84,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             mDefaultHandler.uncaughtException(thread, ex);
         } else {
             try {
-                Thread.sleep(3000);
+                Thread.sleep(1000);
             } catch (InterruptedException e) {
                 Log.e(TAG, "error : ", e);
             }
@@ -109,7 +109,7 @@ public class CrashHandler implements UncaughtExceptionHandler {
             @Override
             public void run() {
                 Looper.prepare();
-                Toast.makeText(mContext, "很抱歉,程序出现异常,即将退出.", Toast.LENGTH_LONG).show();
+                Toast.makeText(mContext, "很抱歉,程序即将退出.", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
         }.start();

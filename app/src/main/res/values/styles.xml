@@ -94,4 +94,8 @@
     <style name="ToolbarSubtitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textColor">@android:color/white</item>
     </style>
+
+    <!-- animation 样式 -->
+    <style name="login" parent="@style/AppTheme.NoActionBar">
+    </style>
 </resources>

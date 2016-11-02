@@ -21,6 +21,9 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import safebox.yiye.com.safebox.utils.SPUtils;
@@ -54,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private String substring;
     private IntentFilter intentFilter;
     private BroadCastActivity_SSS broadCastActivity_sss;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,6 +162,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mTvGetPhoneCode = (TextView) findViewById(R.id.tv_get_phone_code);
         mBtnSubmitUser = (Button) findViewById(R.id.btn_submit_user);
         button_test = (Button) findViewById(R.id.btn_submit_test);
+        imageView = (ImageView) findViewById(R.id.image);
+        TranslateAnimation animation = new TranslateAnimation(0, 100, 0, 0);
+        animation.setDuration(1000);//设置动画持续时间
+        animation.setRepeatMode(Animation.REVERSE);
+        animation.setRepeatCount(Animation.INFINITE);
+        imageView.setAnimation(animation);
+/** 开始动画 */
+        animation.startNow();
     }
 
     private int editStart;//光标开始位置
@@ -286,6 +298,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         return m.matches();
     }
+
     class BroadCastActivity_SSS extends BroadcastReceiver {
 //
 //        public SmsMessage[] getMessageFromIntent(Intent intent) {
@@ -342,7 +355,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 }
                 String substring = fullMessage.substring(fullMessage.length() - 4);
                 mEtPhoneCode.setText(substring);
-                Toast.makeText(LoginActivity.this,"获取到了验证码："+substring,Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "获取到了验证码：" + substring, Toast.LENGTH_LONG).show();
             }
 
         }

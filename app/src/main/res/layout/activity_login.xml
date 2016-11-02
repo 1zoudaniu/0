@@ -3,135 +3,151 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e3e3e3"
     android:gravity="center"
     android:orientation="vertical">
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="50dp"
-        android:layout_marginRight="50dp"
-        android:orientation="vertical">
+        android:layout_height="match_parent"
+
+        >
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:src="@drawable/login"
-            android:layout_marginBottom="30dp"
-            />
+            android:id="@+id/image"
+            android:layout_width="1300dp"
+            android:layout_height="700dp"
+            android:scaleType="fitEnd"
+            android:translationX="-940dp"
+            android:src="@mipmap/login" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="400dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="left|center_vertical"
+            android:orientation="vertical">
 
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/usernameWrapper"
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColorHint="#015DF0">
+                android:layout_gravity="left|center"
+                android:layout_marginLeft="150dp"
+                android:layout_marginBottom="30dp"
+                android:src="@drawable/login" />
 
-                <EditText
-                    android:id="@+id/et_phone"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="请输入您的手机号"
-                    android:textSize="15sp"
-                    android:inputType="number"
-                    android:textColor="#FB0101" />
-
-            </android.support.design.widget.TextInputLayout>
-
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal"
-            android:weightSum="9">
-
-            <android.support.design.widget.TextInputLayout
-                android:id="@+id/passwordWrapper"
-                android:layout_width="0dp"
+            <LinearLayout
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/usernameWrapper"
-                android:layout_marginTop="4dp"
-                android:layout_weight="5"
-                android:textSize="15sp"
-                android:textColorHint="#015DF0">
+                android:layout_gravity="left|center"
+                android:layout_marginLeft="30dp"
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/et_phone_code"
-                    android:layout_width="match_parent"
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/usernameWrapper"
+                    android:layout_width="300dp"
                     android:layout_height="wrap_content"
-                    android:hint="请输入验证码"
-                    android:textSize="15sp"
-                    android:inputType="textPassword"
-                    android:textColor="#FB0101" />
+                    android:textColorHint="#015DF0">
 
-            </android.support.design.widget.TextInputLayout>
+                    <EditText
+                        android:id="@+id/et_phone"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入您的手机号"
+                        android:inputType="number"
+                        android:textColor="#FB0101"
+                        android:textSize="15sp" />
+
+                </android.support.design.widget.TextInputLayout>
 
 
-            <TextView
-                android:id="@+id/tv_get_phone_code"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginLeft="30dp"
+                android:orientation="horizontal"
+                android:weightSum="9">
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/passwordWrapper"
+                    android:layout_width="300dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/usernameWrapper"
+                    android:layout_marginTop="4dp"
+                    android:layout_weight="5"
+                    android:textColorHint="#015DF0"
+                    android:textSize="15sp">
+
+                    <EditText
+                        android:id="@+id/et_phone_code"
+                        android:layout_width="300dp"
+                        android:layout_height="wrap_content"
+                        android:hint="请输入验证码"
+                        android:inputType="textPassword"
+                        android:textColor="#FB0101"
+                        android:textSize="15sp" />
+
+                </android.support.design.widget.TextInputLayout>
+
+
+                <TextView
+                    android:id="@+id/tv_get_phone_code"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_weight="4"
+                    android:background="#00000000"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="获取验证码"
+                    android:textColor="#fff"
+                    android:textSize="15sp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="300dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="4"
-                android:textSize="15sp"
-                android:background="@color/colorPrimary"
-                android:clickable="true"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:gravity="center"
-                android:padding="10dp"
-                android:text="获取验证码"
-                android:textColor="#fff" />
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/btn_submit_user"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:text="立即登陆"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
 
+                <Button
+                    android:id="@+id/btn_submit_test"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:background="#00000000"
+                    android:gravity="center"
+                    android:text="下次再说"
+                    android:textColor="#fff"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="2">
-
-            <Button
-                android:id="@+id/btn_submit_user"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center"
-                android:text="立即登陆"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-
-
-
-            <Button
-                android:id="@+id/btn_submit_test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="5dp"
-                android:background="@color/colorPrimaryDark"
-                android:gravity="center"
-                android:text="下次再说"
-                android:textColor="#fff"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </LinearLayout>
-
+    </FrameLayout>
 </LinearLayout>
