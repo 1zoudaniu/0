@@ -93,7 +93,7 @@
             <!-- </intent-filter> -->
 
         </activity>
-        <activity android:name=".activity.IndexChoseActivity" android:launchMode="singleTask"/>
+        <activity android:name=".activity.IndexChoseActivity"/>
         <activity android:name=".activity.PersonInfoActivity" android:launchMode="singleTask"></activity>
 
         <!--<receiver android:name=".activity.LoginActivity$BroadCastActivity_SMS" >-->

@@ -372,6 +372,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
                 Intent intent = new Intent(SingleCarLocationInfoActivity.this, IndexChoseActivity.class);
                 intent.putExtra("data_no_", data_no);
                 startActivity(intent);
+
                 break;
         }
     }
