@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="0dp"
+        android:theme="@style/AppTheme.AppBarOverlay"
+        android:translationY="0dp">
+
+    </android.support.design.widget.AppBarLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="4">
+
+                <FrameLayout
+                    android:id="@+id/fl_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_above="@+id/bottom_bar"
+                    android:layout_weight="4"
+                    android:background="@android:color/white"
+                    android:elevation="0dp"
+                    android:translationY="0dp">
+
+                </FrameLayout>
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_gravity="bottom"
+
+                    >
+
+                    <RadioGroup
+                        android:id="@+id/rg_tab"
+                        android:layout_width="match_parent"
+                        android:layout_height="55dp"
+                        android:layout_gravity="bottom"
+
+                        android:orientation="horizontal">
+
+                        <RadioButton
+                            android:id="@+id/rb_home"
+                            style="@style/tab"
+                            android:checked="true"
+                            android:drawableTop="@drawable/rb_home_selector"
+                            android:text="@string/home" />
+
+                        <RadioButton
+                            android:id="@+id/rb_guiji"
+                            style="@style/tab"
+                            android:drawableTop="@drawable/rb_hotplace_selector"
+                            android:text="@string/guiji"
+
+                            />
+
+                        <RadioButton
+                            android:id="@+id/rb_paihang"
+                            style="@style/tab"
+                            android:drawableTop="@drawable/rb_realtime_selector"
+                            android:text="@string/paihang"
+
+                            />
+                    </RadioGroup>
+
+                </FrameLayout>
+            </LinearLayout>
+
+</LinearLayout>
