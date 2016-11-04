@@ -82,4 +82,5 @@ dependencies {
 
     apt 'com.zhy:mpermission-compiler:1.0.0'
     compile 'com.zhy:mpermission-api:1.0.0'
+    compile 'com.dou361.dialogui:jjdxm-dialogui:1.0.1'
 }
