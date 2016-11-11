@@ -25,6 +25,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.animation.AlphaAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class SplashActivity extends Activity {
@@ -99,6 +101,7 @@ public class SplashActivity extends Activity {
 
     };
     private String login_safebox;
+    private RelativeLayout mRelativeLayout;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -318,11 +321,21 @@ public class SplashActivity extends Activity {
         //找到控件
         initView();
 
+
+        // 显示透明度动画
+        startAnimation();
         //初始化数据
         initData();
 
     }
-
+    /**
+     * 显示透明度动画 从完全透明到完全不透明(显示)
+     */
+    private void startAnimation() {
+        AlphaAnimation animation = new AlphaAnimation(0.0f, 1.0f);
+        animation.setDuration(2000);
+        mRelativeLayout.startAnimation(animation);
+    }
     /**
      * 初始化数据
      */
@@ -336,5 +349,7 @@ public class SplashActivity extends Activity {
      */
     private void initView() {
         mTv_splash_version = (TextView) findViewById(R.id.tv_splash_version);
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.rl_splash);
+
     }
 }

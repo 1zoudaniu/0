@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:fitsSystemWindows="true"
+              android:orientation="vertical">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -14,64 +15,82 @@
 
     </android.support.design.widget.AppBarLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:weightSum="4">
+    <FrameLayout
+        android:id="@+id/fl_content"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1.0">
+    </FrameLayout>
 
-                <FrameLayout
-                    android:id="@+id/fl_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="0dp"
-                    android:layout_above="@+id/bottom_bar"
-                    android:layout_weight="4"
-                    android:background="@android:color/white"
-                    android:elevation="0dp"
-                    android:translationY="0dp">
+    <safebox.yiye.com.safebox.view.MyTabWidget
+        android:id="@+id/tab_widget"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:bottom_labels="@array/bottom_bar_labels"/>
 
-                </FrameLayout>
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical"-->
+    <!--android:weightSum="4">-->
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_gravity="bottom"
+    <!--<FrameLayout-->
+    <!--android:id="@+id/fl_content"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_above="@+id/bottom_bar"-->
+    <!--android:layout_weight="4"-->
+    <!--android:background="@android:color/white"-->
+    <!--android:elevation="0dp"-->
+    <!--android:translationY="0dp">-->
 
-                    >
+    <!--</FrameLayout>-->
 
-                    <RadioGroup
-                        android:id="@+id/rg_tab"
-                        android:layout_width="match_parent"
-                        android:layout_height="55dp"
-                        android:layout_gravity="bottom"
+    <!--<FrameLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="55dp"-->
+    <!--android:layout_gravity="bottom"-->
 
-                        android:orientation="horizontal">
+    <!--&gt;-->
+    <!--<safebox.yiye.com.safebox.view.MyTabWidget-->
+    <!--android:id="@+id/tab_widget"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="55dp"-->
+    <!--app:bottom_labels="@array/bottom_bar_labels"/>-->
 
-                        <RadioButton
-                            android:id="@+id/rb_home"
-                            style="@style/tab"
-                            android:checked="true"
-                            android:drawableTop="@drawable/rb_home_selector"
-                            android:text="@string/home" />
+    <!--&lt;!&ndash;<RadioGroup&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/rg_tab"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_width="match_parent"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_height="55dp"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:layout_gravity="bottom"&ndash;&gt;-->
 
-                        <RadioButton
-                            android:id="@+id/rb_guiji"
-                            style="@style/tab"
-                            android:drawableTop="@drawable/rb_hotplace_selector"
-                            android:text="@string/guiji"
+    <!--&lt;!&ndash;android:orientation="horizontal">&ndash;&gt;-->
 
-                            />
+    <!--&lt;!&ndash;<RadioButton&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/rb_home"&ndash;&gt;-->
+    <!--&lt;!&ndash;style="@style/tab"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:checked="true"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:drawableTop="@drawable/rb_home_selector"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="@string/home" />&ndash;&gt;-->
 
-                        <RadioButton
-                            android:id="@+id/rb_paihang"
-                            style="@style/tab"
-                            android:drawableTop="@drawable/rb_realtime_selector"
-                            android:text="@string/paihang"
+    <!--&lt;!&ndash;<RadioButton&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/rb_guiji"&ndash;&gt;-->
+    <!--&lt;!&ndash;style="@style/tab"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:drawableTop="@drawable/rb_hotplace_selector"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="@string/guiji"&ndash;&gt;-->
 
-                            />
-                    </RadioGroup>
+    <!--&lt;!&ndash;/>&ndash;&gt;-->
 
-                </FrameLayout>
-            </LinearLayout>
+    <!--&lt;!&ndash;<RadioButton&ndash;&gt;-->
+    <!--&lt;!&ndash;android:id="@+id/rb_paihang"&ndash;&gt;-->
+    <!--&lt;!&ndash;style="@style/tab"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:drawableTop="@drawable/rb_realtime_selector"&ndash;&gt;-->
+    <!--&lt;!&ndash;android:text="@string/paihang"&ndash;&gt;-->
+
+    <!--&lt;!&ndash;/>&ndash;&gt;-->
+    <!--&lt;!&ndash;</RadioGroup>&ndash;&gt;-->
+
+    <!--</FrameLayout>-->
+    <!--</LinearLayout>-->
 
 </LinearLayout>

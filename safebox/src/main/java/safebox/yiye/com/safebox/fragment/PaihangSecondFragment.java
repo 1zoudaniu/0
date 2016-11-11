@@ -32,19 +32,19 @@ import safebox.yiye.com.safebox.view.PinnedSectionListView;
 
 public class PaihangSecondFragment extends  BaseFragment {
 
-    private RightAdapter rightAdapter;
-    private LeftAdapter leftAdapter;
-    private PinnedSectionListView pslvRight;
-    private ListView lvLeft;
+    private RightAdapter rightSecondAdapter;
+    private LeftAdapter leftSecondAdapter;
+    private PinnedSectionListView pslvSecondRight;
+    private ListView lvSecondLeft;
     private ArrayList<Left> alLeft;
     private int posi=0;
     private int pos=0;
     private int first=0;
-    private ArrayList<String> alString;
-    private ArrayList<String> dataLeftBeen;
-    private ArrayList<PaiHangJsonModel.DataBean.CategoriesBean> dataRightBeen;
-    private ExpandableListView expandableListView;
-    private PaiHangJsonModel paiHangJsonModel;
+    private ArrayList<String> alSecondString;
+    private ArrayList<String> dataSecondLeftBeen;
+    private ArrayList<PaiHangJsonModel.DataBean.CategoriesBean> dataSecondRightBeen;
+    private ExpandableListView expandableListViewSecond;
+    private PaiHangJsonModel paiHangJsonSecondModel;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +55,7 @@ public class PaihangSecondFragment extends  BaseFragment {
         initView(mView);
 
         alLeft=new ArrayList<>();
-        alString = new ArrayList<>();
+        alSecondString = new ArrayList<>();
 
         initLfetData();
 
@@ -68,22 +68,22 @@ public class PaihangSecondFragment extends  BaseFragment {
 
     private void initListener() {
         /** 点击左边ListView重定位右边psListView中数据**/
-        lvLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lvSecondLeft.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                pslvRight.setSelection(Integer.parseInt(alLeft.get(position).info));
+//                pslvSecondRight.setSelection(Integer.parseInt(alLeft.get(position).info));
 //                posi = position;
-                leftAdapter.setSelectedPosition(position);
-                leftAdapter.notifyDataSetInvalidated();
+                leftSecondAdapter.setSelectedPosition(position);
+                leftSecondAdapter.notifyDataSetInvalidated();
                 ToastUtil.startShort(getActivity(), "动起来");
 
-                List<PaiHangJsonModel.DataBean.CategoriesBean> categories = paiHangJsonModel.getData().get(position).getCategories();
+                List<PaiHangJsonModel.DataBean.CategoriesBean> categories = paiHangJsonSecondModel.getData().get(position).getCategories();
                 initRightData(categories);
-                rightAdapter.notifyDataSetChanged();
+                rightSecondAdapter.notifyDataSetChanged();
             }
         });
         /**得到左边ListView第一列的位置（显示左边ListView被选中但被隐藏的Item时用）**/
-        lvLeft.setOnScrollListener(new AbsListView.OnScrollListener() {
+        lvSecondLeft.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
 
@@ -97,7 +97,7 @@ public class PaihangSecondFragment extends  BaseFragment {
 
 //
 //        /**滚动右边psListView刷新左边ListView选中状态**/
-//        pslvRight.setOnScrollListener(new AbsListView.OnScrollListener() {
+//        pslvSecondRight.setOnScrollListener(new AbsListView.OnScrollListener() {
 //            @Override
 //            public void onScrollStateChanged(AbsListView view, int scrollState) {
 //            }
@@ -115,40 +115,40 @@ public class PaihangSecondFragment extends  BaseFragment {
     }
 
     private void initAdapter() {
-        leftAdapter=new LeftAdapter(getContext(),dataLeftBeen);
-        lvLeft.setAdapter(leftAdapter);
+        leftSecondAdapter=new LeftAdapter(getContext(),dataSecondLeftBeen);
+        lvSecondLeft.setAdapter(leftSecondAdapter);
 
 
-        rightAdapter=new RightAdapter(getContext(),dataRightBeen);
-        expandableListView.setAdapter(rightAdapter);
+        rightSecondAdapter=new RightAdapter(getContext(),dataSecondRightBeen);
+        expandableListViewSecond.setAdapter(rightSecondAdapter);
         //遍历所有group,将所有项设置成默认展开
-        int count = expandableListView.getCount();
+        int count = expandableListViewSecond.getCount();
         for (int i=0; i<count; i++)
         {
-            expandableListView.expandGroup(i);
+            expandableListViewSecond.expandGroup(i);
         };
     }
 
     private void initView(View mView) {
-        lvLeft=(ListView) mView.findViewById(R.id.lv_left);
-//        pslvRight=(PinnedSectionListView)mView.findViewById(R.id.pslv_right);
-        expandableListView = (ExpandableListView) mView.findViewById(R.id.expendlist);
+        lvSecondLeft=(ListView) mView.findViewById(R.id.lv_left_second);
+//        pslvSecondRight=(PinnedSectionListView)mView.findViewById(R.id.pslv_right);
+        expandableListViewSecond = (ExpandableListView) mView.findViewById(R.id.expendlist_second);
 
     }
 
     //生成左边的数据
     private void initLfetData(){
-        dataLeftBeen = new ArrayList<>();
-        dataRightBeen = new ArrayList<>();
+        dataSecondLeftBeen = new ArrayList<>();
+        dataSecondRightBeen = new ArrayList<>();
         String json = JsonUtils.getJson(getContext(), "safebox.json");
         Gson gson = new Gson();
-        paiHangJsonModel = gson.fromJson(json, PaiHangJsonModel.class);
-        List<PaiHangJsonModel.DataBean> data = paiHangJsonModel.getData();
+        paiHangJsonSecondModel = gson.fromJson(json, PaiHangJsonModel.class);
+        List<PaiHangJsonModel.DataBean> data = paiHangJsonSecondModel.getData();
 
-        dataLeftBeen.clear();
+        dataSecondLeftBeen.clear();
         for (int i = 0; i < data.size(); i++) {
             String cname = data.get(i).getCname();
-            dataLeftBeen.add(cname);
+            dataSecondLeftBeen.add(cname);
         }
 
         List<PaiHangJsonModel.DataBean.CategoriesBean> categories = data.get(0).getCategories();
@@ -157,8 +157,8 @@ public class PaihangSecondFragment extends  BaseFragment {
     }
 
     private void initRightData(List<PaiHangJsonModel.DataBean.CategoriesBean> dataBean) {
-        dataRightBeen.clear();
-        dataRightBeen.addAll(dataBean);
+        dataSecondRightBeen.clear();
+        dataSecondRightBeen.addAll(dataBean);
 
     }
     @Override

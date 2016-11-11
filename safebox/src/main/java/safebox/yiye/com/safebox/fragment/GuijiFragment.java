@@ -23,10 +23,10 @@ import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
 public class GuijiFragment extends Fragment {
 
     private MainActivity mainActivity;
-    private ViewPager viewPager;
+    private ViewPager viewPagerGuiji;
     private GuijiSecondFragment guijiSecondFragment;
     private GuijiFirstFragment guijiFirstFragment;
-    private TabLayout tabLayout;
+    private TabLayout tabLayoutGuiji;
     private GuijiFragmentPageAdapter viewPagerAdapter;
     private View view;
 
@@ -53,8 +53,8 @@ public class GuijiFragment extends Fragment {
         guijiSecondFragment = new GuijiSecondFragment();
 
         mainActivity = (MainActivity) getActivity();
-        viewPager = (ViewPager) view.findViewById(R.id.viewpager);
-        tabLayout = (TabLayout) view.findViewById(R.id.tabs);
+        viewPagerGuiji = (ViewPager) view.findViewById(R.id.viewpager_guiji);
+        tabLayoutGuiji = (TabLayout) view.findViewById(R.id.tabs_guiji);
 
 
         initViewPager();
@@ -67,19 +67,19 @@ public class GuijiFragment extends Fragment {
         titles.add("现在");
         titles.add("历史");
         for (int i = 0; i < titles.size(); i++) {
-            tabLayout.addTab(tabLayout.newTab().setText(titles.get(i)));
+            tabLayoutGuiji.addTab(tabLayoutGuiji.newTab().setText(titles.get(i)));
         }
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(guijiFirstFragment);
         fragments.add(guijiSecondFragment);
 
         viewPagerAdapter = new GuijiFragmentPageAdapter(mainActivity.getSupportFragmentManager(),fragments,titles);
-        viewPager.setAdapter(viewPagerAdapter);
-        viewPager.setCurrentItem(0);
+        viewPagerGuiji.setAdapter(viewPagerAdapter);
+        viewPagerGuiji.setCurrentItem(0);
         //将TabLayout和ViewPager关联起来。
-        tabLayout.setupWithViewPager(viewPager);
+        tabLayoutGuiji.setupWithViewPager(viewPagerGuiji);
         //给TabLayout设置适配器
-        tabLayout.setTabsFromPagerAdapter(viewPagerAdapter);
+        tabLayoutGuiji.setTabsFromPagerAdapter(viewPagerAdapter);
     }
     @Override
     public void onPause() {
@@ -99,5 +99,22 @@ public class GuijiFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+    }
+
+    ReturnToHome toHome;
+
+    public ReturnToHome getToHome() {
+        return toHome;
+    }
+
+    public void setToHome(ReturnToHome toHome) {
+        this.toHome = toHome;
+    }
+
+    // 回到 首页 接口
+    public interface ReturnToHome{
+
+        void toHome();
+
     }
 }

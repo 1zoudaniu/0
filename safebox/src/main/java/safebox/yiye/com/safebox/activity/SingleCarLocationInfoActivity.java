@@ -205,7 +205,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         data_no = intent.getStringExtra("data_no");
         String data_score = intent.getStringExtra("data_score");
         single_car_losction_carinfo.setText(data_no);
-        single_car_losction_carinfo_dis.setText("总里程:" + data_score + "km");
+        single_car_losction_carinfo_dis.setText("日程:" + data_score + "km");
 
     }
 

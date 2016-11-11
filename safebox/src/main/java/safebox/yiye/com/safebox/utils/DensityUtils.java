@@ -15,8 +15,18 @@ public class DensityUtils
     {  
         /* cannot be instantiated */  
         throw new UnsupportedOperationException("cannot be instantiated");  
-    }  
-  
+    }
+    /**
+     * dp到像素px的转化
+     *
+     * @param context
+     * @param dp
+     * @return
+     */
+    public static int dp2dx(Context context, float dp) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp,
+                context.getResources().getDisplayMetrics());
+    }
     /** 
      * dp转px 
      *  

@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/splash" >
+                android:id="@+id/rl_splash"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/splash">
 
     <!-- 显示版本号 -->
 
@@ -14,6 +15,6 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
         android:text="版本:2.0"
-        android:textColor="#FFF" />
+        android:textColor="#FFF"/>
 
 </RelativeLayout>

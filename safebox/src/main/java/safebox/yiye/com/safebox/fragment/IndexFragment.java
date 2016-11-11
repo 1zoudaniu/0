@@ -523,5 +523,20 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
             dotCircularRingView.setProgress(values[0] + "%");
         }
     }
+
+    TableSelectListener tableSelectListener = null;
+
+    public TableSelectListener getTableSelectListener() {
+        return tableSelectListener;
+    }
+
+    public void setTableSelectListener(
+            TableSelectListener tableSelectListener) {
+        this.tableSelectListener = tableSelectListener;
+    }
+
+    public interface TableSelectListener {
+        void tableSelect(int position,int tag);
+    }
 }
 

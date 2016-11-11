@@ -98,4 +98,7 @@
     <!-- animation 样式 -->
     <style name="login" parent="@style/AppTheme.NoActionBar">
     </style>
+
+    <style name="edittext_style">
+        <![CDATA[<style name="edittext_style">         <item name="android:singleLine">true</item>         <item name="android:layout_width">wrap_content</item>         <item name="android:layout_height">match_parent</item>         <item name="android:background">@android:color/transparent</item>         <item name="android:textColor">#333333</item>         <item name="android:textColorHint">#8c8c8c</item>         <item name="android:textSize">14sp</item>     </style>]]></style>
 </resources>

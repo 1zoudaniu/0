@@ -1,309 +1,51 @@
 package safebox.yiye.com.safebox.activity;
 
-import android.annotation.TargetApi;
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
-import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import safebox.yiye.com.safebox.R;
-import safebox.yiye.com.safebox.adapter.GuijiFragmentPageAdapter;
+import safebox.yiye.com.safebox.constant.SpContent;
 import safebox.yiye.com.safebox.fragment.BaseFragment;
-
-import safebox.yiye.com.safebox.fragment.GuijiFirstFragment;
 import safebox.yiye.com.safebox.fragment.GuijiFragment;
-import safebox.yiye.com.safebox.fragment.GuijiSecondFragment;
 import safebox.yiye.com.safebox.fragment.IndexFragment;
 import safebox.yiye.com.safebox.fragment.PaihangFragment;
-import safebox.yiye.com.safebox.utils.ActivityCollector;
-import safebox.yiye.com.safebox.utils.JsonUtils;
-import safebox.yiye.com.safebox.utils.LogUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
+import safebox.yiye.com.safebox.view.MyTabWidget;
 
-public class MainActivity extends AppCompatActivity
-        implements BaseFragment.BackHandledInterface {
+public class MainActivity extends FragmentActivity implements
+        MyTabWidget.OnTabSelectedListener,BaseFragment.BackHandledInterface {
+    private MyTabWidget mTabWidget;
+    private int mIndex = SpContent.HOME_FRAGMENT_INDEX;
+    private FragmentManager mFragmentManager;
+    private mReturnToHome returnToHome;
+    int index = 0;
+    public boolean isUpdate = true;
 
-    private FragmentManager supportFragmentManager;
 
+    private GuijiFragment guijiFirstFragment;
     private IndexFragment indexFragment;
     private PaihangFragment paihangFragment;
-    private RadioGroup radioGroup;
-    private BaseFragment mBackHandedFragment;
-    public long getFirsttime = new Date().getTime();
-    private TextView textView;
-    private GuijiFragment guijiFirstFragment;
-    private GuijiFragmentPageAdapter guijiFragmentPageAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        ActivityCollector.addActivity(this);
+//        ActivityCollector.addActivity(MainActivity.this);
 
         applyKitKatTranslucency();
-
-//
-//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-//
-//        setSupportActionBar(toolbar);
-//
-//
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-//        drawer.setDrawerListener(toggle);
-//        toggle.syncState();
-
-//        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-//        navigationView.setNavigationItemSelectedListener(this);
-
-
-        ////开始 初始化 fragment管理器
-        supportFragmentManager = getSupportFragmentManager();
-        //初始化fragment
-        initFragment();
-        //初始化view
-        initView();
-        //初始化页面为首页
-        changeFragment(indexFragment);
-
-
+        init();
+        initEvents();
     }
-
-    @Override
-    public void onBackPressed() {
-//        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-//        if (drawer.isDrawerOpen(GravityCompat.START)) {
-//            drawer.closeDrawer(GravityCompat.START);
-//        } else {
-//            super.onBackPressed();
-//        }
-
-
-        if (mBackHandedFragment == null || !mBackHandedFragment.onBackPressed()) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
-                String visibleFragment = getVisibleFragment().getClass().getName();
-                if (visibleFragment.equals(IndexFragment.class.getName())
-                        || (visibleFragment.equals(GuijiFragment.class.getName()))
-                        || visibleFragment.equals(PaihangFragment.class.getName())) {
-                    supportFragmentManager.popBackStack(null, 1);
-                    radioGroup.setVisibility(View.VISIBLE);
-                    isShowBottonRadioGroup(1);
-                    long nowtime = new Date().getTime();
-                    if (nowtime - getFirsttime <= 2000) {
-                        System.exit(0);
-                    } else {
-                        getFirsttime = nowtime;
-                        //Toast.makeText(this, "再次点击back退出程序", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            } else {
-                isShowBottonRadioGroup(1);
-                getSupportFragmentManager().popBackStack();
-            }
-        }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-//
-//    @SuppressWarnings("StatementWithEmptyBody")
-//    @Override
-//    public boolean onNavigationItemSelected(MenuItem item) {
-//        // Handle navigation view item clicks here.
-//        int id = item.getItemId();
-//
-//        if (id == R.id.nav_camera) {
-//            // Handle the camera action
-//        } else if (id == R.id.nav_gallery) {
-//
-//        } else if (id == R.id.nav_slideshow) {
-//
-//        } else if (id == R.id.nav_manage) {
-//
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-//
-//        }
-////
-////        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-////        drawer.closeDrawer(GravityCompat.START);
-//        return true;
-//    }
-
-    //初始化fragment
-    private void initFragment() {
-        indexFragment = new IndexFragment();
-        guijiFirstFragment = new GuijiFragment();
-        paihangFragment =  new PaihangFragment();
-
-
-    }
-
-    //初始化view
-    private void initView() {
-        radioGroup = (RadioGroup) findViewById(R.id.rg_tab);
-        radioGroup.setOnCheckedChangeListener(listener);
-
-    }
-
-    private RadioGroup.OnCheckedChangeListener listener = new RadioGroup.OnCheckedChangeListener() {
-        @Override
-        public void onCheckedChanged(RadioGroup group, int checkedId) {
-            switch (checkedId) {
-                case R.id.rb_home:
-                    changeFragment(indexFragment);//切换到首页
-                    break;
-                case R.id.rb_paihang:
-                    changeFragment(paihangFragment);//切换到排行页
-                    break;
-                case R.id.rb_guiji:
-                    changeFragment(guijiFirstFragment);//切换到排行页
-                    break;
-
-
-            }
-        }
-    };
-
-    /**
-     * 切换Fragment
-     *
-     * @param frag
-     */
-    public void changeFragment(Fragment frag) {
-        FragmentManager supportFragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = supportFragmentManager.beginTransaction();
-        supportFragmentManager.popBackStack(null, 1);
-
-        //fragment切换动画
-//        transaction.setCustomAnimations(
-//                R.anim.fragment_slide_right_in, R.anim.fragment_slide_left_out,
-//                R.anim.fragment_slide_left_in, R.anim.fragment_slide_right_out
-//        );
-        transaction.replace(R.id.fl_content, frag);
-        transaction.commit();
-    }
-
-    /**
-     * 添加Fragment到回退栈
-     *
-     * @param fragment
-     */
-    public void addToBackStack(Fragment fragment) {
-        FragmentTransaction transaction = supportFragmentManager.beginTransaction();
-        transaction.replace(R.id.fl_content, fragment);
-        transaction.addToBackStack(null);
-        transaction.commit();
-    }
-
-    /**
-     * 清空栈
-     */
-    public void clearBackStack() {
-        supportFragmentManager.popBackStack(null, 0);//参数为0，清除栈顶的Fragment，参数为1，清空栈
-    }
-
-    public RadioGroup findRadiogroup() {
-        return radioGroup;
-    }
-
-    public void back(View view) {
-        isShowBottonRadioGroup(1);
-        clearBackStack();
-    }
-
-    public Fragment getVisibleFragment() {
-        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-
-        List<Fragment> fragments = fragmentManager.getFragments();
-        for (Fragment fragment : fragments) {
-            if (fragment != null && fragment.isVisible())
-                return fragment;
-        }
-        return null;
-    }
-
-    public void isShowBottonRadioGroup() {
-        String visibleFragment = getVisibleFragment().getClass().getName();
-
-        if (visibleFragment.equals(IndexFragment.class.getName())
-                || visibleFragment.equals(GuijiFragment.class.getName())
-                || visibleFragment.equals(PaihangFragment.class.getName())) {
-            radioGroup.setVisibility(View.VISIBLE);
-        } else {
-            radioGroup.setVisibility(View.GONE);
-        }
-    }
-
-    public void isShowBottonRadioGroup(int i) {
-        String visibleFragment = getVisibleFragment().getClass().getName();
-
-        if (visibleFragment.equals(IndexFragment.class.getName())) {
-            radioGroup.check(R.id.rb_home);
-            radioGroup.setVisibility(View.VISIBLE);
-
-        } else if (visibleFragment.equals(GuijiFragment.class.getName())) {
-            radioGroup.check(R.id.rb_guiji);
-            radioGroup.setVisibility(View.VISIBLE);
-        } else if (visibleFragment.equals(PaihangFragment.class.getName())) {
-            radioGroup.check(R.id.rb_paihang);
-            radioGroup.setVisibility(View.VISIBLE);
-        } else {
-            radioGroup.setVisibility(View.GONE);
-        }
-    }
-
-    @Override
-    public void setSelectedFragment(BaseFragment selectedFragment) {
-        this.mBackHandedFragment = selectedFragment;
-    }
-
-
     /**
      * 设置顶部通知栏样式方法
      */
@@ -316,10 +58,7 @@ public class MainActivity extends AppCompatActivity
             mTintManager.setStatusBarTintEnabled(true);
             mTintManager.setStatusBarTintResource(R.color.colorPrimary);//通知栏所需颜色
         }
-
     }
-
-    @TargetApi(19)
     private void setTranslucentStatus(boolean on) {
         Window win = getWindow();
         WindowManager.LayoutParams winParams = win.getAttributes();
@@ -331,4 +70,146 @@ public class MainActivity extends AppCompatActivity
         }
         win.setAttributes(winParams);
     }
+    private void init() {
+        mFragmentManager = getSupportFragmentManager();
+        mTabWidget = (MyTabWidget) findViewById(R.id.tab_widget);
+//        MyActivityManager.getInstance().pushOneActivity(this);
+    }
+
+    private void initEvents() {
+        mTabWidget.setOnTabSelectedListener(this);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        index = getIntent().getIntExtra("INDEX", 0);
+        if (index != 0) {
+            mIndex = index;
+            mTabWidget.setVisibility(View.GONE);
+        } else {
+            mTabWidget.setVisibility(View.VISIBLE);
+        }
+        onTabSelected(mIndex, 0);
+        mTabWidget.setTabsDisplay(this, mIndex);
+
+    }
+
+    @Override
+    public void setSelectedFragment(BaseFragment selectedFragment) {
+
+    }
+
+
+    class MyTableSelectListener implements IndexFragment.TableSelectListener {
+        @Override
+        public void tableSelect(int position, int tag) {
+//			mTabWidget.setTabsDisplay(ClientHomeActivity.this, position);
+            onTabSelected(position, tag);
+        }
+
+    }
+
+    @Override
+    public void onTabSelected(int index, int tag) {
+        FragmentTransaction transaction = mFragmentManager.beginTransaction();
+        hideFragments(transaction);
+        switch (index) {
+            case SpContent.HOME_FRAGMENT_INDEX:
+                if (null == indexFragment) {
+                    MyTableSelectListener listener = new MyTableSelectListener();
+                    indexFragment = new IndexFragment();
+                    indexFragment.setTableSelectListener(listener);
+                    transaction.add(R.id.fl_content, indexFragment);
+                } else {
+                    transaction.show(indexFragment);
+                }
+                break;
+            case SpContent.GUIJI_FRAGMENT_INDEX:
+                if (null == guijiFirstFragment) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("TAG", tag);
+                    guijiFirstFragment = new GuijiFragment();
+                    returnToHome = new mReturnToHome();
+                    guijiFirstFragment.setToHome(returnToHome);
+                    guijiFirstFragment.setArguments(bundle);
+                    transaction.add(R.id.fl_content, guijiFirstFragment);
+                } else {
+                    transaction.show(guijiFirstFragment);
+                }
+                break;
+            case SpContent.PAIHANG_FRAGMENT_INDEX:
+                if (null == paihangFragment) {
+                    paihangFragment = new PaihangFragment();
+                    transaction.add(R.id.fl_content, paihangFragment);
+                } else {
+                    transaction.show(paihangFragment);
+                }
+
+                break;
+            default:
+                break;
+        }
+        mIndex = index;
+        transaction.commit();
+//        transaction.commitAllowingStateLoss();
+    }
+
+    private void hideFragments(FragmentTransaction transaction) {
+        if (null != indexFragment) {
+            transaction.hide(indexFragment);
+        }
+        if (null != guijiFirstFragment) {
+            transaction.hide(guijiFirstFragment);
+        }
+        if (null != paihangFragment) {
+            transaction.hide(paihangFragment);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        // 自己记录fragment的位置,防止activity被系统回收时，fragment错乱的问题
+        // super.onSaveInstanceState(outState);
+        outState.putInt("index", mIndex);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        // super.onRestoreInstanceState(savedInstanceState);
+        mIndex = savedInstanceState.getInt("index");
+    }
+
+    private long mExitTime;
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (index != 0) {
+                finish();
+            } else {
+                if ((System.currentTimeMillis() - mExitTime) > 2000) {
+                    ToastUtil.startShort(this, "再按一次退出程序");
+                    mExitTime = System.currentTimeMillis();
+                } else {
+                    finish();
+                }
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+    class mReturnToHome implements GuijiFragment.ReturnToHome {
+
+        @Override
+        public void toHome() {
+            mTabWidget.setVisibility(View.VISIBLE);
+            onTabSelected(0, 0);
+            mTabWidget.setTabsDisplay(MainActivity.this, 0);
+        }
+    }
+
+
 }

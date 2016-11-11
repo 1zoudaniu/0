@@ -115,7 +115,7 @@ public class PaihangFirstFragment extends  BaseFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View mView = View.inflate(getContext(), R.layout.fragment_paihang_second, null);
+        View mView = View.inflate(getContext(), R.layout.fragment_paihang_first, null);
 
         initView(mView);
 
@@ -176,9 +176,9 @@ public class PaihangFirstFragment extends  BaseFragment {
     }
 
     private void initView(View mView) {
-        lvLeft=(ListView) mView.findViewById(R.id.lv_left);
+        lvLeft=(ListView) mView.findViewById(R.id.lv_left_first);
 //        pslvRight=(PinnedSectionListView)mView.findViewById(R.id.pslv_right);
-        expandableListView = (ExpandableListView) mView.findViewById(R.id.expendlist);
+        expandableListView = (ExpandableListView) mView.findViewById(R.id.expendlist_first);
 
     }
 

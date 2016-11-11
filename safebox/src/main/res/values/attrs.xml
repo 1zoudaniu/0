@@ -84,4 +84,8 @@
 
     </declare-styleable>
 
+    <declare-styleable name="TabWidget">
+        <attr name="bottom_labels" format="reference" />
+    </declare-styleable>
+
 </resources>

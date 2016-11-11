@@ -61,10 +61,10 @@ public class LogUtils {
             Log.d(tag, msg, tr);
         }
     }
-
-    public static void i(String msg) {
+//TODO
+    public static void i(String tag, String msg) {
         if (showI) {
-            String tag = generateTag();
+            String tag1 = generateTag();
             Log.i(tag, msg);
         }
     }

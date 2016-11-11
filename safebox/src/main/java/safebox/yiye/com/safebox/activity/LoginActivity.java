@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.os.Build;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -21,6 +22,8 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
@@ -35,6 +38,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.readystatesoftware.systembartint.SystemBarTintManager;
 import com.socks.library.KLog;
 
 import org.json.JSONException;
@@ -63,6 +67,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        applyKitKatTranslucency();
+
         login_safebox = SPUtils.getString(LoginActivity.this, "login_safebox");
         if (!TextUtils.isEmpty(login_safebox)) {
             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -92,6 +99,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             SMSSDK.registerEventHandler(eh);
             setListener();
         }
+    }
+    /**
+     * 设置顶部通知栏样式方法
+     */
+    private void applyKitKatTranslucency() {
+
+        // KitKat translucent navigation/status bar.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            setTranslucentStatus(true);
+            SystemBarTintManager mTintManager = new SystemBarTintManager(this);
+            mTintManager.setStatusBarTintEnabled(true);
+            mTintManager.setStatusBarTintResource(R.color.colorPrimary);//通知栏所需颜色
+        }
+    }
+    private void setTranslucentStatus(boolean on) {
+        Window win = getWindow();
+        WindowManager.LayoutParams winParams = win.getAttributes();
+        final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+        if (on) {
+            winParams.flags |= bits;
+        } else {
+            winParams.flags &= ~bits;
+        }
+        win.setAttributes(winParams);
     }
 
     Handler handler = new Handler() {

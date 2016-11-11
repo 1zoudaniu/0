@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- <item>@string/collect</item> -->
+    <!-- 首页导航 -->
+    <string-array name="bottom_bar_labels">
+        <item>@string/home</item>
+        <item>@string/guiji</item>
+        <item>@string/paihang</item>
+
+    </string-array>
+
+</resources>
