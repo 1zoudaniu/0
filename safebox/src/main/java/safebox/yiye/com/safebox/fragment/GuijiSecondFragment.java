@@ -109,6 +109,7 @@ public class GuijiSecondFragment extends Fragment {
 
         //一下是一个周的
         chart_week = (LineChartView) rootView.findViewById(R.id.chart_week);
+        chart_week.setZoomEnabled(false);
         pointsHaveDifferentColor_week = !pointsHaveDifferentColor_week;
         // Generate some random values.
         generateValues_week();
@@ -122,6 +123,7 @@ public class GuijiSecondFragment extends Fragment {
 
         //一下是一个月的
         chart = (LineChartView) rootView.findViewById(R.id.chart_mounth);
+        chart.setZoomEnabled(false);
         pointsHaveDifferentColor = !pointsHaveDifferentColor;
         // Generate some random values.
         generateValues();
@@ -228,7 +230,7 @@ public class GuijiSecondFragment extends Fragment {
     private void generateValues_week() {
         for (int i = 0; i < maxNumberOfLines_week; ++i) {
             for (int j = 0; j < numberOfPoints_week; ++j) {
-                randomNumbersTab_week[i][j] = (float) Math.random() * 100f;
+                randomNumbersTab_week[i][j] = (float)( Math.random() * 40f+60);
             }
         }
     }
@@ -239,9 +241,9 @@ public class GuijiSecondFragment extends Fragment {
     private void resetViewport_week() {
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(chart_week.getMaximumViewport());
-        v.bottom = 0;
+        v.bottom = 30;
         v.top = 100;
-        v.left = 1;
+        v.left = 0;
         v.right = numberOfPoints_week-1;
         chart_week.setMaximumViewport(v);
         chart_week.setCurrentViewport(v);
@@ -303,7 +305,7 @@ public class GuijiSecondFragment extends Fragment {
     private void generateValues() {
         for (int i = 0; i < maxNumberOfLines; ++i) {
             for (int j = 0; j < numberOfPoints; ++j) {
-                randomNumbersTab[i][j] = (float) (70.0f+Math.random() * 30f);
+                randomNumbersTab[i][j] = (float) (60.0f+Math.random() * 40f);
             }
         }
     }
@@ -315,7 +317,7 @@ public class GuijiSecondFragment extends Fragment {
     private void resetViewport() {
         // Reset viewport height range to (0,100)
         final Viewport v = new Viewport(chart.getMaximumViewport());
-        v.bottom = 0;
+        v.bottom = 30;
         v.top = 100;
         v.left = 0;
         v.right = numberOfPoints;
