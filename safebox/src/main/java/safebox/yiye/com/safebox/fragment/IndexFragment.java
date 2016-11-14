@@ -3,12 +3,19 @@ package safebox.yiye.com.safebox.fragment;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.RectF;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,33 +28,284 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.twotoasters.jazzylistview.JazzyListView;
 import com.twotoasters.jazzylistview.effects.ReverseFlyEffect;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import safebox.yiye.com.safebox.Globle.SafeboxApplication;
 import safebox.yiye.com.safebox.R;
+import safebox.yiye.com.safebox.activity.MainActivity;
 import safebox.yiye.com.safebox.activity.PersonInfoActivity;
 import safebox.yiye.com.safebox.activity.SingleCarLocationInfoActivity;
 import safebox.yiye.com.safebox.adapter.IndexCarScoreAdapter;
+import safebox.yiye.com.safebox.beans.ServerVersionInfo;
+import safebox.yiye.com.safebox.constant.Model;
 import safebox.yiye.com.safebox.firstanmi.AlphaForegroundColorSpan;
 import safebox.yiye.com.safebox.http.CarScoreAndListModel;
 import safebox.yiye.com.safebox.http.HttpApi;
 import safebox.yiye.com.safebox.utils.BaseUrl;
+import safebox.yiye.com.safebox.utils.SPUtils;
 import safebox.yiye.com.safebox.utils.ToastUtil;
+import safebox.yiye.com.safebox.utils.UpdateUtils;
 import safebox.yiye.com.safebox.view.DotCircularRingView;
 
 /**
  * Created by aina on 2016/9/20.
  */
 public class IndexFragment extends BaseFragment implements AdapterView.OnItemClickListener, View.OnClickListener {
+    //当前服务器获取版本号的标志
+    protected static final int SERVERVERSIONCONTENT = 100;
+
+    //服务器下载完成的标志
+    private static final int DOWNFINISH = 101;
+
+    //开启当前安装的intent意图
+    private static final int INSTALLREQUEST = 102;
+    private static final String TAG = "INDEXFRAGMENT";
+
+    private TextView mTv_splash_version;
+
+    //定义接收数据handler
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SERVERVERSIONCONTENT:
+                    //获取服务器版本内容
+                    String serverVersionContent = (String) msg.obj;
+                    if (TextUtils.isEmpty(serverVersionContent)) {
+                        //如果是空的
+                        //进入主界面
+                        go2login();//进入主界面
+
+                        return;//结束当前的操作
+                    }
+
+////                    //说明数据不为空,进行解析
+////                    ServerVersionInfo info = parseJSON(serverVersionContent);
+////
+////                    //校验当前的数据是否为空
+////                    if (info == null) {
+////                        //进入主界面
+////                        go2login();
+////                        return;//返回
+////                    }
+//
+//                    //打印
+//                    Log.i(TAG, info.versincode + "-->" + info.downURL);
+
+                    //得到本地的版本号
+                    int localversion = UpdateUtils.getLocalCode(SafeboxApplication.getContext());
+
+//                    //对比本地的版本号与服务器版本号是否一致
+//                    if (localversion != info.versincode) {
+//                        //不等于,弹出对话框
+//                        Log.i(TAG, "弹出对话框");
+//                        showUpdateDialog(info.downURL);
+//
+//                    } else {
+//                        //进入主界面
+//                        go2login();
+//                    }
+                    //TODO  进行更换上面的diamante
+                    if (localversion != 0) {
+//                        //不等于,弹出对话框
+//                        Log.i(TAG, "弹出对话框");
+//                        showUpdateDialog("string");
+                        mUpdateMsg.setVisibility(View.VISIBLE);
+                        mUpdateMsg.setText("  1");
+                    } else {
+                        //进入主界面
+                        go2login();
+                    }
+
+                    break;
+
+                case DOWNFINISH://下载完成
+                    //安装我的下载的apk
+                    File downFile = (File) msg.obj;
+                    UpdateUtils.installAPK(getActivity(), downFile, INSTALLREQUEST);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+    };
+    private TextView mUpdateMsg;
+
+    private void go2login() {
+        Toast.makeText(SafeboxApplication.getContext(), "有了", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 显示一个更新对话框
+     */
+    private void showUpdateDialog(final String url) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(SafeboxApplication.getContext());
+        builder.setTitle("有新版本啦");
+        builder.setMessage("是否更新新版本");
+        builder.setCancelable(false);//当前对话框外部点击不消失
+        builder.setNegativeButton("立即更新", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                //下载操作
+                new Thread(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        downAPK(url);
+                    }
+                }).start();
+
+            }
+
+        });
+
+        builder.setPositiveButton("下次再说", new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                //直接进入主界面
+                go2login();
+
+            }
+        });
+
+        //显示对话框
+        builder.show();
+    }
+
+    /**
+     * 专门用于下载
+     */
+    private void downAPK(String url) {
+        try {
+            //得到我们的response对象
+            Response response = UpdateUtils.getResponse(url);
+            //得到请求内容
+            InputStream inputStream = response.body().byteStream();
+
+            //写入sd卡
+            //写入的sd状态
+
+            //判断当前的状态是否可写可读SD
+            if (TextUtils.equals(Environment.getExternalStorageState(), Environment.MEDIA_MOUNTED)) {
+                //可读可写
+                File storageDirectory = Environment.getExternalStorageDirectory();
+                //创建一个文件
+                File downFile = new File(storageDirectory, "ichuche.apk");
+
+                //写入文件
+                UpdateUtils.writeFile(inputStream, downFile);
+
+                Message msg = Message.obtain();
+                msg.obj = downFile;//下载文件
+                msg.what = DOWNFINISH;
+                //提交数据
+                mHandler.sendMessage(msg);
+
+            } else {
+                //出错
+                go2login();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            /**
+             * 有两种方法
+             * 1. 如果要提示用户,直接mhandler
+             * 2. 不提示用户
+             */
+            //直接进入主界面
+            go2login();
+        }
+
+    }
+
+    //解析json
+    private ServerVersionInfo parseJSON(String json) {
+        /*   {
+               "downurl": "http://www.heima.com",
+               "version": "2"
+           }*/
+
+        try {
+            JSONObject jsonObject = new JSONObject(json);
+            int versoncode = jsonObject.getInt("version");
+            String downurl = jsonObject.getString("downurl");
+
+            ServerVersionInfo info = new ServerVersionInfo();
+            info.versincode = versoncode;
+            info.downURL = downurl;
+
+            return info;//返回数据
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+
+            return null;
+        }
+
+    }
+    /**
+     * 版本更新
+     */
+    private void checkServerVersion() {
+        /**
+         * 访问网络
+         * 耗时操作
+         */
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                //去服务器访问最新的版本信息
+                try {
+                    //得到我们的response对象
+                    Response response = UpdateUtils.getResponse(Model.SERVERVERSONURL);
+                    //打印数据体
+                    String content = response.body().string();
+                    Log.i(TAG, "serverversion:" + content);
+
+                    Message msg = Message.obtain();
+                    msg.obj = content;//数据体
+                    msg.what = SERVERVERSIONCONTENT;//当前标识
+                    //传送数据
+                    mHandler.sendMessage(msg);
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                    //直接进入主界面
+                    go2login();
+                }
+            }
+        }).start();
+
+    }
+
+
+
+
 
 
     public static boolean isFirstRoate = true;
@@ -55,7 +313,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     private volatile boolean isRunning = true;
 
     //新近添加开始
-    private static final String TAG = "NoBoringActionBarActivity";
     private int mActionBarTitleColor;
     private int mActionBarHeight;
     private int mActionBarHeight_null;
@@ -102,6 +359,9 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
         initViewData(inflater);
 
+        //TODO 新增加的
+        initCheckUpdate();
+
         setupListView();
 
         initRota();
@@ -110,6 +370,25 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
         return mView;
 
+    }
+
+    private void initCheckUpdate() {
+
+        //新加的
+        //TODO
+        //得到自动更新的标志
+        boolean autoisopen = SPUtils.getBoolean_true(SafeboxApplication.getContext(), Model.AUTOISOPEN);
+        Log.i(TAG, "自动更新的状态" + autoisopen);
+
+        //判断如果是true;就去版本更新
+        //如果是false就直接进入主界面
+
+        if (autoisopen) {
+            //更新版本
+            checkServerVersion();
+        } else {
+            go2login();
+        }
     }
 
     private void initListViewData() {
@@ -131,7 +410,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
                     @Override
                     public void onFailure(Call<CarScoreAndListModel> call, Throwable t) {
-                        ToastUtil.startShort(getActivity(),"请检查网络");
+                        ToastUtil.startShort(getActivity(), "请检查网络");
                     }
                 });
 
@@ -160,9 +439,10 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
         mListView = (JazzyListView) mView.findViewById(R.id.listview);
         imageView_menu = (ImageView) mView.findViewById(R.id.fragment_index_menu);
         imageView_message = (ImageView) mView.findViewById(R.id.fragment_index_message);
+        mUpdateMsg = (TextView) mView.findViewById(R.id.fragment_index_msg);
+
         imageView_menu.setOnClickListener(this);
         imageView_message.setOnClickListener(this);
-
 
 
         mHeader = (RelativeLayout) mPlaceHolderView.findViewById(R.id.header);
@@ -261,7 +541,6 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     public void onPause() {
         super.onPause();
     }
-
 
 
     private void setupListView() {
@@ -536,7 +815,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
     }
 
     public interface TableSelectListener {
-        void tableSelect(int position,int tag);
+        void tableSelect(int position, int tag);
     }
 }
 

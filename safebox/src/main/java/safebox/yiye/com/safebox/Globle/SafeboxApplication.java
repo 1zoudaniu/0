@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.lang.Thread.UncaughtExceptionHandler;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Environment;
 import android.os.Process;
 
@@ -13,6 +14,8 @@ import android.os.Process;
 全局上下文 创建在所有的四大组件之前
 */
 public class SafeboxApplication extends Application {
+	private static Context context;
+
 	/*** 方法
 	*/
 	@Override
@@ -37,8 +40,22 @@ public class SafeboxApplication extends Application {
 //				Process.killProcess(Process.myPid());
 //			}
 //		});
-
+		this.context=getApplicationContext();
 		CrashHandler crashHandler = CrashHandler.getInstance();
 		crashHandler.init(getApplicationContext());
+
+
 	}
+
+	public static Context getContext(){
+		return context;
+	}
+//	public static synchronized newInstance (final Context mContext)
+//	{
+//		if (mInstance == null)
+//		{
+//			mInstance = new XXClass(context.getApplicationContext());
+//		}
+//		return mInstance;
+//	}
 }

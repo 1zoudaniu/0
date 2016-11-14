@@ -32,15 +32,15 @@ public class Model {
 
 
     // 父listview的文本数据数组
-    public static Float[] INDEX_TWO_Latitude = new Float[]{31.216524f, 31.225526f,
-            31.215335f, 31.20366f, 31.213853f, 31.185682f, 31.185526f, 31.215335f};
+    public static Float[] INDEX_TWO_Latitude = new Float[]{31.236524f, 31.225526f,
+            31.215335f, 31.20366f, 31.223853f, 31.195682f, 31.185526f, 31.215335f};
 
     // 父listview的文本数据数组
     public static Float[] INDEX_TWO_Longitude = new Float[]{121.61904f, 121.61471f,
-            121.581078f, 121.544427f, 121.507345f, 121.407345f, 121.60471f, 121.701078f};
+            121.881078f, 121.744427f, 121.507345f, 121.307345f, 121.60471f, 121.761078f};
 
     //自动更新
     public static final String AUTOISOPEN= "AUTOISOPEN";
     //把url地址抽出来
-    public static final String SERVERVERSONURL = "http://192.168.1.144:8080/versionServer.json";
+    public static final String SERVERVERSONURL = "http://www.baidu.com";
 }
