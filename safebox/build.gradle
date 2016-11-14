@@ -78,9 +78,15 @@ dependencies {
     testCompile 'org.mockito:mockito-core:1.9.0'
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-
-
     apt 'com.zhy:mpermission-compiler:1.0.0'
     compile 'com.zhy:mpermission-api:1.0.0'
     compile 'com.dou361.dialogui:jjdxm-dialogui:1.0.1'
+    compile project(':rxdownload_library')
+
+
+    compile 'com.jakewharton:butterknife:8.4.0'
+    apt 'com.jakewharton:butterknife-compiler:8.4.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
+    compile 'zlc.season:practicalrecyclerview:1.0.8'
+    compile 'com.tbruyelle.rxpermissions:rxpermissions:0.8.2@aar'
 }

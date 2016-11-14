@@ -91,7 +91,7 @@ public class SplashActivity extends Activity {
                 case DOWNFINISH://下载完成
                     //安装我的下载的apk
                     File downFile = (File) msg.obj;
-                    UpdateUtils.installAPK(SplashActivity.this, downFile, INSTALLREQUEST);
+//                    UpdateUtils.installAPK(SplashActivity.this, downFile, INSTALLREQUEST);
                     break;
 
                 default:

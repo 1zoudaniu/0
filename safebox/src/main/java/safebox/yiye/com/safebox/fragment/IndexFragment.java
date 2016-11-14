@@ -128,6 +128,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 //                        //不等于,弹出对话框
 //                        Log.i(TAG, "弹出对话框");
 //                        showUpdateDialog("string");
+                        Toast.makeText(SafeboxApplication.getContext(), "有新版本", Toast.LENGTH_SHORT).show();
                         mUpdateMsg.setVisibility(View.VISIBLE);
                         mUpdateMsg.setText("  1");
                     } else {
@@ -140,7 +141,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
                 case DOWNFINISH://下载完成
                     //安装我的下载的apk
                     File downFile = (File) msg.obj;
-                    UpdateUtils.installAPK(getActivity(), downFile, INSTALLREQUEST);
+//                    UpdateUtils.installAPK(getActivity(), downFile, INSTALLREQUEST);
                     break;
 
                 default:
@@ -153,6 +154,7 @@ public class IndexFragment extends BaseFragment implements AdapterView.OnItemCli
 
     private void go2login() {
         Toast.makeText(SafeboxApplication.getContext(), "有了", Toast.LENGTH_SHORT).show();
+        mUpdateMsg.setVisibility(View.GONE);
     }
 
     /**

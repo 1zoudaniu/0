@@ -53,4 +53,5 @@
 
 
     <color name="linen">#FAF0E6</color>
+    <color name="bg">#edebeb</color>
 </resources>

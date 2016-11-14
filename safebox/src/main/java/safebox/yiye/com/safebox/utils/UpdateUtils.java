@@ -16,6 +16,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.net.Uri;
 import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
+import android.widget.Toast;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -80,28 +82,16 @@ public class UpdateUtils {
      * 安装apk
      */
     /**
-     * @param file 安装 文件
-     * @param INSTALLREQUEST 请求码
      */
-    public static void installAPK(Activity context,File file,int INSTALLREQUEST) {
-        /*     <intent-filter>
-             <action android:name="android.intent.action.VIEW" />
-             <category android:name="android.intent.category.DEFAULT" />
-             <data android:scheme="content" />
-             <data android:scheme="file" />
-             <data android:mimeType="application/vnd.android.package-archive" />
-         </intent-filter>*/
-        
+    public static void installAPK(Context context,String url) {
         //创建一个意图
         Intent intent_install = new Intent();
         intent_install.setAction("android.intent.action.VIEW");
         intent_install.addCategory("android.intent.category.DEFAULT");
-        Uri data = Uri.fromFile(file);
+        Uri data = Uri.parse(url);
         intent_install.setDataAndType(data, "application/vnd.android.package-archive");
-        
-        //开启intent
-        // startActivity(intent_install);
-        context.startActivityForResult(intent_install, INSTALLREQUEST);
+        intent_install.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent_install);
     }
     
     /**
@@ -127,7 +117,7 @@ public class UpdateUtils {
     /**
      * 写入文件
      * @param inputStream
-     * @param fileOutputStream
+     * @param
      * @throws IOException
      */
     public static void writeFile(InputStream inputStream, File downFile)

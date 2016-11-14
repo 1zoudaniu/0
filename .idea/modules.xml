@@ -3,6 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SafeBox.iml" filepath="$PROJECT_DIR$/SafeBox.iml" />
+      <module fileurl="file://$PROJECT_DIR$/rxdownload_library/rxdownload_library.iml" filepath="$PROJECT_DIR$/rxdownload_library/rxdownload_library.iml" />
       <module fileurl="file://$PROJECT_DIR$/safebox/safebox.iml" filepath="$PROJECT_DIR$/safebox/safebox.iml" />
     </modules>
   </component>
