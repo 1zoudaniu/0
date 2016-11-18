@@ -1,1 +1,1 @@
-include ':safebox', ':rxdownload_library'
+include ':safebox', ':rxdownload_library', ':MPChartLib'
