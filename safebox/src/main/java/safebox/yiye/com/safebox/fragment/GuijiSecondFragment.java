@@ -1,378 +1,381 @@
 package safebox.yiye.com.safebox.fragment;
 
+
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import lecho.lib.hellocharts.animation.ChartAnimationListener;
-import lecho.lib.hellocharts.gesture.ZoomType;
-import lecho.lib.hellocharts.listener.ColumnChartOnValueSelectListener;
-import lecho.lib.hellocharts.listener.LineChartOnValueSelectListener;
-import lecho.lib.hellocharts.model.Axis;
-import lecho.lib.hellocharts.model.AxisValue;
-import lecho.lib.hellocharts.model.Column;
-import lecho.lib.hellocharts.model.ColumnChartData;
-import lecho.lib.hellocharts.model.Line;
-import lecho.lib.hellocharts.model.LineChartData;
-import lecho.lib.hellocharts.model.PointValue;
-import lecho.lib.hellocharts.model.SubcolumnValue;
-import lecho.lib.hellocharts.model.ValueShape;
-import lecho.lib.hellocharts.model.Viewport;
-import lecho.lib.hellocharts.util.ChartUtils;
-import lecho.lib.hellocharts.view.Chart;
-import lecho.lib.hellocharts.view.ColumnChartView;
-import lecho.lib.hellocharts.view.LineChartView;
+import safebox.yiye.com.safebox.Globle.SafeboxApplication;
 import safebox.yiye.com.safebox.R;
-import safebox.yiye.com.safebox.utils.ToastUtil;
+import safebox.yiye.com.safebox.view.MyMarkerView;
+
 
 /**
  * Created by aina on 2016/10/17.
  */
 
-public class GuijiSecondFragment extends Fragment {
+public class GuijiSecondFragment extends Fragment implements
+        OnChartGestureListener, OnChartValueSelectedListener {
 
-    public final static String[] days = new String[]{"1", "2", "3", "4", "5", "6", "7",};
 
-    private LineChartView chartTop;
+    protected Typeface mTfRegular;
+    protected Typeface mTfLight;
+    private Context mContext;
 
-    private LineChartData lineData;
 
-    public GuijiSecondFragment() {
-    }
-//    99CC00
-
-    //一下是一个月的
-    private LineChartView chart;
-    private LineChartData data;
-    private int numberOfLines = 1;
-    private int maxNumberOfLines = 4;
-    private int numberOfPoints = 31;
-
-    float[][] randomNumbersTab = new float[maxNumberOfLines][numberOfPoints];
-
-    private boolean hasAxes = true;
-    private boolean hasAxesNames = true;
-    private boolean hasLines = true;
-    private boolean hasPoints = true;
-    private ValueShape shape = ValueShape.CIRCLE;
-    //出现阴影面积
-    private boolean isFilled = true;
-    private boolean hasLabels = false;
-    private boolean isCubic = false;
-    //点击后出现具体数字
-    private boolean hasLabelForSelected = true;
-    private boolean pointsHaveDifferentColor;
-
-    //一下是一个周的
-    private LineChartView chart_week;
-    private LineChartData data_week;
-    private int numberOfLines_week = 1;
-    private int maxNumberOfLines_week = 4;
-    private int numberOfPoints_week = 7;
-
-    float[][] randomNumbersTab_week = new float[maxNumberOfLines_week][numberOfPoints_week];
-
-    private boolean hasAxes_week = true;
-    private boolean hasAxesNames_week = true;
-    private boolean hasLines_week = true;
-    private boolean hasPoints_week = true;
-    private ValueShape shape_week = ValueShape.CIRCLE;
-    //出现阴影面积
-    private boolean isFilled_week = true;
-    private boolean hasLabels_week = true;
-    private boolean isCubic_week = false;
-    //点击后出现具体数字
-    private boolean hasLabelForSelected_week = false;
-    private boolean pointsHaveDifferentColor_week;
+    private LineChart mChartMounth;
+    private LineChart mChartWeek;
+    private SeekBar mSeekBarX, mSeekBarY;
+    private TextView tvX, tvY;
+    private View mView;
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_line_column_dependency, container, false);
-//一个周的第一个版本
-//        // *** TOP LINE CHART ***
-//        chartTop = (LineChartView) rootView.findViewById(R.id.chart_top);
-//
-//        // Generate and set data for line chart
-//        generateInitialLineData();
-//
-//        generateLineData(ChartUtils.COLOR_GREEN, 100);
+        mContext = SafeboxApplication.getContext();
+        mTfRegular = Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Regular.ttf");
+        mTfLight = Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Light.ttf");
 
-        //一下是一个周的
-        chart_week = (LineChartView) rootView.findViewById(R.id.chart_week);
-        chart_week.setZoomEnabled(false);
-        pointsHaveDifferentColor_week = !pointsHaveDifferentColor_week;
-        // Generate some random values.
-        generateValues_week();
-        chart_week.setValueSelectionEnabled(hasLabelForSelected_week);
-        generateData_week();
+        mView = View.inflate(mContext, R.layout.fragment_line_column_dependency, null);
 
-        // Disable viewport recalculations, see toggleCubic() method for more info.
-        chart_week.setViewportCalculationEnabled(false);
-        resetViewport_week();
+        mChartWeek = (LineChart) mView.findViewById(R.id.chart_week);
+        mChartMounth = (LineChart) mView.findViewById(R.id.chart_mounth);
+        mChartWeek.setOnChartGestureListener(this);
+        mChartWeek.setOnChartValueSelectedListener(this);
+        mChartWeek.setDrawGridBackground(false);
+//        mChartMounth.setOnChartGestureListener(this);
+//        mChartMounth.setOnChartValueSelectedListener(this);
+//        mChartMounth.setDrawGridBackground(false);
+
+        // no description text
+        mChartWeek.getDescription().setEnabled(false);
+        mChartMounth.getDescription().setEnabled(false);
+
+        // enable touch gestures  设置可触摸可点击
+//        mChartWeek.setTouchEnabled(true);
+
+        // enable scaling and dragging
+        mChartWeek.setDragEnabled(true);
+        mChartWeek.setScaleEnabled(true);
+        mChartMounth.setDragEnabled(true);
+        mChartMounth.setScaleEnabled(true);
+        // mChartWeek.setScaleXEnabled(true);
+        // mChartWeek.setScaleYEnabled(true);
+
+        // if disabled, scaling can be done on x- and y-axis separately
+        mChartWeek.setPinchZoom(true);
+        mChartMounth.setPinchZoom(true);
+
+        // set an alternative background color
+        // mChartWeek.setBackgroundColor(Color.GRAY);
+
+        // create a custom MarkerView (extend MarkerView) and specify the layout
+        // to use for it  设置点击后出现的的mark标记
+        MyMarkerView mv = new MyMarkerView(mContext, R.layout.custom_marker_view);
+        mv.setChartView(mChartMounth); // For bounds control
+        mChartMounth.setMarker(mv); // Set the marker to the chart
+
+//        // x-axis limit line
+//        LimitLine llXAxis = new LimitLine(10f, "鬼知道呢");
+//        llXAxis.setLineWidth(4f);
+//        llXAxis.enableDashedLine(10f, 10f, 0f);
+//        llXAxis.setLabelPosition(LimitLabelPosition.RIGHT_BOTTOM);
+//        llXAxis.setTextSize(10f);
+
+        Typeface tf = Typeface.createFromAsset(mContext.getAssets(), "OpenSans-Regular.ttf");
+//        XAxis xAxis = holder.chart.getXAxis();
+
+        XAxis xAxis = mChartWeek.getXAxis();
+
+        //设置X坐标字的位置
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTypeface(tf);
+        //设置画格子
+        xAxis.setDrawGridLines(false);
+        xAxis.setDrawAxisLine(true);
+        xAxis.enableGridDashedLine(10f, 10f, 0);
+
+        XAxis xAxisMounth = mChartMounth.getXAxis();
+
+        //设置X坐标字的位置
+        xAxisMounth.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxisMounth.setTypeface(tf);
+        //设置画格子
+        xAxisMounth.setDrawGridLines(false);
+        xAxisMounth.setDrawAxisLine(true);
+        xAxisMounth.enableGridDashedLine(10f, 10f, 0);
 
 
-        //一下是一个月的
-        chart = (LineChartView) rootView.findViewById(R.id.chart_mounth);
-        chart.setZoomEnabled(false);
-        pointsHaveDifferentColor = !pointsHaveDifferentColor;
-        // Generate some random values.
-        generateValues();
+        YAxis leftAxis = mChartWeek.getAxisLeft();
+        leftAxis.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+//        leftAxis.addLimitLine(ll1);
+//        leftAxis.addLimitLine(ll2);
+        leftAxis.setAxisMaximum(100f);
+        leftAxis.setAxisMinimum(0f);
+        //leftAxis.setYOffset(20f);
+        leftAxis.enableGridDashedLine(10f, 10f, 0);
+        leftAxis.setDrawZeroLine(false);
 
-        generateData();
+        // limit lines are drawn behind data (and not on top)
+        leftAxis.setDrawLimitLinesBehindData(true);
 
-        // Disable viewport recalculations, see toggleCubic() method for more info.
-        chart.setViewportCalculationEnabled(false);
-        chart.setValueSelectionEnabled(hasLabelForSelected);
+        YAxis leftAxisMounth = mChartMounth.getAxisLeft();
+        leftAxisMounth.removeAllLimitLines(); // reset all limit lines to avoid overlapping lines
+//        leftAxis.addLimitLine(ll1);
+//        leftAxis.addLimitLine(ll2);
+        leftAxisMounth.setAxisMaximum(100f);
+        leftAxisMounth.setAxisMinimum(0f);
+        //leftAxis.setYOffset(20f);
+        leftAxisMounth.enableGridDashedLine(10f, 10f, 0);
+        leftAxisMounth.setDrawZeroLine(false);
 
-        resetViewport();
+        // limit lines are drawn behind data (and not on top)
+        leftAxisMounth.setDrawLimitLinesBehindData(true);
 
-        return rootView;
-    }
-    //一个周的第一个版本
-//
-//    /**
-//     * Generates initial data for line chart. At the begining all Y values are equals 0. That will change when user
-//     * will select value on column chart.
-//     */
-//    private void generateInitialLineData() {
-//        int numValues = 7;
-//
-//        List<AxisValue> axisValues = new ArrayList<AxisValue>();
-//        List<PointValue> values = new ArrayList<PointValue>();
-//        for (int i = 0; i < numValues; ++i) {
-//            values.add(new PointValue(i, 0));
-//            axisValues.add(new AxisValue(i).setLabel(days[i]));
-//        }
-//
-//        Line line = new Line(values);
-//        line.setColor(ChartUtils.COLOR_GREEN).setCubic(true);
-//
-//        List<Line> lines = new ArrayList<Line>();
-//        lines.add(line);
-//
-//        lineData = new LineChartData(lines);
-//        lineData.setAxisXBottom(new Axis(axisValues).setHasLines(true));
-//        lineData.setAxisYLeft(new Axis().setHasLines(true).setMaxLabelChars(3));
-//
-//        chartTop.setLineChartData(lineData);
-//
-//        // For build-up animation you have to disable viewport recalculation.
-//        chartTop.setViewportCalculationEnabled(false);
-//
-//        // And set initial max viewport and current viewport- remember to set viewports after data.
-//        Viewport v = new Viewport(0, 100, 6, 0);
-//        chartTop.setMaximumViewport(v);
-//        chartTop.setCurrentViewport(v);
-//
-//        chartTop.setZoomType(ZoomType.HORIZONTAL);
-//
-//        chartTop.setOnValueTouchListener(new LineChartOnValueSelectListener() {
-//            @Override
-//            public void onValueSelected(int lineIndex, int pointIndex, PointValue value) {
-//                int i = (int) (value.getX() + 1);
-//
-//                float y = value.getY();
-//                ToastUtil.startShort(getActivity(),"第"+ i +"天的评分为："+ y +"分");
-//            }
-//
-//            @Override
-//            public void onValueDeselected() {
-//
-//            }
-//        });
-//    }
-//
-//    private void generateLineData(int color, float range) {
-//        // Cancel last animation if not finished.
-//        chartTop.cancelDataAnimation();
-//
-//        // Modify data targets
-//        Line line = lineData.getLines().get(0);// For this example there is always only one line.
-//        line.setColor(color);
-//        for (PointValue value : line.getValues()) {
-//            // Change target only for Y value.
-//            value.setTarget(value.getX(), (float) Math.random() * range);
-//        }
-//
-//        // Start new data animation with 300ms duration;
-//        chartTop.startDataAnimation(300);
-//    }
-//
-//    private class ValueTouchListener implements ColumnChartOnValueSelectListener {
-//
-//        @Override
-//        public void onValueSelected(int columnIndex, int subcolumnIndex, SubcolumnValue value) {
-//            generateLineData(value.getColor(), 100);
-//        }
-//
-//        @Override
-//        public void onValueDeselected() {
-//
-//            generateLineData(ChartUtils.COLOR_GREEN, 0);
-//
-//        }
-//    }
-    //一下是一个周的
+        mChartWeek.getAxisRight().setEnabled(false);
+        mChartMounth.getAxisRight().setEnabled(false);
 
-    /**
-     * 生成点的数据
-     */
-    private void generateValues_week() {
-        for (int i = 0; i < maxNumberOfLines_week; ++i) {
-            for (int j = 0; j < numberOfPoints_week; ++j) {
-                randomNumbersTab_week[i][j] = (float)( Math.random() * 40f+60);
-            }
+
+        // add data
+        setDataWeek(7, 20);
+        setDataMounth(30, 30);
+
+
+        mChartWeek.animateX(0);
+        mChartMounth.animateX(0);
+        //mChartWeek.invalidate();
+
+        // get the legend (only possible after setting data)
+        Legend l = mChartWeek.getLegend();
+        Legend lMounth = mChartMounth.getLegend();
+
+        // modify the legend ...
+        l.setForm(Legend.LegendForm.LINE);
+        lMounth.setForm(Legend.LegendForm.LINE);
+
+
+        //清楚顶点数字
+        List<ILineDataSet> sets = mChartMounth.getData()
+                .getDataSets();
+
+        for (ILineDataSet iSet : sets) {
+
+            LineDataSet set = (LineDataSet) iSet;
+            set.setDrawValues(!set.isDrawValuesEnabled());
         }
+        mChartMounth.invalidate();
+
+
+        // // dont forget to refresh the drawing
+        mChartWeek.animateXY(3000, 3000);
+        mChartMounth.animateXY(3000, 3000);
+
+        return mView;
     }
 
-    /**
-     * 设置视图的点数  起点终点  最大值
-     */
-    private void resetViewport_week() {
-        // Reset viewport height range to (0,100)
-        final Viewport v = new Viewport(chart_week.getMaximumViewport());
-        v.bottom = 30;
-        v.top = 100;
-        v.left = 0;
-        v.right = numberOfPoints_week-1;
-        chart_week.setMaximumViewport(v);
-        chart_week.setCurrentViewport(v);
+
+    protected float getRandom(int range, int startsfrom) {
+        return (float) (Math.random() * range) + startsfrom;
     }
 
-    private void generateData_week() {
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
 
-        List<Line> lines = new ArrayList<Line>();
-        for (int i = 0; i < numberOfLines_week; ++i) {
+    @Override
+    public void onResume() {
+        super.onResume();
+        mChartWeek.animateXY(3000, 3000);
+        mChartMounth.animateXY(3000, 3000);
+    }
 
-            List<PointValue> values_week = new ArrayList<PointValue>();
-            for (int j = 0; j < numberOfPoints_week; j++) {
-                values_week.add(new PointValue(j, randomNumbersTab_week[i][j]));
-            }
+    private void setDataWeek(int count, int range) {
 
-            Line line = new Line(values_week);
-            line.setColor(ChartUtils.COLORS[i]);
-            line.setShape(shape_week);
-            line.setCubic(isCubic_week);
-            line.setFilled(isFilled_week);
-            line.setHasLabels(hasLabels_week);
-            line.setHasLabelsOnlyForSelected(hasLabelForSelected_week);
-            line.setHasLines(hasLines_week);
-            line.setHasPoints(hasPoints_week);
-            if (pointsHaveDifferentColor_week) {
-//                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
-                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
+        ArrayList<Entry> valuesWeek = new ArrayList<Entry>();
 
-            }
-            lines.add(line);
+        for (int i = 0; i < count; i++) {
+
+            int val = (int) ((Math.random() * range) + 80);
+            valuesWeek.add(new Entry(i, val));
         }
 
-        data_week = new LineChartData(lines);
+        LineDataSet set1Week;
 
-        if (hasAxes_week) {
-            Axis axisX = new Axis();
-            Axis axisY = new Axis().setHasLines(true);
-//            if (hasAxesNames) {
-//                axisX.setName("日期");
-//                axisY.setName("评分");
-//            }
-            data_week.setAxisXBottom(axisX);
-            data_week.setAxisYLeft(axisY);
+        if (mChartWeek.getData() != null &&
+                mChartWeek.getData().getDataSetCount() > 0) {
+            set1Week = (LineDataSet) mChartWeek.getData().getDataSetByIndex(0);
+            set1Week.setValues(valuesWeek);
+            mChartWeek.getData().notifyDataChanged();
+            mChartWeek.notifyDataSetChanged();
         } else {
-            data_week.setAxisXBottom(null);
-            data_week.setAxisYLeft(null);
-        }
+            // create a dataset and give it a type
+            set1Week = new LineDataSet(valuesWeek, "近一周的评分趋势图");
 
-        data_week.setBaseValue(Float.NEGATIVE_INFINITY);
-        chart_week.setLineChartData(data_week);
+            // set the line to be drawn like this "- - - - - -"
+            set1Week.enableDashedLine(10f, 5f, 0f);
+            set1Week.enableDashedHighlightLine(10f, 5f, 0f);
+            set1Week.setColor(Color.BLACK);
+            set1Week.setCircleColor(Color.BLACK);
+            set1Week.setLineWidth(1f);
+            set1Week.setCircleRadius(5f);
+            set1Week.setDrawCircleHole(false);
+            set1Week.setValueTextSize(10f);
+            set1Week.setDrawFilled(true);
+            set1Week.setFormLineWidth(1f);
+            set1Week.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+            set1Week.setFormSize(15f);
 
-    }
-
-    //一下是一个月的
-
-    /**
-     * 生成点的数据
-     */
-    private void generateValues() {
-        for (int i = 0; i < maxNumberOfLines; ++i) {
-            for (int j = 0; j < numberOfPoints; ++j) {
-                randomNumbersTab[i][j] = (float) (60.0f+Math.random() * 40f);
-            }
-        }
-    }
-
-
-    /**
-     * 设置视图的点数  起点终点  最大值
-     */
-    private void resetViewport() {
-        // Reset viewport height range to (0,100)
-        final Viewport v = new Viewport(chart.getMaximumViewport());
-        v.bottom = 30;
-        v.top = 100;
-        v.left = 0;
-        v.right = numberOfPoints;
-        chart.setMaximumViewport(v);
-        chart.setCurrentViewport(v);
-    }
-
-    private void generateData() {
-
-        List<Line> lines = new ArrayList<Line>();
-        for (int i = 0; i < numberOfLines; ++i) {
-
-            List<PointValue> values = new ArrayList<PointValue>();
-            for (int j = 0; j < numberOfPoints; j++) {
-                if (j % 2 == 0) {
-                    values.add(new PointValue(j, randomNumbersTab[i][j]));
-                }
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_red);
+                set1Week.setFillDrawable(drawable);
+            } else {
+                set1Week.setFillColor(Color.BLACK);
             }
 
-            Line line = new Line(values);
-            line.setColor(ChartUtils.COLORS[i]);
-            line.setShape(shape);
-            line.setCubic(isCubic);
-            line.setFilled(isFilled);
-            line.setHasLabels(hasLabels);
-            line.setHasLabelsOnlyForSelected(hasLabelForSelected);
-            line.setHasLines(hasLines);
-            line.setHasPoints(hasPoints);
-            if (pointsHaveDifferentColor) {
-//                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
-                line.setPointColor(ChartUtils.COLORS[(i + 1) % ChartUtils.COLORS.length]);
+            ArrayList<ILineDataSet> dataSetsWeek = new ArrayList<ILineDataSet>();
+            dataSetsWeek.add(set1Week); // add the datasets
 
-            }
-            lines.add(line);
+            // create a data object with the datasets
+            LineData dataWeek = new LineData(dataSetsWeek);
+
+            // set data
+            mChartWeek.setData(dataWeek);
+        }
+    }
+
+
+    private void setDataMounth(int count, int range) {
+
+        ArrayList<Entry> values = new ArrayList<Entry>();
+
+        for (int i = 0; i < count; i++) {
+
+            int val = (int) ((Math.random() * range) + 70);
+            values.add(new Entry(i, val));
         }
 
-        data = new LineChartData(lines);
+        LineDataSet set1;
 
-        if (hasAxes) {
-            Axis axisX = new Axis();
-            Axis axisY = new Axis().setHasLines(true);
-//            if (hasAxesNames) {
-//                axisX.setName("日期");
-//                axisY.setName("评分");
-//            }
-            data.setAxisXBottom(axisX);
-            data.setAxisYLeft(axisY);
+        if (mChartMounth.getData() != null &&
+                mChartMounth.getData().getDataSetCount() > 0) {
+            set1 = (LineDataSet) mChartMounth.getData().getDataSetByIndex(0);
+            set1.setValues(values);
+            mChartMounth.getData().notifyDataChanged();
+            mChartMounth.notifyDataSetChanged();
         } else {
-            data.setAxisXBottom(null);
-            data.setAxisYLeft(null);
+            // create a dataset and give it a type
+            set1 = new LineDataSet(values, "近一月的评分趋势图");
+
+            // set the line to be drawn like this "- - - - - -"
+            set1.enableDashedLine(10f, 5f, 0f);
+            set1.enableDashedHighlightLine(10f, 5f, 0f);
+            set1.setColor(Color.BLACK);
+            set1.setCircleColor(Color.BLACK);
+            set1.setLineWidth(1f);
+            set1.setCircleRadius(5f);
+            set1.setDrawCircleHole(false);
+            set1.setValueTextSize(10f);
+            set1.setDrawFilled(true);
+            set1.setFormLineWidth(1f);
+            set1.setFormLineDashEffect(new DashPathEffect(new float[]{10f, 5f}, 0f));
+            set1.setFormSize(15f);
+
+            if (Utils.getSDKInt() >= 18) {
+                // fill drawable only supported on api level 18 and above
+                Drawable drawable = ContextCompat.getDrawable(mContext, R.drawable.fade_red);
+                set1.setFillDrawable(drawable);
+            } else {
+                set1.setFillColor(Color.BLACK);
+            }
+
+            ArrayList<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+            dataSets.add(set1); // add the datasets
+
+            // create a data object with the datasets
+            LineData data = new LineData(dataSets);
+
+            // set data
+            mChartMounth.setData(data);
         }
+    }
 
-        data.setBaseValue(Float.NEGATIVE_INFINITY);
-        chart.setLineChartData(data);
 
+    @Override
+    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+    }
+
+    @Override
+    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+
+        // un-highlight values after the gesture is finished and no single-tap
+        if (lastPerformedGesture != ChartTouchListener.ChartGesture.SINGLE_TAP)
+            mChartWeek.highlightValues(null); // or highlightTouch(null) for callback to onNothingSelected(...)
+        mChartMounth.highlightValues(null); // or highlightTouch(null) for callback to onNothingSelected(...)
+    }
+
+    @Override
+    public void onChartLongPressed(MotionEvent me) {
+    }
+
+    @Override
+    public void onChartDoubleTapped(MotionEvent me) {
+    }
+
+    @Override
+    public void onChartSingleTapped(MotionEvent me) {
+    }
+
+    @Override
+    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+    }
+
+    @Override
+    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+    }
+
+    @Override
+    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+    }
+
+    @Override
+    public void onValueSelected(Entry e, Highlight h) {
+    }
+
+    @Override
+    public void onNothingSelected() {
     }
 }
 

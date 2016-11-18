@@ -33,6 +33,7 @@ public class GuijiFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -75,6 +76,10 @@ public class GuijiFragment extends Fragment {
 
         viewPagerAdapter = new GuijiFragmentPageAdapter(mainActivity.getSupportFragmentManager(),fragments,titles);
         viewPagerGuiji.setAdapter(viewPagerAdapter);
+        int currentItem = viewPagerGuiji.getCurrentItem();
+        if (currentItem == 1) {
+            callBack.onLogined();
+        }
         viewPagerGuiji.setCurrentItem(0);
         //将TabLayout和ViewPager关联起来。
         tabLayoutGuiji.setupWithViewPager(viewPagerGuiji);
@@ -113,8 +118,15 @@ public class GuijiFragment extends Fragment {
 
     // 回到 首页 接口
     public interface ReturnToHome{
-
         void toHome();
+    }
 
+
+    OnClickTabCallBack callBack;
+    public void setOnClickTabCallBack(OnClickTabCallBack callBack) {
+        this.callBack = callBack;
+    }
+    public interface OnClickTabCallBack {
+        void onLogined();
     }
 }
