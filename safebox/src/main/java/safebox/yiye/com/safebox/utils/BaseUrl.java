@@ -10,6 +10,10 @@ public class BaseUrl {
     public static final String BASE_URL = BaseUrl.URL_IPPORT+"iChucheBox/a/device/device/interface/";
 
     public static final String INDEX_CAR_LIST="getRealTimeCarInfoByOri?tel=";
+    //首页第二个页面
+    public static final String INDEX_TWO_SINGLE="getCarHisinfoByCode?";
+
+//    http://180.97.232.57:9090/iChucheBox/%20a/device/device/interface/getCarHisinfoByCode?code=00001803&datestr=20160917
 
 
 //    http://180.97.232.57:9090/iChucheBox/a /device/device/interface/getRealTimeCarInfoByOri?tel=12345678910

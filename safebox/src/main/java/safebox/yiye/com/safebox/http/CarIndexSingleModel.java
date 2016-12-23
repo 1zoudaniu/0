@@ -1,14 +1,17 @@
-package safebox.yiye.com.safebox.beans;
+package safebox.yiye.com.safebox.http;
 
 /**
- * Created by aina on 2016/10/9.
+ * Name: CarIndexSingleModel
+ * Author: aina
+ * Email:
+ * Comment: //TODO
+ * Date: 2016-11-22 10:20
  */
-
-public class CarIndexTwoBean {
+public class CarIndexSingleModel {
     private String time;
-    private String event;
     private String score;
     private double latitude;
+    private String status;
     private double longitude;
 
     public String getTime() {
@@ -17,14 +20,6 @@ public class CarIndexTwoBean {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public String getEvent() {
-        return event;
-    }
-
-    public void setEvent(String event) {
-        this.event = event;
     }
 
     public String getScore() {
@@ -43,6 +38,14 @@ public class CarIndexTwoBean {
         this.latitude = latitude;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public double getLongitude() {
         return longitude;
     }
@@ -51,10 +54,14 @@ public class CarIndexTwoBean {
         this.longitude = longitude;
     }
 
+    @Override
+    public String toString() {
+        return "CarIndexSingleModel{" +
+                "time='" + time + '\'' +
+                ", score='" + score + '\'' +
+                ", latitude=" + latitude +
+                ", status='" + status + '\'' +
+                ", longitude=" + longitude +
+                '}';
+    }
 }
-
-
-//唯独  精度
-//    latLng.latitude, latLng.longitude
-
-

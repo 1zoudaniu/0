@@ -3,10 +3,10 @@ package safebox.yiye.com.safebox.activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -31,7 +31,6 @@ import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.LatLngBounds;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
@@ -50,19 +49,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import safebox.yiye.com.safebox.R;
 import safebox.yiye.com.safebox.adapter.IndexTwoListViewAdapter;
-import safebox.yiye.com.safebox.beans.CarIndexTwoBean;
 import safebox.yiye.com.safebox.constant.Model;
+import safebox.yiye.com.safebox.http.CarIndexSingleModel;
+import safebox.yiye.com.safebox.http.HttpApi;
 import safebox.yiye.com.safebox.utils.AMapUtil;
 import safebox.yiye.com.safebox.utils.ActivityCollector;
+import safebox.yiye.com.safebox.utils.BaseUrl;
 import safebox.yiye.com.safebox.utils.ToastUtil;
 
 
 public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         AMapLocationListener, LocationSource,
         AMap.OnMapLoadedListener, AMap.OnCameraChangeListener, AMap.OnInfoWindowClickListener,
-        AMap.OnMarkerClickListener, AMap.InfoWindowAdapter, View.OnClickListener,
+        AMap.InfoWindowAdapter, View.OnClickListener,
         AMap.OnPOIClickListener, GeocodeSearch.OnGeocodeSearchListener, AdapterView.OnItemClickListener {
 
     private MapView mMapView = null;
@@ -74,7 +77,7 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
     private CameraUpdate mUpdata;
     private JazzyListView jazzyListView;
     private IndexTwoListViewAdapter indexTwoListViewAdapter;
-    private ArrayList<CarIndexTwoBean> fakes;
+    private ArrayList<CarIndexSingleModel> fakes;
     private ImageView backImageView;
 
     private Marker geoMarker;
@@ -87,11 +90,12 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
     private TextView single_car_losction_carinfo_dot;
     private Marker markerSingleDot=null;
     private LatLng latLngww;
-    private Float[] setLatitude;
-    private Float[] setLongitude;
-    private List<Marker> markerlst;
+
+
     private List<Marker> markerlst1;
     private String data_no;
+    private HttpApi mHttpApi;
+    private ArrayList<Marker> markerlst;
 
 
     @Override
@@ -100,7 +104,11 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_single_car_location_info);
         ActivityCollector.addActivity(this);
 
-        initData();
+        mHttpApi = new Retrofit.Builder()
+                .baseUrl(BaseUrl.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(HttpApi.class);
 
         initView();
 
@@ -128,7 +136,20 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
             initMapListener();
         }
-        initFirstAllMark();
+
+        initData();
+
+        initAdapter();
+
+    }
+
+    private void initAdapter() {
+
+        indexTwoListViewAdapter = new IndexTwoListViewAdapter(getApplicationContext(), R.layout.activity_index_two_listview_item, fakes);
+        jazzyListView.setAdapter(indexTwoListViewAdapter);
+
+        jazzyListView.setTransitionEffect(new GrowEffect());
+        jazzyListView.setOnItemClickListener(this);
     }
 
     //初始化所有的标记
@@ -137,11 +158,11 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         // 绘制一个虚线三角形
         PolylineOptions polylineOptions = new PolylineOptions();
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < fakes.size(); i++) {
 
             MarkerOptions markOptiopns = new MarkerOptions();
 
-            LatLng allLagng = new LatLng(setLatitude[i], setLongitude[i]);
+            LatLng allLagng = new LatLng(fakes.get(i).getLatitude(), fakes.get(i).getLongitude());
 //绘制虚线的参数坐标
             polylineOptions.add(allLagng);
 
@@ -169,18 +190,28 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
     private void initData() {
         fakes = new ArrayList<>();
-        setLatitude = Model.INDEX_TWO_Latitude;
-        setLongitude = Model.INDEX_TWO_Longitude;
-        String[] strings = Model.INDEX_TWO_LISTVIEW;
-        for (int i = 0; i < 8; i++) {
-            CarIndexTwoBean carIndexInfoBean = new CarIndexTwoBean();
-            carIndexInfoBean.setTime(new Random().nextInt(24) + ":" + new Random().nextInt(60));
-            carIndexInfoBean.setEvent(strings[i]);
-            carIndexInfoBean.setScore("-" + new Random().nextInt(10));
-            carIndexInfoBean.setLatitude(setLatitude[i]);
-            carIndexInfoBean.setLongitude(setLongitude[i]);
-            fakes.add(carIndexInfoBean);
+
+        for (int i = 0; i < Model.INDEX_TWO_Longitude.length; i++) {
+            CarIndexSingleModel carIndexSingleModel = new CarIndexSingleModel();
+
+            carIndexSingleModel.setTime("1"+i+":"+(new Random().nextInt(60)+10));
+            carIndexSingleModel.setLatitude(Model.INDEX_TWO_Latitude[i]);
+            carIndexSingleModel.setLongitude(Model.INDEX_TWO_Longitude[i]);
+            carIndexSingleModel.setScore("-0.5");
+             String status;
+            switch (i/5) {
+                case 0: status = "横向抖动";break;
+                case 1: status = "急加速";break;
+                case 2: status = "长时间怠慢";break;
+                case 3: status = "急减速";break;
+                case 4: status = "左急转弯";break;
+                default: status = "右急转弯";
+            }
+            carIndexSingleModel.setStatus(status);
+            fakes.add(carIndexSingleModel);
         }
+        initFirstAllMark();
+
     }
 
     private void initView() {
@@ -195,11 +226,6 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         backImageView.setOnClickListener(this);
         single_car_losction_carinfo_dot.setOnClickListener(this);
 
-        indexTwoListViewAdapter = new IndexTwoListViewAdapter(getApplicationContext(), R.layout.activity_index_two_listview_item, fakes);
-        jazzyListView.setAdapter(indexTwoListViewAdapter);
-
-        jazzyListView.setTransitionEffect(new GrowEffect());
-        jazzyListView.setOnItemClickListener(this);
 
         Intent intent = getIntent();
         data_no = intent.getStringExtra("data_no");
@@ -212,7 +238,6 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
     private void initMapListener() {
         aMap.setOnMapLoadedListener(this);
         aMap.setOnCameraChangeListener(this);
-        aMap.setOnMarkerClickListener(this);
         aMap.setOnInfoWindowClickListener(this);
         aMap.setInfoWindowAdapter(this);// 设置自定义InfoWindow样式
 
@@ -313,14 +338,14 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
     @Override
     public void onMapLoaded() {
-        // 设置所有maker显示在当前可视区域地图中
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        for (int i = 0; i < 8; i++) {
-            LatLng allLagng = new LatLng(setLatitude[i], setLongitude[i]);
-            builder.include(allLagng);
-        }
-        LatLngBounds build = builder.build();
-        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build, 150));
+//        // 设置所有maker显示在当前可视区域地图中
+//        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//        for (int i = 0; i < 8; i++) {
+//            LatLng allLagng = new LatLng(mRes_data.get(i).getGpsy(), mRes_data.get(i).getGpsx());
+//            builder.include(allLagng);
+//        }
+//        LatLngBounds build = builder.build();
+//        aMap.moveCamera(CameraUpdateFactory.newLatLngBounds(build, 150));
     }
 
     @Override
@@ -383,24 +408,6 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
 
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-
-        marker.showInfoWindow();
-
-        if (aMap != null) {
-            for (int i = 0; i < markerlst.size(); i++) {
-                if (marker.equals(markerlst.get(i))) {
-                    addressName = new StringBuilder(fakes.get(i).getTime() + "  " + fakes.get(i).getEvent() + "  扣分" + fakes.get(i).getScore() + "\n");
-                    LatLng latLng = new LatLng(setLatitude[i], setLongitude[i]);
-                    latLonPoint = new LatLonPoint(setLatitude[i], setLongitude[i]);
-                    latLngww = new LatLng(setLatitude[i], setLongitude[i]);
-                    initGeocodeSearch();
-                }
-            }
-        }
-        return false;
-    }
 
     /**
      * marker点击时跳动一下
@@ -498,7 +505,17 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
         indexTwoListViewAdapter.notifyDataSetInvalidated();
         indexTwoListViewAdapter.notifyDataSetChanged();
 
-        addressName = new StringBuilder(fakes.get(position).getTime() + "  " + fakes.get(position).getEvent() + "  扣分" + fakes.get(position).getScore() + "\n");
+        String status1 = fakes.get(position).getStatus();
+        switch (position/5) {
+            case 0: status1 = "横向抖动";break;
+            case 1: status1 = "急加速";break;
+            case 2: status1 = "长时间怠慢";break;
+            case 3: status1 = "急减速";break;
+            case 4: status1 = "左急转弯";break;
+            default:status1 = "右急转弯";
+        }
+
+        addressName = new StringBuilder(fakes.get(position).getTime() + "  " + status1 + "  扣分" + fakes.get(position).getScore() + "\n");
 
 //        aMap.clear();
 
@@ -509,8 +526,8 @@ public class SingleCarLocationInfoActivity extends AppCompatActivity implements
          */
 
         //经纬度是item给的
-        float latitude = fakes.get(position).getLatitude();
-        float longitude = fakes.get(position).getLongitude();
+        double latitude = fakes.get(position).getLatitude();
+        double longitude = fakes.get(position).getLongitude();
 
         latLonPoint = new LatLonPoint(latitude, longitude);
         latLngww = new LatLng(latitude, longitude);

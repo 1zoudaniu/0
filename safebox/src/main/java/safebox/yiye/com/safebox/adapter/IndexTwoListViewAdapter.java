@@ -1,23 +1,17 @@
 package safebox.yiye.com.safebox.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import safebox.yiye.com.safebox.R;
-import safebox.yiye.com.safebox.beans.CarIndexInfoBean;
-import safebox.yiye.com.safebox.beans.CarIndexTwoBean;
-import safebox.yiye.com.safebox.holder.FragmentIndexListViewHolder;
 import safebox.yiye.com.safebox.holder.IndexTwoListviewHolder;
-import safebox.yiye.com.safebox.utils.LogUtils;
-import safebox.yiye.com.safebox.utils.ToastUtil;
+import safebox.yiye.com.safebox.http.CarIndexSingleModel;
 
 /**
  * Created by aina on 2016/10/9.
@@ -27,9 +21,9 @@ public class IndexTwoListViewAdapter extends BaseAdapter {
 
     private Context mContext;
     private int mFragment_index_listview_item;
-    private ArrayList<CarIndexTwoBean> mFakes;
+    private ArrayList<CarIndexSingleModel> mFakes;
 
-    public IndexTwoListViewAdapter(Context context, int fragment_index_listview_item, ArrayList<CarIndexTwoBean> fakes) {
+    public IndexTwoListViewAdapter(Context context, int fragment_index_listview_item, ArrayList<CarIndexSingleModel> fakes) {
         this.mContext = context;
         this.mFragment_index_listview_item = fragment_index_listview_item;
         this.mFakes = fakes;
@@ -67,7 +61,16 @@ public class IndexTwoListViewAdapter extends BaseAdapter {
             holder = (IndexTwoListviewHolder) convertView.getTag();
         }
         holder.iv_two_time.setText(mFakes.get(position).getTime());
-        holder.iv_two_event.setText(mFakes.get(position).getEvent());
+        String status1 = mFakes.get(position).getStatus();
+        switch (position/5) {
+            case 0: status1 = "横向抖动";break;
+            case 1: status1 = "急加速";break;
+            case 2: status1 = "长时间怠慢";break;
+            case 3: status1 = "急减速";break;
+            case 4: status1 = "左急转弯";break;
+            default:status1 = "右急转弯";
+        }
+        holder.iv_two_event.setText(status1);
         holder.iv_two_score.setText(mFakes.get(position).getScore());
         if (position == selectItem) {
             convertView.setBackgroundColor(Color.RED);

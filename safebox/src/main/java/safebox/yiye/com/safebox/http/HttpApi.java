@@ -18,7 +18,8 @@ public interface HttpApi {
     @GET("getRealTimeCarInfoByOri")
     Call<CarScoreAndListModel> getCarList(@Query("tel") String tel);
 
-
+    @GET("getCarinfoByCode")
+    Call<CarIndexSingleModel> getCarSingle(@Query("code") String tel,@Query("datestr") String datestr);
 //    @GET("getRealTimeCarInfoByOri")
 //    Call<CarScoreAndListModel> getCarList();
 //

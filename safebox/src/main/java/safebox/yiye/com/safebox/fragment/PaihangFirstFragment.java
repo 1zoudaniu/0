@@ -205,7 +205,6 @@ public class PaihangFirstFragment extends  BaseFragment {
     private void initRightData(List<PaiHangJsonModel.DataBean.CategoriesBean> dataBean) {
         dataRightBeen.clear();
         dataRightBeen.addAll(dataBean);
-
     }
 
     @Override
